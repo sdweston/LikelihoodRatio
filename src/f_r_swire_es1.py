@@ -20,6 +20,9 @@ import math
 import sys
 import matplotlib.pyplot as plt
 
+# Load in the definitions and constants
+execfile('constants.py')
+
 #print math.pi
 
 print "Starting f(r) calculations and db updates"
@@ -140,7 +143,10 @@ plt.plot(RADIUS, F_R,'k.')
 plt.title(' ATLAS/ELAIS_S1     f(r) vs r')
 plt.ylabel('f(r)')
 plt.xlabel('r (arcsec)')
-plt.savefig("atlas-elasis_s1_fr_vs_r.ps")
+
+plot_fname='atlas-elasis_s1_fr_vs_r.ps'
+fname=output_dir + plot_fname
+plt.savefig(fname)
 plt.show()
 
 print "End"

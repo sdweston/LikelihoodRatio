@@ -5,9 +5,14 @@ import numpy
 import scipy
 import matplotlib.pyplot as plt
 import astropysics as astro
+import pylab
+import sys
 
 from astropysics.constants import c,G
 
+# Load in the definitions and constants
+execfile('constants.py')
+    
 def auks():
     global pie
     global e
@@ -66,6 +71,7 @@ def QCalcReal():
 #===================================================================================================
 
 execfile('area_none_radio_survey.py')
+execfile('f_r.py')
 
 auks()
 print_header()	
@@ -77,9 +83,16 @@ print "eradian :",eradian
 print "c       :",c
 print "G       :",G
 
-#QCalcReal()
+# First truncate all the working tables in the database
+
+# Calculate the spherical area of the none-radio survey being used
+# for cross matching to get an accurate measure of the area for determing
+# the bacground source density per unit area.
 
 area=area_none_radio_survey()
 print "Area returned  : %f" % area
+
+# Determine f(r) and update the database.
+f_r()
 
 print_end()

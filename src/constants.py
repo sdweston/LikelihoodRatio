@@ -10,3 +10,7 @@ nrs=856
 # the detection limit
 
 Q=0.8
+
+# Location to put plot files etc
+
+output_dir='f:/temp/'
