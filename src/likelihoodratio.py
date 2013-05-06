@@ -27,47 +27,6 @@ def print_header():
 def print_end():
     print "End"
 
-#def Q_0():
-# This function takes three source catalogs
-# 1) The radio data
-# 2) the Swire data
-# 3) the randon data
-# It yields the four fields. Q0, e_Q0, Sigma(Positional accuracy), e_sigma(error in sigma).
-
-#===================================================================================================
-def QCalcReal():
-# Compute distance to nearest swire source from radio objects.
-# Connect to the local database with the atlas uid
-
-  db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
-
-# Lets run a querry
-
-  db.query("select t1.cid, t2.index_spitzer, \
-            pow((t1.RA_Deg-t2.RA_SPITZER)*cos(t1.Dec_Deg),2)+ \
-            pow(t1.Dec_Deg-t2.DEC_SPITZER,2)\
-            from ecdfs.coords as t1, swire_cdfs.cdfs as t2 \
-            where pow((t1.RA_Deg-t2.RA_SPITZER)*cos(t1.Dec_Deg),2)+ \
-            pow(t1.Dec_Deg-t2.DEC_SPITZER,2) <= pow(10/3600,2) \
-            order by t1.cid;")
-
-  r=db.use_result()
-
-  # fetch results, returning char we need float !
-
-  rows=r.fetch_row(maxrows=100)
-
-  # Close connection to the database
-
-  db.close()
-
-  # print returned rows
-
-  for row in rows:
-      print row
-
-  return
-
 #===================================================================================================
 
 execfile('area_none_radio_survey.py')

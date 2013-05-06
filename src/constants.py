@@ -13,4 +13,4 @@ Q=0.8
 
 # Location to put plot files etc
 
-output_dir='f:/temp/'
+global output_dir='f:/temp/'

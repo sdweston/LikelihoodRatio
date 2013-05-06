@@ -121,9 +121,10 @@ def f_r():
 #    print "cid   index_spitzer   f(r) : ",cid,index_spitzer,f_r
 #    print "\n"
 
+#        print "Update the database with the f(r) values"
 # Populate new table with cid,BS,SNR,f(r), or put back into matches table.
-#    db.query("update elais_s1.matches set f_r=%s,snr=%s where elais_s1_cid='%s' \
-#              and swire_es1_index_spitzer='%s';" % (f_r, SNR, cid, index_spitzer))
+        db.query("update elais_s1.matches set f_r=%s,snr=%s where elais_s1_cid='%s' \
+                  and swire_es1_index_spitzer='%s';" % (f_r, SNR, cid, index_spitzer))
 
 # End of do block
 
@@ -140,6 +141,6 @@ def f_r():
     plt.savefig(fname)
     plt.show()
 
-    print "End of f(r)"
+    print "\nEnd of f(r)"
 
 
