@@ -2,6 +2,7 @@ import math
 import array
 import _mysql
 import numpy
+import scipy
 import matplotlib.pyplot as plt
 import astropysics as astro
 
@@ -63,8 +64,8 @@ def QCalcReal():
   return
 
 #===================================================================================================
-#def QCalcFake():
-# Compute distance to nearest swire source from random objects.
+
+execfile('area_none_radio_survey.py')
 
 auks()
 print_header()	
@@ -76,6 +77,9 @@ print "eradian :",eradian
 print "c       :",c
 print "G       :",G
 
-QCalcReal()
+#QCalcReal()
+
+area=area_none_radio_survey()
+print "Area returned  : %f" % area
 
 print_end()
