@@ -31,6 +31,7 @@ def print_end():
 
 execfile('area_none_radio_survey.py')
 execfile('f_r.py')
+execfile('n_m.py')
 
 auks()
 print_header()	
@@ -52,6 +53,9 @@ area=area_none_radio_survey()
 print "Area returned  : %f" % area
 
 # Determine f(r) and update the database.
-f_r()
+#f_r()
+
+# Determine n(m) and update data base
+n_m()
 
 print_end()

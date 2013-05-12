@@ -1,6 +1,6 @@
 # None radio source catalog area
-# deg ^ 2
-nr_area=1.625319
+# arc_sec ^ 2
+global area
 
 # Number of radio sources in radio catalogue
 
@@ -13,4 +13,5 @@ Q=0.8
 
 # Location to put plot files etc
 
-global output_dir='f:/temp/'
+global output_dir
+output_dir='f:/temp/'
