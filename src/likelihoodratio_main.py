@@ -55,30 +55,27 @@ global sqasec
 sqasec=area_nr
 
 # Determine f(r) and update the database.
-#f_r()
+f_r()
 
 # Determine n(m) and update data base
-#n_m()
+n_m()
 
 # Determine total(m) and update data base
-#total_m()
+total_m()
 
 # Determine r(m) and update database
-#real_m()
+real_m()
 
 # Determine q(m) and update database
-#q_m()
+q_m()
 
 # Plot n(m), q(m) and total(m)
-#plot_m()
+plot_m()
 
 # Calculate LR
-#lr()
+lr()
 
-# Calculate Reliability
+# Calculate Reliability & Plot LR vs Reliability
 rel()
-
-# Plot LR vs Reliability
-
 
 print_end()
