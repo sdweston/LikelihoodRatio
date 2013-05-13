@@ -1,9 +1,9 @@
 #===========================================================================
 #
-# n_m.py
+# total_m.py
 #
-# Python script to query SWIRE_ES1 mysql database to determine the
-# n(m) for the likelihood ratio.
+# Python script to query mysql database to determine the
+# total(m) for the likelihood ratio.
 #
 #===========================================================================
 #
@@ -12,11 +12,9 @@
 # March 2013
 #===========================================================================
 
-def n_m():
+def total_m():
 
-    print "\nStarting n(m) calculations and db updates"
-
-    execfile('constants.py')
+    print "\nStarting total(m) calculations and db updates"
 
 # Connect to the local database with the atlas uid
 
@@ -24,10 +22,7 @@ def n_m():
 
 # Lets run a querry
 
-    db.query("select IRAC_3_6_micron_FLUX_MUJY FROM swire_es1.es1_swire \
-         where IRAC_3_6_micron_FLUX_MUJY != -9.9 \
-         and ra_spitzer > 8.0 and ra_spitzer < 9.5 \
-         and dec_spitzer < -43.0 and dec_spitzer > -44.5;")
+    db.query("select flux FROM elais_s1.matches where flux > -8.0;")
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -65,52 +60,31 @@ def n_m():
 
     f_rows=[]
     for row in lst_rows:
-
-#   a = IRAC_3_6_micron_FLUX_MUJY
-        a=map(float,row)
-        b=math.log10(a[0])
-#    print "Flux %4.8f Log10_Flux %4.8f " % (a[0], b)
-        f_rows.append(b)
+         a=map(float,row)
+#    print "%.4f" % a[0]
+         b=math.log10(a[0])
+#    print "%.4f" % b
+         f_rows.append(b)
 
     (hist,bins)=numpy.histogram(f_rows,bins=60,range=[-1.0,5.0])
-    width = 0.7*(bins[1]-bins[0])
-    center = (bins[:-1]+bins[1:])/2
-#plt.yscale('log')
-#plt.xscale('log')
-    plt.bar(center, hist, align = 'center',width = width,linewidth=0)
-    plt.title('es1 N(m)')
-    plt.ylabel('n(f)')
-    plt.xlabel('log10(f)')
-    plot_fname='atlas-elaise_nf_vs_log10f.ps'
-    fname=output_dir + plot_fname
-    plt.savefig(fname)
-    plt.show()
-    
+#    print "hist"
+#    print hist
+#    print "bins"
+#    print bins
+
 # We have the binned data as a histogram, now insert it into table n_m_lookup
 
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
     db.query("set autocommit=0;")
 
-# first is the lookup table empty, if yes then use insert if no then use update
-    db.query("select count(*) from swire_es1.n_m_lookup;")
-    r=db.store_result()
-    rows=r.fetch_row(maxrows=1)
-    for row in rows:
-	    r_count=int(row[0])
-	    
-# If the row count from above is zero then insert into the db table, if row count is > 0 then update
     print "    Update database with n(m) values"
- 	
+	
     i=1
     for item in xrange(len(hist)):
-        n_m=hist[item]
-#        print " n_m md/area arcsec^2 : %14.9f %14.9f" % (hist[item], n_m) 
+        total_m=hist[item]
         log10_f=bins[item]
-#       Update the database with the n(m) values	
-        if r_count == 0:	
-           db.query("insert into swire_es1.n_m_lookup(i,n_m,log10_f,md) values ('%d','%f','%f','%f');" % (i,n_m,log10_f,hist[item]))
-        else:
-           db.query("update swire_es1.n_m_lookup set n_m=%f, log10_f=%f, md=%f where i=%d;" % (n_m, log10_f, hist[item],i))
+        db.query("update swire_es1.n_m_lookup set total_m='%f' \
+                  where i='%d';" % (total_m, i))
         db.commit()
         i=i+1
 
@@ -119,7 +93,7 @@ def n_m():
 # Close connection to the database
     db.close()
 
-    print "End of n(m)\n"
+    print "End of total(m)\n"
 
 
 

@@ -32,6 +32,8 @@ def print_end():
 execfile('area_none_radio_survey.py')
 execfile('f_r.py')
 execfile('n_m.py')
+execfile('total_m.py')
+execfile('real_m.py')
 
 auks()
 print_header()	
@@ -49,13 +51,22 @@ print "G       :",G
 # for cross matching to get an accurate measure of the area for determing
 # the bacground source density per unit area.
 
-area=area_none_radio_survey()
-print "Area returned  : %f" % area
+area_nr=area_none_radio_survey()
+print "Area returned  : %f" % area_nr
 
 # Determine f(r) and update the database.
 #f_r()
 
 # Determine n(m) and update data base
-n_m()
+#n_m()
+
+# Determine total(m) and update data base
+#total_m()
+
+# Determine r(m) and update database
+real_m()
+
+print sum_real_m
+print nrs
 
 print_end()
