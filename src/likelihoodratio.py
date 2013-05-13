@@ -35,16 +35,10 @@ execfile('n_m.py')
 execfile('total_m.py')
 execfile('real_m.py')
 execfile('q_m.py')
+execfile('plot_m.py')
 
 auks()
 print_header()	
-print "Pi      :",pie
-print "e       :",e
-print "eradian :",eradian
-
-#Print physical constants
-print "c       :",c
-print "G       :",G
 
 # First truncate all the working tables in the database
 
@@ -67,10 +61,19 @@ print "Area returned  : %f" % area_nr
 # Determine r(m) and update database
 real_m()
 
-print sum_real_m
-print nrs
-
 # Determine q(m) and update database
+
 q_m()
+
+# Plot n(m), q(m) and total(m)
+
+plot_m()
+
+# Calculate LR
+
+# Calculate Reliability
+
+# Plot LR vs Reliability
+
 
 print_end()

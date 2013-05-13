@@ -38,7 +38,7 @@ def real_m():
     rows=r.fetch_row(maxrows=1)
     for row in rows:
         nrs=int(row[0])
-        print "Number of Radio Sources : ",nrs
+        print "    Number of Radio Sources : ",nrs
 
     db.query("select total_m,n_m FROM swire_es1.n_m_lookup;")
 
@@ -68,8 +68,8 @@ def real_m():
 #   nrs=SELECT count(distinct elais_s1_cid) FROM elais_s1.matches;
 
     area=nrs * math.pi * math.pow(sr,2)
-    print "Area          : %f " % area
-    print "Back Grd Area : %f " % sqasec
+#   print "Area              : %f " % area
+#    print "Back Ground Area : %f " % sqasec
 
     total_m=[]
     n_m=[]
@@ -96,9 +96,9 @@ def real_m():
         sum_real_m=sum_real_m+c
         real_m.append(c)
         background_m.append(bck_grd)
-        print " %14.9f %14.9f %14.9f %14.9f" % (a, b, c, bck_grd)
+#        print " %14.9f %14.9f %14.9f %14.9f" % (a, b, c, bck_grd)
 
-    print "    Sum real(m) : " ,sum_real_m
+#    print "    Sum real(m) : " ,sum_real_m
 
     db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
     db.query("set autocommit=0;")
