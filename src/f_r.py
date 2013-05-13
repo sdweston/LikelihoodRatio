@@ -20,7 +20,7 @@ def f_r():
 
 # Connect to the local database with the atlas uid
 
-    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+    db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
 
 # Lets run a querry
 

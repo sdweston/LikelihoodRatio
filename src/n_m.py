@@ -20,7 +20,7 @@ def n_m():
 
 # Connect to the local database with the atlas uid
 
-    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+    db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
 
 # Lets run a querry
 
@@ -88,7 +88,7 @@ def n_m():
     
 # We have the binned data as a histogram, now insert it into table n_m_lookup
 
-    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+    db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
     db.query("set autocommit=0;")
 
 # first is the lookup table empty, if yes then use insert if no then use update
