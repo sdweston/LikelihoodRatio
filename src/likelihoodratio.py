@@ -34,6 +34,7 @@ execfile('f_r.py')
 execfile('n_m.py')
 execfile('total_m.py')
 execfile('real_m.py')
+execfile('q_m.py')
 
 auks()
 print_header()	
@@ -68,5 +69,8 @@ real_m()
 
 print sum_real_m
 print nrs
+
+# Determine q(m) and update database
+q_m()
 
 print_end()
