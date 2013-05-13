@@ -53,10 +53,10 @@ print "Area returned  : %f" % area_nr
 #f_r()
 
 # Determine n(m) and update data base
-#n_m()
+n_m()
 
 # Determine total(m) and update data base
-#total_m()
+total_m()
 
 # Determine r(m) and update database
 real_m()
