@@ -1,79 +1,89 @@
-import math
-import array
-import _mysql
-import numpy
-import scipy
-import matplotlib.pyplot as plt
-import astropysics as astro
-import pylab
-import sys
+#===========================================================================
+#
+# lr_swire_es1.py
+#
+# Python script to query SWIRE_ES1 mysql database to determine the
+# LR the likelihood ratio.
+#
+#===========================================================================
+#
+# S. Weston
+# AUT University
+# March 2013
+#===========================================================================
 
-from astropysics.constants import c,G
+def lr():
 
-# Load in the definitions and constants
-execfile('constants.py')
-    
-def auks():
-    global pie
-    global e
-    global eradian
-    pie=math.pi
-    e=math.e
-    eradian=180.0/math.pi
+    print "\nStarting LR calculations and db updates"
 
-def print_header():
-	print "Likelihood Ratio"
+# Connect to the local database with the atlas uid
+
+    db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
+
+# Lets run a querry
+
+    db.query("select elais_s1_cid,swire_es1_index_spitzer,f_r,flux from elais_s1.matches \
+              where f_r is not null and flux > -9.0;")
+          
+# store_result() returns the entire result set to the client immediately.
+# The other is to use use_result(), which keeps the result set in the server 
+#and sends it row-by-row when you fetch.
+
+#r=db.store_result()
+# ...or...
+    r=db.use_result()
+
+# fetch results, returning char we need float !
+
+    rows=r.fetch_row(maxrows=5000)
+
+# rows is a tuple, convert it to a list
+
+    print "    Calculate LR Update database with LR values"
+
+#print rows
+
+    for row in rows:
+        cid=row[0]
+        index_spitzer=row[1]
+        f_r=float(row[2])
+        flux=float(row[3])
+#    print "Flux %f" %flux
+        sys.stdout.write('.')
+
+#   check lookup table for values of q(m) and n(m)
 	
-def print_end():
+        log10_f=math.log10(flux)
+	
+        db.query("select log10_f,n_m,q_m from swire_es1.n_m_lookup \
+                  where %s > log10_f - 0.05 \
+                  and %s < log10_f + 0.05;" % (log10_f, log10_f))
+	
+        r2=db.store_result()
+        strings=r2.fetch_row(maxrows=1)
+
+#    print log10_f,strings
+
+        for string in strings:
+            n_m=float(string[1])
+            q_m=float(string[2])         
+
+#    print "n(m) %20.9f q(m) %20.9f " % (n_m, q_m)
+              
+        lr = (q_m * f_r) / (n_m / sqasec)
+        
+#   print "Likelihood Ratio : %f " % lr
+    
+#   update table with likelihood ratio.
+
+        db.query("update elais_s1.matches set lr=%s where elais_s1_cid='%s' \
+                  and swire_es1_index_spitzer='%s';" % (lr, cid, index_spitzer))
+
+# End of do block
+
+# Close connection to the database
+    db.close()
+
     print "End"
 
-#===================================================================================================
 
-execfile('area_none_radio_survey.py')
-execfile('f_r.py')
-execfile('n_m.py')
-execfile('total_m.py')
-execfile('real_m.py')
-execfile('q_m.py')
-execfile('plot_m.py')
-
-auks()
-print_header()	
-
-# First truncate all the working tables in the database
-
-# Calculate the spherical area of the none-radio survey being used
-# for cross matching to get an accurate measure of the area for determing
-# the bacground source density per unit area.
-
-area_nr=area_none_radio_survey()
-print "Area returned  : %f" % area_nr
-
-# Determine f(r) and update the database.
-#f_r()
-
-# Determine n(m) and update data base
-n_m()
-
-# Determine total(m) and update data base
-total_m()
-
-# Determine r(m) and update database
-real_m()
-
-# Determine q(m) and update database
-
-q_m()
-
-# Plot n(m), q(m) and total(m)
-
-plot_m()
-
-# Calculate LR
-
-# Calculate Reliability
-
-# Plot LR vs Reliability
-
-
-print_end()
