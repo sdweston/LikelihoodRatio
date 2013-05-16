@@ -30,7 +30,7 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # select from matches the sum of L_i grouped by radio source
 
-db.query("select elais_s1_cid,sum(lr) \
+db.query("select elais_s1_cid \
           from elais_s1.matches \
 		  where lr is not null \
 		  group by elais_s1_cid;")
@@ -55,7 +55,16 @@ REL=[]
 for row in rows:
 #    print row
     cid=row[0]
-    sum_lr=float(row[1])
+
+#   sum of all possible matches of lr within search radius
+
+    db.query("select sum(lr) from elais_s1.matches \
+              where elais_s1_cid='%s';" % cid)
+    r3=db.store_result()
+    strings3=r3.fetch_row(maxrows=1)
+    for string3 in strings3:
+        sum_lr=float(string3[0])
+
     
 # now select each row from matches for each radio source where the flux is not null
 
@@ -81,8 +90,8 @@ for row in rows:
 	
 #       Now update the matches table with the reliability
 
-#        db.query("update elais_s1.matches set reliability=%s where elais_s1_cid='%s' \
-#                  and swire_es1_index_spitzer='%s';" % (rel, cid, index_spitzer))
+        db.query("update elais_s1.matches set reliability=%s where elais_s1_cid='%s' \
+                  and swire_es1_index_spitzer='%s';" % (rel, cid, index_spitzer))
 	
 # End of do block
 
@@ -94,7 +103,7 @@ plt.plot(LR, REL,'k.')
 plt.title(' ATLAS/ELAIS_S1     Reliability vs Likelihood Ratio')
 plt.ylabel('Reliability')
 plt.xlabel('Likelihood Ratio')
-plt.savefig("atlas-elasis_s1_rel_vs_lr.ps")
+plt.savefig('f:\temp\atlas-elasis_s1_rel_vs_lr.ps')
 plt.show()
 
 print "End"
