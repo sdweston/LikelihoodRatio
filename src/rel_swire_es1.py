@@ -30,10 +30,10 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # select from matches the sum of L_i grouped by radio source
 
-db.query("select elais_s1_cid \
+db.query("select distinct elais_s1_cid \
           from elais_s1.matches \
-		  where lr is not null \
-		  group by elais_s1_cid;")
+	  where lr is not null \
+	  order by elais_s1_cid;")
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -103,7 +103,7 @@ plt.plot(LR, REL,'k.')
 plt.title(' ATLAS/ELAIS_S1     Reliability vs Likelihood Ratio')
 plt.ylabel('Reliability')
 plt.xlabel('Likelihood Ratio')
-plt.savefig('f:\temp\atlas-elasis_s1_rel_vs_lr.ps')
+#plt.savefig('f:\temp\atlas-elasis_s1_rel_vs_lr.ps')
 plt.show()
 
 print "End"

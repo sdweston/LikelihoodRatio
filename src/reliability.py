@@ -22,10 +22,10 @@ def rel():
 
 # select from matches the sum of L_i grouped by radio source
 
-    db.query("select elais_s1_cid,sum(lr) \
+    db.query("select distinct elais_s1_cid \
               from elais_s1.matches \
 		      where lr is not null \
-		      group by elais_s1_cid;")
+		      order by elais_s1_cid;")
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -48,7 +48,15 @@ def rel():
     for row in rows:
 #    print row
         cid=row[0]
-        sum_lr=float(row[1])
+
+#   sum of all possible matches of lr within search radius
+
+    db.query("select sum(lr) from elais_s1.matches \
+              where elais_s1_cid='%s';" % cid)
+    r3=db.store_result()
+    strings3=r3.fetch_row(maxrows=1)
+    for string3 in strings3:
+        sum_lr=float(string3[0])
     
 # now select each row from matches for each radio source where the flux is not null
 
