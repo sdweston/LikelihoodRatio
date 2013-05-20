@@ -22,3 +22,4 @@ and   t2.ra_spitzer < 9.5
 and   t2.dec_spitzer < -43.0
 and   t2.dec_spitzer > -44.5	  
 #limit 0,3000000;
+
