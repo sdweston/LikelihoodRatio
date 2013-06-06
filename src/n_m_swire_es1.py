@@ -96,6 +96,7 @@ plt.bar(center, hist, align = 'center',width = width,linewidth=0)
 plt.title('es1 N(m)')
 plt.ylabel('n(f)')
 plt.xlabel('log10(f)')
+plot_fname='atlas-elaise_nf_vs_log10f.ps'
 plt.show()
 #pylab.savefig('C:\Users\stuart\Desktop\PhD 2012\Likelihood Ratio\python_lr\swire_es1_n_f.pdf')
     
