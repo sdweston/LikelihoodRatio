@@ -24,7 +24,7 @@ def f_r():
 
 # Lets run a querry
 
-    db.query("select t1.cid,t2.swire_es1_index_spitzer,t1.dbmaj,t1.dbmin,t1.sint,t1.rms,t2.r_arcsec \
+    db.query("select t1.cid,t2.swire_index_spitzer,t1.dbmaj,t1.dbmin,t1.sint,t1.rms,t2.r_arcsec \
           from elais_s1.table4 as t1 left outer join elais_s1.matches t2 \
           on t2.elais_s1_cid=t1.cid \
           order by t1.cid;")
@@ -125,7 +125,7 @@ def f_r():
 		
 # Populate new table with cid,BS,SNR,f(r), or put back into matches table.
         db.query("update elais_s1.matches set f_r=%s,snr=%s where elais_s1_cid='%s' \
-                  and swire_es1_index_spitzer='%s';" % (f_r, SNR, cid, index_spitzer))
+                  and swire_index_spitzer='%s';" % (f_r, SNR, cid, index_spitzer))
 
 # End of do block
 
