@@ -52,7 +52,7 @@ def rel():
     
 # now select each row from matches for each radio source where the flux is not null
 
-        db.query("select swire_es1_index_spitzer,lr \
+        db.query("select swire_index_spitzer,lr \
                   from elais_s1.matches \
 	              where lr is not null \
 	              and elais_s1_cid like '%s';" % cid)
@@ -75,7 +75,7 @@ def rel():
 #       Now update the matches table with the reliability
 
             db.query("update elais_s1.matches set reliability=%s where elais_s1_cid='%s' \
-#                     and swire_es1_index_spitzer='%s';" % (rel, cid, index_spitzer))
+                      and swire_index_spitzer='%s';" % (rel, cid, index_spitzer))
 	
 # End of do block
 

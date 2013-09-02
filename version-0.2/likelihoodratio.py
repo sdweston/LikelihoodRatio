@@ -22,7 +22,7 @@ def lr():
 
 # Lets run a querry
 
-    db.query("select elais_s1_cid,swire_es1_index_spitzer,f_r,flux from elais_s1.matches \
+    db.query("select elais_s1_cid,swire_index_spitzer,f_r,flux from elais_s1.matches \
               where f_r is not null and flux > -9.0;")
           
 # store_result() returns the entire result set to the client immediately.
@@ -77,7 +77,7 @@ def lr():
 #   update table with likelihood ratio.
 
         db.query("update elais_s1.matches set lr=%s where elais_s1_cid='%s' \
-                  and swire_es1_index_spitzer='%s';" % (lr, cid, index_spitzer))
+                  and swire_index_spitzer='%s';" % (lr, cid, index_spitzer))
 
 # End of do block
 

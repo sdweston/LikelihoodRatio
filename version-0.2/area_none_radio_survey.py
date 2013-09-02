@@ -14,6 +14,9 @@
 
 def area_none_radio_survey():
 
+# http://home.strw.leidenuniv.nl/~jarle/Surveys/DeepFields/SWIRE-ELAIS-S1-All.html
+# SWIRE ELAIS_S1 at 3.5mu 4.2 deg sq
+
     ra2=8.0
     ra1=9.5
     dec2=-44.5
@@ -33,8 +36,9 @@ def area_none_radio_survey():
     term3=math.cos(math.radians(dec1_dec2))
     print "math.cos((rad_dec1+rad_dec2)/2) = %f" % term3
 
-    area_sqdeg=term1* term3* term2
-
+#    area_sqdeg=term1* term3* term2
+    area_sqdeg=4.2
+	
     print "Area square degrees : %f" % area_sqdeg
 
     area_arcsec=area_sqdeg*(3600**2)

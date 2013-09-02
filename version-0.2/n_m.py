@@ -26,8 +26,9 @@ def n_m():
 
     db.query("select IRAC_3_6_micron_FLUX_MUJY FROM swire_es1.es1_swire \
          where IRAC_3_6_micron_FLUX_MUJY != -9.9 \
-         and ra_spitzer > 8.0 and ra_spitzer < 9.5 \
-         and dec_spitzer < -43.0 and dec_spitzer > -44.5;")
+         and ra_spitzer > 8.0 and ra_spitzer < 9.5 ;")
+		 
+#         and dec_spitzer < -43.0 and dec_spitzer > -44.5;")
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
