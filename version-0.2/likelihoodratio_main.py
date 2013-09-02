@@ -29,6 +29,10 @@ def print_end():
 
 #===================================================================================================
 
+# ask which field to process
+field=raw_input('Which field ecdfs/elais ?')
+print "\nentered : ",field,"\n"
+
 execfile('area_none_radio_survey.py')
 execfile('f_r.py')
 execfile('n_m.py')
