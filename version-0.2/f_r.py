@@ -25,10 +25,10 @@ def f_r():
 # Lets run a querry
 
     db.query("select t1.cid,t2.swire_index_spitzer,t1.dbmaj,t1.dbmin,t1.sint,t1.rms,t2.r_arcsec \
-          from elais_s1.table4 as t1 left outer join elais_s1.matches t2 \
-          on t2.elais_s1_cid=t1.cid \
-          order by t1.cid;")
-          
+          from %s.table4 as t1 left outer join %s.matches t2 \
+          on t2.cid=t1.cid \
+          order by t1.cid;" % (field,field))
+		  
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
 #and sends it row-by-row when you fetch.
@@ -124,8 +124,8 @@ def f_r():
 #        print "    Update the database with the f(r) values"
 		
 # Populate new table with cid,BS,SNR,f(r), or put back into matches table.
-        db.query("update elais_s1.matches set f_r=%s,snr=%s where elais_s1_cid='%s' \
-                  and swire_index_spitzer='%s';" % (f_r, SNR, cid, index_spitzer))
+        db.query("update %s.matches set f_r=%s,snr=%s where cid='%s' \
+                  and swire_index_spitzer='%s';" % (field, f_r, SNR, cid, index_spitzer))
 
 # End of do block
 
@@ -133,11 +133,12 @@ def f_r():
     db.close()
 
     plt.plot(RADIUS, F_R,'k.')
-    plt.title(' ATLAS/ELAIS_S1     f(r) vs r')
+    plot_title='ATLAS ' +field+ ' f(r) vs r'
+    plt.title(plot_title)
     plt.ylabel('f(r)')
     plt.xlabel('r (arcsec)')
 
-    plot_fname='atlas-elasis_s1_fr_vs_r.ps'
+    plot_fname='atlas_' +field+ '_fr_vs_r.ps'
     fname=output_dir + plot_fname
     plt.savefig(fname)
     plt.show()

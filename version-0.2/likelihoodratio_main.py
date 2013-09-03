@@ -30,8 +30,19 @@ def print_end():
 #===================================================================================================
 
 # ask which field to process
-field=raw_input('Which field ecdfs/elais ?')
-print "\nentered : ",field,"\n"
+answer=raw_input('Which field ecdfs/elais ?')
+print "\nentered : ",answer,"\n"
+
+if answer == 'ecdfs': 
+   field='ecdfs'
+   swire_schema='swire_cdfs'
+else:
+   field='elais_s1'
+   swire_schema='swire_es1'
+   
+print "Field : ",field," ; swire_schema : ",swire_schema
+
+# now the field string is the same as the database schema name.
 
 execfile('area_none_radio_survey.py')
 execfile('f_r.py')
@@ -65,22 +76,22 @@ f_r()
 n_m()
 
 # Determine total(m) and update data base
-total_m()
+#total_m()
 
 # Determine r(m) and update database
-real_m()
+#real_m()
 
 # Determine q(m) and update database
-q_m()
+#q_m()
 
 # Plot n(m), q(m) and total(m)
-plot_m()
+#plot_m()
 
 # Calculate LR
-lr()
+#lr()
 
 # Calculate Reliability
-rel()
+#rel()
 
 # Plot LR vs Reliability
 

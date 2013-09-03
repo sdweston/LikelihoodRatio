@@ -24,9 +24,9 @@ def n_m():
 
 # Lets run a querry
 
-    db.query("select IRAC_3_6_micron_FLUX_MUJY FROM swire_es1.es1_swire \
+    db.query("select IRAC_3_6_micron_FLUX_MUJY FROM %s.swire \
          where IRAC_3_6_micron_FLUX_MUJY != -9.9 \
-         and ra_spitzer > 8.0 and ra_spitzer < 9.5 ;")
+         and ra_spitzer > 8.0 and ra_spitzer < 9.5 ;" % (swire_schema))
 		 
 #         and dec_spitzer < -43.0 and dec_spitzer > -44.5;")
 
@@ -79,10 +79,11 @@ def n_m():
 #plt.yscale('log')
 #plt.xscale('log')
     plt.bar(center, hist, align = 'center',width = width,linewidth=0)
-    plt.title('es1 N(m)')
+    plot_title=field+' N(m)'
+    plt.title(plot_title)
     plt.ylabel('n(f)')
     plt.xlabel('log10(f)')
-    plot_fname='atlas-elaise_nf_vs_log10f.ps'
+    plot_fname='atlas_'+field+'_nf_vs_log10f.ps'
     fname=output_dir + plot_fname
     plt.savefig(fname)
     plt.show()
@@ -93,7 +94,7 @@ def n_m():
     db.query("set autocommit=0;")
 
 # first is the lookup table empty, if yes then use insert if no then use update
-    db.query("select count(*) from swire_es1.n_m_lookup;")
+    db.query("select count(*) from %s.n_m_lookup;" % (swire_schema))
     r=db.store_result()
     rows=r.fetch_row(maxrows=1)
     for row in rows:
@@ -109,9 +110,9 @@ def n_m():
         log10_f=bins[item]
 #       Update the database with the n(m) values	
         if r_count == 0:	
-           db.query("insert into swire_es1.n_m_lookup(i,n_m,log10_f,md) values ('%d','%f','%f','%f');" % (i,n_m,log10_f,hist[item]))
+           db.query("insert into %s.n_m_lookup(i,n_m,log10_f,md) values ('%d','%f','%f','%f');" % (swire_schema, i,n_m,log10_f,hist[item]))
         else:
-           db.query("update swire_es1.n_m_lookup set n_m=%f, log10_f=%f, md=%f where i=%d;" % (n_m, log10_f, hist[item],i))
+           db.query("update %s.n_m_lookup set n_m=%f, log10_f=%f, md=%f where i=%d;" % (swire_schema, n_m, log10_f, hist[item],i))
         db.commit()
         i=i+1
 
