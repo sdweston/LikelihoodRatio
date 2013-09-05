@@ -23,11 +23,13 @@ def f_r():
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # Lets run a querry
+# table4 for atlas.elais and atlas.cdfs are not consistent. Rename column dbmaj,dbmin to be majaxis,minaxis for both tables !
 
-    db.query("select t1.cid,t2.swire_index_spitzer,t1.dbmaj,t1.dbmin,t1.sint,t1.rms,t2.r_arcsec \
+    db.query("select t1.cid,t2.swire_index_spitzer,t1.majaxis,t1.minaxis,t1.sint,t1.rms,t2.r_arcsec \
           from %s.table4 as t1 left outer join %s.matches t2 \
           on t2.cid=t1.cid \
           order by t1.cid;" % (field,field))
+
 		  
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 

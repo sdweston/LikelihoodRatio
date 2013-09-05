@@ -22,7 +22,7 @@ def plot_m():
 
 # select from matches the sum of L_i grouped by radio source
 
-    db.query("SELECT i,log10_f,total_m,real_m,bckgrd_m FROM swire_es1.n_m_lookup;")
+    db.query("SELECT i,log10_f,total_m,real_m,bckgrd_m FROM %s.n_m_lookup;" % (swire_schema))
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -60,11 +60,12 @@ def plot_m():
 
     plt.yscale('log')
     plt.plot(log10_f, total_m,'k.',log10_f,real_m,'g+',log10_f,bckgrd,'ro')
-    plt.title(' Log10(f) vs Total(m)')
+    plot_title=field+'  Log10(f) vs Total(m)'
+    plt.title(plot_title)
     plt.ylabel('Total(m)')
     plt.xlabel('log10(f)')
     plt.legend(["Total(m)","Real(m)","Background"])
-    plot_fname='magnitude_dependance.ps'
+    plot_fname='atlas_'+field+'_magnitude_dependance.ps'
     fname=output_dir + plot_fname
     plt.savefig(fname)
     plt.show()

@@ -22,7 +22,7 @@ def total_m():
 
 # Lets run a querry
 
-    db.query("select flux FROM elais_s1.matches where flux > -8.0;")
+    db.query("select flux FROM %s.matches where flux > -8.0;" % (field))
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -83,8 +83,8 @@ def total_m():
     for item in xrange(len(hist)):
         total_m=hist[item]
         log10_f=bins[item]
-        db.query("update swire_es1.n_m_lookup set total_m='%f' \
-                  where i='%d';" % (total_m, i))
+        db.query("update %s.n_m_lookup set total_m='%f' \
+                  where i='%d';" % (swire_schema, total_m, i))
         db.commit()
         i=i+1
 

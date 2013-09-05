@@ -33,14 +33,14 @@ def real_m():
     db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
 
 # Lets run a querry
-    db.query("SELECT count(distinct elais_s1_cid) FROM elais_s1.matches;")
+    db.query("SELECT count(distinct cid) FROM %s.matches;" % (field))
     r=db.store_result()
     rows=r.fetch_row(maxrows=1)
     for row in rows:
         nrs=int(row[0])
         print "    Number of Radio Sources : ",nrs
 
-    db.query("select total_m,n_m FROM swire_es1.n_m_lookup;")
+    db.query("select total_m,n_m FROM %s.n_m_lookup;" % (swire_schema))
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -90,15 +90,16 @@ def real_m():
         c= a - ((b/(sqasec * area_pct)) * nrs * math.pi * math.pow(sr,2))
         total_m.append(a)
         n_m.append(b)
+        print " %14.9f %14.9f %14.9f %14.9f" % (a, b, c, bck_grd)
         if c < 0:
            c=0
        
         sum_real_m=sum_real_m+c
         real_m.append(c)
         background_m.append(bck_grd)
-#        print " %14.9f %14.9f %14.9f %14.9f" % (a, b, c, bck_grd)
+        print " %14.9f %14.9f %14.9f %14.9f" % (a, b, c, bck_grd)
 
-#    print "    Sum real(m) : " ,sum_real_m
+    print "    Sum real(m) : " ,sum_real_m
 
     db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
     db.query("set autocommit=0;")
@@ -109,8 +110,8 @@ def real_m():
     for item in xrange(len(total_m)):
         r_m=real_m[item]
         b_m=background_m[item]
-        db.query("update swire_es1.n_m_lookup set real_m='%f', bckgrd_m='%f' \
-                  where i='%d';" % (r_m, b_m, i))
+        db.query("update %s.n_m_lookup set real_m='%f', bckgrd_m='%f' \
+                  where i='%d';" % (swire_schema, r_m, b_m, i))
         db.commit()
         i=i+1
 

@@ -25,10 +25,16 @@ def n_m():
 # Lets run a querry
 
     db.query("select IRAC_3_6_micron_FLUX_MUJY FROM %s.swire \
-         where IRAC_3_6_micron_FLUX_MUJY != -9.9 \
-         and ra_spitzer > 8.0 and ra_spitzer < 9.5 ;" % (swire_schema))
+         where IRAC_3_6_micron_FLUX_MUJY != -9.9 ;" % (swire_schema))
+
+# limits for elais_s1		 
+#         and ra_spitzer > 8.0 and ra_spitzer < 9.5 ;" % (swire_schema))
 		 
 #         and dec_spitzer < -43.0 and dec_spitzer > -44.5;")
+
+# limits for ecdfs
+#        and ra_spitzer > 51.6 and ra_spitzer < 54.0 \
+#         and dec_spitzer > -29.0 and dec_spitzer < -27.0;")
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 

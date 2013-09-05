@@ -22,7 +22,7 @@ def q_m():
 
 # Lets run a querry
 
-    db.query("select real_m FROM swire_es1.n_m_lookup;")
+    db.query("select real_m FROM %s.n_m_lookup;" % (swire_schema))
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -52,6 +52,7 @@ def q_m():
     q_m=[]
     for row in rows:
         a=float(row[0])
+        print a, sum_real_m, Q
         b=(a / sum_real_m ) * Q
 #        print "q(m) ",b
         q_m.append(b)
@@ -67,8 +68,8 @@ def q_m():
     i=1
     for item in xrange(len(q_m)):
 #        print item
-        db.query("update swire_es1.n_m_lookup set q_m='%f' \
-                  where i='%d';" % (q_m[item], i))
+        db.query("update %s.n_m_lookup set q_m='%f' \
+                  where i='%d';" % (swire_schema, q_m[item], i))
         db.commit()
         i=i+1
 
