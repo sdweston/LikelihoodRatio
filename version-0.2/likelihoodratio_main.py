@@ -82,7 +82,7 @@ sqasec=area_nr
 #populate_matches()
 
 # Determine f(r) and update the database.
-#f_r()
+f_r()
 
 # Determine n(m) and update data base
 n_m()
@@ -100,10 +100,10 @@ q_m()
 plot_m()
 
 # Calculate LR
-#lr()
+lr()
 
 # Calculate Reliability
-#rel()
+rel()
 
 # Plot LR vs Reliability
 
