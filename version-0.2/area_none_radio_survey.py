@@ -34,7 +34,7 @@ def area_none_radio_survey():
     if field == 'ecdfs': 
 #     ATLAS ES1 2.697 sq deg, 
       area_arcsec=3.566 * 12960000
-	  ra1=7.357132
+      ra1=7.357132
       ra2=9.77962
       dec1=-44.601035
       dec2=-42.899883

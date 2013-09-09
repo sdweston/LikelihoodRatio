@@ -22,8 +22,8 @@ def lr():
 
 # Lets run a querry
 
-    db.query("select elais_s1_cid,swire_index_spitzer,f_r,flux from elais_s1.matches \
-              where f_r is not null and flux > -9.0;")
+    db.query("select cid,swire_index_spitzer,f_r,flux from %s.matches \
+              where f_r is not null and flux > -9.0;" % (field))
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -55,9 +55,9 @@ def lr():
 	
         log10_f=math.log10(flux)
 	
-        db.query("select log10_f,n_m,q_m from swire_es1.n_m_lookup \
+        db.query("select log10_f,n_m,q_m from %s.n_m_lookup \
                   where %s > log10_f - 0.05 \
-                  and %s < log10_f + 0.05;" % (log10_f, log10_f))
+                  and %s < log10_f + 0.05;" % (swire_schema,log10_f, log10_f))
 	
         r2=db.store_result()
         strings=r2.fetch_row(maxrows=1)
@@ -76,8 +76,8 @@ def lr():
     
 #   update table with likelihood ratio.
 
-        db.query("update elais_s1.matches set lr=%s where elais_s1_cid='%s' \
-                  and swire_index_spitzer='%s';" % (lr, cid, index_spitzer))
+        db.query("update %s.matches set lr=%s where cid='%s' \
+                  and swire_index_spitzer='%s';" % (field,lr, cid, index_spitzer))
 
 # End of do block
 

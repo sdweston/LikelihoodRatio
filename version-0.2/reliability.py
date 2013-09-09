@@ -22,10 +22,10 @@ def rel():
 
 # select from matches the sum of L_i grouped by radio source
 
-    db.query("select elais_s1_cid,sum(lr) \
-              from elais_s1.matches \
+    db.query("select cid,sum(lr) \
+              from %s.matches \
 		      where lr is not null \
-		      group by elais_s1_cid;")
+		      group by cid;" % (field))
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -53,9 +53,9 @@ def rel():
 # now select each row from matches for each radio source where the flux is not null
 
         db.query("select swire_index_spitzer,lr \
-                  from elais_s1.matches \
+                  from %s.matches \
 	              where lr is not null \
-	              and elais_s1_cid like '%s';" % cid)
+	              and cid like '%s';" % (field,cid))
 
         r2=db.store_result()
         strings=r2.fetch_row(maxrows=1000)
@@ -74,8 +74,8 @@ def rel():
 	
 #       Now update the matches table with the reliability
 
-            db.query("update elais_s1.matches set reliability=%s where elais_s1_cid='%s' \
-                      and swire_index_spitzer='%s';" % (rel, cid, index_spitzer))
+            db.query("update %s.matches set reliability=%s where cid='%s' \
+                      and swire_index_spitzer='%s';" % (field,rel, cid, index_spitzer))
 	
 # End of do block
 
@@ -84,10 +84,12 @@ def rel():
 
     plt.xscale('log')
     plt.plot(LR, REL,'k.')
-    plt.title(' ATLAS Reliability vs Likelihood Ratio')
+	
+    plot_title='ATLAS ' +field+ ' Reliability vs Likelihood Ratio'
+    plt.title(plot_title)
     plt.ylabel('Reliability')
     plt.xlabel('Likelihood Ratio')
-    plot_fname='rel_vs_lr.ps'
+    plot_fname='atlas_' +field+ '_rel_vs_lr.ps'
     fname=output_dir + plot_fname
     plt.savefig(fname,orientation='landscape')
     plt.show()
