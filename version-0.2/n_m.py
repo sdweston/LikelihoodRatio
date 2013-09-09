@@ -23,9 +23,13 @@ def n_m():
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # Lets run a querry
-
+    print "limits : ",ra1,ra2,dec1,dec2
+    print "\n DB Schemas : ",field,swire_schema
+	
     db.query("select IRAC_3_6_micron_FLUX_MUJY FROM %s.swire \
-         where IRAC_3_6_micron_FLUX_MUJY != -9.9 ;" % (swire_schema))
+         where IRAC_3_6_micron_FLUX_MUJY != -9.9 \
+         and ra_spitzer > %s and ra_spitzer < %s \
+         and dec_spitzer > %s and dec_spitzer < %s;" % (swire_schema,ra1,ra2,dec1,dec2))
 
 # limits for elais_s1		 
 #         and ra_spitzer > 8.0 and ra_spitzer < 9.5 ;" % (swire_schema))

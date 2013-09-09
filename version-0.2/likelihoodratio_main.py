@@ -44,7 +44,16 @@ print "Field : ",field," ; swire_schema : ",swire_schema
 
 # now the field string is the same as the database schema name.
 
+# notify use of nearest neigbour search radius
+
+answer=raw_input('Nearest neighbour search radius (%s arcsec) :' % (sr))
+
+if answer !='':
+    sr=answer
+    print "New nearest neighbour search radius : ",answer,"\n"
+
 execfile('area_none_radio_survey.py')
+execfile('populate_matches.py')
 execfile('f_r.py')
 execfile('n_m.py')
 execfile('total_m.py')
@@ -69,8 +78,11 @@ print "Area returned  : %f" % area_nr
 global sqasec
 sqasec=area_nr
 
+# Fine the nearest neighbour matches within search radius
+#populate_matches()
+
 # Determine f(r) and update the database.
-f_r()
+#f_r()
 
 # Determine n(m) and update data base
 n_m()
@@ -88,10 +100,10 @@ q_m()
 plot_m()
 
 # Calculate LR
-lr()
+#lr()
 
 # Calculate Reliability
-rel()
+#rel()
 
 # Plot LR vs Reliability
 
