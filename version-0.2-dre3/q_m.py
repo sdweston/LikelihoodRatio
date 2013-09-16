@@ -53,7 +53,12 @@ def q_m():
     for row in rows:
         a=float(row[0])
         print a, sum_real_m, Q
-        b=(a / sum_real_m ) * Q
+
+        if a==0.0:
+           b=0.0
+        else:
+           b=(a / sum_real_m ) * Q
+           
 #        print "q(m) ",b
         q_m.append(b)
 

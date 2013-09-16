@@ -34,10 +34,10 @@ answer=raw_input('Which field ecdfs/elais ?')
 print "\nentered : ",answer,"\n"
 
 if answer == 'ecdfs': 
-   field='ecdfs'
+   field='atlas'
    swire_schema='swire_cdfs'
 else:
-   field='elais_s1'
+   field='atlas'
    swire_schema='swire_es1'
    
 print "Field : ",field," ; swire_schema : ",swire_schema
@@ -79,7 +79,7 @@ global sqasec
 sqasec=area_nr
 
 # Fine the nearest neighbour matches within search radius
-#pm()
+pm()
 
 # Determine f(r) and update the database.
 f_r()
