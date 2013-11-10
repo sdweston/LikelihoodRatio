@@ -24,15 +24,11 @@ def f_r():
 
 # Lets run a querry
 # table4 for atlas.elais and atlas.cdfs are not consistent. Rename column dbmaj,dbmin to be majaxis,minaxis for both tables !
-# for ATLAS DR3 this is table atlasdr3_fullcmpcat and the columns are different !
-#     SNR        signal-to-noise ratio of raw dectection
-#     DECONV     Deconvolved angular size (arcsec)
-#     DECONV_ERR Error in deconvolved angular size (arcsec)
-#     
 
-    db.query("select t1.cid,t2.swire_index_spitzer,t1.snr,t1.ra_err,t1.dec_err,t2.r_arcsec \
-          from %s.atlasdr3_fullcmpcat as t1, %s.matches as t2 \
-          where t2.cid=t1.cid;" % (field,field))
+    db.query("select t1.cid,t2.swire_index_spitzer,t1.majaxis,t1.minaxis,t1.sint,t1.rms,t2.r_arcsec \
+          from %s.table4 as t1 left outer join %s.matches t2 \
+          on t2.cid=t1.cid \
+          order by t1.cid;" % (field,field))
 
 		  
 # store_result() returns the entire result set to the client immediately.
@@ -51,23 +47,44 @@ def f_r():
 
 #lst_rows=list(rows)
 
-#    print rows
+#print rows
 
     RADIUS=[]
     F_R=[]
 
     for row in rows:
-#        print row[0],row[1],row[2],row[3],row[4],row[5]
         cid=row[0]
         index_spitzer=row[1]
-        snr=float(row[2])
-        ra_err=float(row[3])
-        dec_err=float(row[4])
-        r=float(row[5])
+        dbmaj=row[2]
+        dbmin=row[3]
+        sint=float(row[4])
+        rms=float(row[5])
+        if row[6]==None:
+            continue
+        r=float(row[6])
     
 #    print cid, index_spitzer,dbmaj,dbmin,sint,rms,r
         sys.stdout.write('.')
     
+
+# if dbmaj or dbmin are a string "None" then continue with next iteration
+
+        if dbmaj==None:
+            continue
+        if dbmin==None:
+            continue
+
+# Need Sint & rms in same units muJy
+# Sint is in mJy 10-3
+# rms is in muJy 10-6
+
+#    print "CID           : ",cid
+        DBMAJ=float(dbmaj)
+        DBMIN=float(dbmin)
+
+        RMS=rms/1000
+#    print "RMS           : ",RMS
+
 # ACE - ancillary catalogue error, arcsec's
 
         ACE=0.1
@@ -76,17 +93,23 @@ def f_r():
 
         IRE=0.6
 
+# Work out SNR
+
+        SNR = sint/RMS
+#    print "SNR           : ",SNR
+
+# Work out FWHM
+
 # Calculate Sigma
 
-        sigma_x=math.sqrt((ra_err/(2*snr))**2 + ACE**2 + IRE**2)
+        sigma_x=math.sqrt((DBMAJ/(2*SNR))**2 + ACE**2 + IRE**2)
 #    print "Sigma X       : ",sigma_x
 
-        sigma_y=math.sqrt((dec_err/(2*snr))**2 + ACE**2 + IRE**2)
+        sigma_y=math.sqrt((DBMIN/(2*SNR))**2 + ACE**2 + IRE**2)
 #    print "Sigma Y       : ",sigma_y
 
 #   sigma is the mean of sigma_x and sigma_y
         sigma=(sigma_x + sigma_y)/2
-
 #    print "Sigma         : ",sigma
 
 # r is the radial distance between the radio source and the aux catalogue source
@@ -104,7 +127,7 @@ def f_r():
 		
 # Populate new table with cid,BS,SNR,f(r), or put back into matches table.
         db.query("update %s.matches set f_r=%s,snr=%s where cid='%s' \
-                  and swire_index_spitzer='%s';" % (field, f_r, snr, cid, index_spitzer))
+                  and swire_index_spitzer='%s';" % (field, f_r, SNR, cid, index_spitzer))
 
 # End of do block
 

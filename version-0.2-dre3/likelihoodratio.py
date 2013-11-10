@@ -70,7 +70,7 @@ def lr():
 
 #    print "n(m) %20.9f q(m) %20.9f " % (n_m, q_m)
               
-        lr = (q_m * f_r) / (n_m / sqasec)
+        lr = (q_m * f_r) / (n_m / atlas_sqasec)
         
 #   print "Likelihood Ratio : %f " % lr
     

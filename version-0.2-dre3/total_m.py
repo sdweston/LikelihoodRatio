@@ -66,7 +66,7 @@ def total_m():
 #    print "%.4f" % b
          f_rows.append(b)
 
-    (hist,bins)=numpy.histogram(f_rows,bins=60,range=[-1.0,5.0])
+    (hist,bins)=numpy.histogram(f_rows,bins=40,range=[0.0,4.0])
 #    print "hist"
 #    print hist
 #    print "bins"

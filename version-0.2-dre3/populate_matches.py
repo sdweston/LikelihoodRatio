@@ -39,7 +39,7 @@ def pm():
               "t1.Dec_Deg-t2.DEC_SPITZER, "
               "sqrt(pow((t1.RA_Deg-t2.RA_SPITZER)*cos(t1.Dec_Deg),2)+pow(t1.Dec_Deg-t2.DEC_SPITZER,2))*3600, "
               "t2.irac_3_6_micron_flux_mujy "
-              "from "+field+".atlasdr3_fullcmpcat as t1, "+swire_schema+".swire as t2 "
+              "from "+field+".coords as t1, "+swire_schema+".swire as t2 "
               "where pow((t1.RA_Deg-t2.RA_SPITZER)*cos(t1.Dec_Deg),2)+" 
               "pow(t1.Dec_Deg-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2) "
               " and   t2.ra_spitzer > "+str(ra1)+" and t2.ra_spitzer < "+str(ra2)+" "
