@@ -46,7 +46,7 @@ db.query("SELECT t1.swire_index_spitzer, t1.cid,  \
                      t3.sp, \
                      t3.sint, \
 	             t2.redshift \
-              from elais_s1.matches t1, swire_es1.es1_swire t2, elais_s1.table4 t3 \
+              from elais_s1.matches t1, swire_es1.swire t2, elais_s1.table4 t3 \
               where t1.swire_index_spitzer=t2.index_spitzer \
               and t1.cid=t3.cid \
               and t2.irac_5_8_micron_flux_mujy > 0.0 \
@@ -89,8 +89,8 @@ for row in rows:
     r_sint_1_4_flux_mjy.append(float(row[7]))
     redshift.append(float(row[8]))
 	
-    i1_i2.append(float(row[2])/float(row[3]))
-    i3_i4.append(float(row[4])/float(row[5]))
+    i1_i2.append(float(row[5])/float(row[3]))
+    i3_i4.append(float(row[4])/float(row[2]))
 
     r_sint_mujy.append(float(row[7])*1000)
 	
@@ -105,10 +105,10 @@ db.close()
 plt.yscale('log')
 plt.xscale('log')
 plt.plot(i1_i2, i3_i4,'k.')
-#plot_title=field+'  ir_3_6/ir_4_5 vs ir_5_8/ir_8_0'
-plt.title(' Colour Index ir_3_6/ir_4_5 vs ir_5_8/ir_8_0')
-plt.ylabel('ir_3_6/ir_4_5')
-plt.xlabel('ir_5_8/ir_8_0')
+#plot_title=field+'  ir_8p0/ir_4p5 vs ir_5p8/ir_3p6'
+plt.title(' Colour Index ir_8p0/ir_4p5 vs ir_5p8/ir_3p6')
+plt.ylabel('ir_8p0/ir_4p5')
+plt.xlabel('ir_5p8/ir_3p6')
 #    plot_fname='atlas_'+field+'_magnitude_dependance.ps'
 #    fname=output_dir + plot_fname
 #    plt.savefig(fname)
@@ -116,11 +116,11 @@ plt.show()
 
 plt.yscale('log')
 plt.xscale('log')
-plt.plot(r_sint_mujy,i1_i2,'k.',r_sint_mujy,i3_i4,'g+')
+plt.plot(i1_i2,r_sint_mujy,'k.',i3_i4,r_sint_mujy,'g+')
 #plot_title=field+'  ir_3_6/ir_4_5 muJy vs Flux 1.4 muJy'
 plt.title(' Colour Index ir_3_6/ir_4_5 vs Flux 1.4')
-plt.ylabel('ir_3_6/ir_4_5 muJy')
-plt.xlabel('Flux 1.4 muJy')
+plt.xlabel('ir_3_6/ir_4_5 muJy')
+plt.ylabel('Flux 1.4 muJy')
 #    plot_fname='atlas_'+field+'_magnitude_dependance.ps'
 #    fname=output_dir + plot_fname
 #    plt.savefig(fname)
