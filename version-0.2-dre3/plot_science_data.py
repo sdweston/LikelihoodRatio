@@ -4,6 +4,8 @@
 #
 # Python script to query SWIRE_ES1 mysql database to 
 # select from matches the IR Flux, Radio Flux, Redshift etc so we can do some science
+# Plot the colour colour 
+# Plot the colour magnitude
 #
 #===========================================================================
 #
