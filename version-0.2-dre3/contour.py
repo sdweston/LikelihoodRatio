@@ -1,4 +1,6 @@
-
+#
+# Python script to generate radio contour levels for DS9 to use
+#
 import math 
 
 sqrt2=math.sqrt(2)
