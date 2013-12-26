@@ -23,13 +23,13 @@ def n_m():
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # Lets run a querry
-    print "limits : ",ra1,ra2,dec1,dec2
+    print "limits : ",swire_ra1,swire_ra2,swire_dec1,swire_dec2
     print "\n DB Schemas : ",field,swire_schema
 	
     db.query("select IRAC_3_6_micron_FLUX_MUJY FROM %s.swire \
          where IRAC_3_6_micron_FLUX_MUJY != -9.9 \
          and ra_spitzer > %s and ra_spitzer < %s \
-         and dec_spitzer > %s and dec_spitzer < %s;" % (swire_schema,ra1,ra2,dec1,dec2))
+         and dec_spitzer > %s and dec_spitzer < %s;" % (swire_schema,swire_ra1,swire_ra2,swire_dec1,swire_dec2))
 
 # limits for elais_s1		 
 #         and ra_spitzer > 8.0 and ra_spitzer < 9.5 ;" % (swire_schema))
@@ -83,7 +83,8 @@ def n_m():
 #    print "Flux %4.8f Log10_Flux %4.8f " % (a[0], b)
         f_rows.append(b)
 
-    (hist,bins)=numpy.histogram(f_rows,bins=60,range=[-1.0,5.0])
+#    (hist,bins)=numpy.histogram(f_rows,bins=60,range=[-1.0,5.0])
+    (hist,bins)=numpy.histogram(f_rows,bins=40,range=[0.0,4.0])
     width = 0.7*(bins[1]-bins[0])
     center = (bins[:-1]+bins[1:])/2
 #plt.yscale('log')

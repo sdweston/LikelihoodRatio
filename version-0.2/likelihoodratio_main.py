@@ -56,6 +56,7 @@ execfile('area_none_radio_survey.py')
 execfile('populate_matches.py')
 execfile('f_r.py')
 execfile('n_m.py')
+execfile('q_0.py')
 execfile('total_m.py')
 execfile('real_m.py')
 execfile('q_m.py')
@@ -73,19 +74,25 @@ print_header()
 # the bacground source density per unit area.
 
 area_nr=area_none_radio_survey()
-print "Area returned  : %f" % area_nr
+print "Area's returned  : %f %f" % (area_nr[0],area_nr[1])
 
-global sqasec
-sqasec=area_nr
+global atlas_sqasec
+atlas_sqasec=area_nr[0]
+
+global swire_sqsec
+swire_sqsec=area_nr[1]
 
 # Fine the nearest neighbour matches within search radius
-#pm()
+pm()
 
 # Determine f(r) and update the database.
 f_r()
 
 # Determine n(m) and update data base
 n_m()
+
+# Determine the Q0 at this point as we have n_m
+q_0()
 
 # Determine total(m) and update data base
 total_m()

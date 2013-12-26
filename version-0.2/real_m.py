@@ -68,8 +68,8 @@ def real_m():
 #   nrs=SELECT count(distinct elais_s1_cid) FROM elais_s1.matches;
 
     area=nrs * math.pi * math.pow(sr,2)
-#   print "Area              : %f " % area
-#    print "Back Ground Area : %f " % sqasec
+    print "Area              : %f " % area
+    print "Back Ground Area  : %f " % atlas_sqasec
 
     total_m=[]
     n_m=[]
@@ -86,8 +86,10 @@ def real_m():
 
 
     
-        bck_grd=(b/(sqasec * area_pct)) * nrs * math.pi * math.pow(sr,2)
-        c= a - ((b/(sqasec * area_pct)) * nrs * math.pi * math.pow(sr,2))
+#        bck_grd=(b/(swire_sqsec * (1-area_pct))) * nrs * math.pi * math.pow(sr,2)
+# try loosing the pct area lost correction
+        bck_grd=(b/(swire_sqsec)) * nrs * math.pi * math.pow(sr,2)
+        c= a - bck_grd
         total_m.append(a)
         n_m.append(b)
         print " %14.9f %14.9f %14.9f %14.9f" % (a, b, c, bck_grd)
