@@ -19,10 +19,11 @@ import math
 import sys
 import os
 
+field='cdfs'
 
-radio_image_fits='d:\\elais\\atlas_elaiss1_map.fits'
+radio_image_fits='d:\\'+field+'\\atlas_'+field+'_map.fits'
 
-nonradio_image_fits='d:\\elais\\elais_s1_factor2.fits'
+nonradio_image_fits='d:\\'+field+'\\'+field+'_s1_factor2.fits'
 
 
 print "Starting Postage Stamps"
@@ -34,15 +35,18 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 # Lets run a querry
 # This gets a list of the possible radio pairs  
 
-db.query("select cid1, \
-	        (select ra from atlas_dr3.elais_coords where id=cid1) ra1,  \
-                (select decl from atlas_dr3.elais_coords where id=cid1) dec1, \
-	   cid2, \
-                (select ra from atlas_dr3.elais_coords where id=cid2) ra2, \
-	        (select decl from atlas_dr3.elais_coords  where id=cid2) dec2 \
-from atlas_dr3.elais_radio_pairs \
-where flag='rd';")
+sql=("select cid1, \
+	        (select ra from atlas_dr3."+field+"_coords where id=cid1) ra1,  \
+                (select decl from atlas_dr3."+field+"_coords where id=cid1) dec1, \
+	  cid2, \
+                (select ra from atlas_dr3."+field+"_coords where id=cid2) ra2, \
+	        (select decl from atlas_dr3."+field+"_coords  where id=cid2) dec2 \
+      from atlas_dr3."+field+"_radio_pairs \
+      where flag='rd';")
 
+print sql,"\n"
+db.query(sql)
+	
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server
 #and sends it row-by-row when you fetch.
@@ -97,7 +101,7 @@ for row in rows:
     # Now create DS9 commands and execute
 
     contour_file_name=cid1+'_'+ra_radio1+'_'+dec_radio1+'.con'
-    postage_stamp_filename1='D:\\elais\\radio_pairs\\atlas_'+cid1+'_'+cid2+'.jpeg'
+    postage_stamp_filename1='D:\\'+field+'\\radio_pairs\\atlas_'+cid1+'_'+cid2+'.jpeg'
     
     cmd1='ds9 -zscale -invert '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 150 150 wcs fk5 arcsec -contour open -contour loadlevels contour_ds9.lev -contour yes ' + \
@@ -106,7 +110,7 @@ for row in rows:
          '-saveimage '+postage_stamp_filename1+' 100 '
 #    print cmd1
  
-    postage_stamp_filename='D:\\elais\\radio_pairs\\swire_'+cid1+'_'+cid2+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
+    postage_stamp_filename='D:\\'+field+'\\radio_pairs\\swire_'+cid1+'_'+cid2+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
     cmd2='ds9 -zscale -invert '+ nonradio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 150 150 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
