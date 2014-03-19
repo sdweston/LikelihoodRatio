@@ -50,6 +50,12 @@ select id,(flux1+flux2)/2,
 from atlas_dr3.cdfs_radio_pairs
 where flag='rd';
 
+# Need SQL to backout these updates for radio doubles.
 
+# first delete entries from coords
+
+# delete entries from radio_properties
+
+# truncate the radio pairs table ready for another run
 
 select 	
