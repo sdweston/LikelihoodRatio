@@ -37,17 +37,21 @@ from atlas_dr3.cdfs_radio_pairs
 where flag='rd';
 
 insert into atlas_dr3.cdfs_coords 
-(id, ra, decl)
+(id, ra, decl, ra_err, decl_err)
 select id,
        ((select ra from atlas_dr3.cdfs_coords where id=cid1)+(select ra from atlas_dr3.cdfs_coords where id=cid2))/2 ,
-       ((select decl from atlas_dr3.cdfs_coords where id=cid1)+(select decl from atlas_dr3.cdfs_coords where id=cid2))/2 
+       ((select decl from atlas_dr3.cdfs_coords where id=cid1)+(select decl from atlas_dr3.cdfs_coords where id=cid2))/2,
+	   sqrt(power((select ra_err from atlas_dr3.cdfs_coords where id=cid1),2)+power((select ra_err from atlas_dr3.cdfs_coords where id=cid2),2)),
+	   sqrt(power((select decl_err from atlas_dr3.cdfs_coords where id=cid1),2)+power((select decl_err from atlas_dr3.cdfs_coords where id=cid2),2))
 from atlas_dr3.cdfs_radio_pairs
 where flag='rd';
 
 insert into atlas_dr3.cdfs_radio_properties
-(id,sp,sint)
+(id,sp,sint,sp_err,sint_err)
 select id,(flux1+flux2)/2,
-       ((select sint from atlas_dr3.cdfs_radio_properties where id=cid1)+(select sint from atlas_dr3.cdfs_radio_properties where id=cid2))/2
+       ((select sint from atlas_dr3.cdfs_radio_properties where id=cid1)+(select sint from atlas_dr3.cdfs_radio_properties where id=cid2))/2,
+	   sqrt(power((select sp_err from atlas_dr3.cdfs_radio_properties where id=cid1),2)+power((select sp_err from atlas_dr3.cdfs_radio_properties where id=cid2),2)),
+	   sqrt(power((select sint_err from atlas_dr3.cdfs_radio_properties where id=cid1),2)+power((select sint_err from atlas_dr3.cdfs_radio_properties where id=cid2),2))
 from atlas_dr3.cdfs_radio_pairs
 where flag='rd';
 
