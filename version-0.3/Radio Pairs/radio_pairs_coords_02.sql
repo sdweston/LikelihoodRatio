@@ -23,6 +23,7 @@ and ang_sep_arcsec/sqrt(flux1+flux2) < 10.0
 
 # From the entries in field_radio_pairs
 # add new entries into tables coords and radio_properties
+# sum errors in quadrature
 
 select cid1, 
 	        (select ra from atlas_dr3.cdfs_coords where id=cid1) as ra1,  
