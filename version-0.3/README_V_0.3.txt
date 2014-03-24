@@ -18,3 +18,14 @@ Ang_Sep is say 1" as we have a 10" search radius
 We can have two IR objects with a similar LR-Rel and similar distance from the Radio Source but opposed,
 to each other say one at 3" from the Radio Source at 2 O'Clock and the other at 3.1" at 6 O'Clock. So they
 are clearly not related.
+
+Need to use ATLAS_DR3 schema with normalised tables rather than the one big table:
+
+field_cmpcat 				Full DR3 component catalogue
+field_coords				DR3 component coords
+field_deconv				DR3 component deconv values
+field_name
+field_radio_properties		DR3 component radio values
+field_sindex
+
+field_matches				DR3 working table for LR

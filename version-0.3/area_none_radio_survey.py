@@ -34,7 +34,7 @@ def area_none_radio_survey():
 # 1 sq deg = 12 960 000 sq arc seconds
 # 1 sq minute = 3600 sq arc seconds
 
-    if field == 'ecdfs': 
+    if field == 'cdfs': 
 #     ATLAS CDFS 3.566 sq deg
       area_arcsec=3.566 * 12960000
       ra1=51.474385

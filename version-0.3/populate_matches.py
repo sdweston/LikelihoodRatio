@@ -26,57 +26,58 @@ def pm():
 
     print "Truncate the matches table\n"
 	
-    db.query("truncate table %s.matches;" % (field))
+    db.query("truncate table "+schema+"."+field+"_matches;")
     db.query("set session wait_timeout=30000;")
     db.query("set session interactive_timeout=30000;")
 	
-#	limit 0,3000000;
+#   limit 0,3000000;
+#   First find all matches, change tables to use atlas_dr3 schema.
+    
+    print "find all matches within search radius\n"
 	
-    sql=("insert into "+field+".matches(cid,swire_index_spitzer,dx,dy,r_arcsec,flux) "
-              "select t1.cid, "
+    sql1=("insert into "+schema+"."+field+"_matches(cid,swire_index_spitzer,dx,dy,r_arcsec,flux) "
+              "select t1.id, "
               "t2.Index_Spitzer, "
-              "(t1.RA_Deg-t2.RA_SPITZER)*cos(t1.Dec_Deg), "
-              "t1.Dec_Deg-t2.DEC_SPITZER, "
-              "sqrt(pow((t1.RA_Deg-t2.RA_SPITZER)*cos(t1.Dec_Deg),2)+pow(t1.Dec_Deg-t2.DEC_SPITZER,2))*3600, "
+              "(t1.ra-t2.RA_SPITZER)*cos(t1.decl), "
+              "t1.decl-t2.DEC_SPITZER, "
+              "sqrt(pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+pow(t1.decl-t2.DEC_SPITZER,2))*3600, "
               "t2.irac_3_6_micron_flux_mujy "
-              "from "+field+".coords as t1, "+swire_schema+".swire as t2 "
-              "where pow((t1.RA_Deg-t2.RA_SPITZER)*cos(t1.Dec_Deg),2)+" 
-              "pow(t1.Dec_Deg-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2) "
+              "from "+schema+"."+field+"_coords as t1, "+swire_schema+".swire as t2 "
+              "where pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+" 
+              "pow(t1.decl-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2) "
               " and   t2.ra_spitzer > "+str(ra1)+" and t2.ra_spitzer < "+str(ra2)+" "
               " and   t2.dec_spitzer > "+str(dec1)+" and t2.dec_spitzer < "+str(dec2)+" limit 0,3000000; ")
 
-#    sql='select * from '+field+'.matches;'
-    print sql,"\n"
+
+    print sql1,"\n"
 	
     print "This SQL will take a while .... \n"
-    db.query(sql)
+    db.query(sql1)
     
     db.commit()
-
-# store_result() returns the entire result set to the client immediately.
-# The other is to use use_result(), which keeps the result set in the server 
-#and sends it row-by-row when you fetch.
-
-#r=db.store_result()
-# ...or...
-#    r=db.use_result()
-
-# fetch results, returning char we need float !
-
-#    rows=r.fetch_row(maxrows=100)
 
 # Close connection to the database
 
     db.close()
 
-#    print rows
+# Next delete field records that are a member of a radio pair
 
-# rows is a tuple, convert it to a list
+# Connect to the local database with the atlas uid
 
-#    lst_rows=list(rows)
-	
-#    for row in lst_rows:
-#        print row+"\n"
+    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+
+    sql2=("delete from atlas_dr3.cdfs_matches where cid in (select cid1 from atlas_dr3.cdfs_radio_pairs where flag='rd');")
+
+    sql3=("delete from atlas_dr3.cdfs_matches where cid in (select cid2 from atlas_dr3.cdfs_radio_pairs where flag='rd');")
+
+    print sql2,"\n"	
+    db.query(sql2)
+    print sql3,"\n"	
+    db.query(sql3)
+
+    db.commit()
+
+    db.close()	
 	
     print "End of populate matches\n"
 

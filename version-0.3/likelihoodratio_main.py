@@ -30,14 +30,16 @@ def print_end():
 #===================================================================================================
 
 # ask which field to process
-answer=raw_input('Which field ecdfs/elais ?')
+answer=raw_input('Which field cdfs/elais ?')
 print "\nentered : ",answer,"\n"
 
-if answer == 'ecdfs': 
-   field='ecdfs'
+if answer == 'cdfs':
+   schema='atlas_dr3' 
+   field='cdfs'
    swire_schema='swire_cdfs'
 else:
-   field='elais_s1'
+   schema='atlas_dr3' 
+   field='elais'
    swire_schema='swire_es1'
    
 print "Field : ",field," ; swire_schema : ",swire_schema
@@ -86,31 +88,31 @@ swire_sqsec=area_nr[1]
 pm()
 
 # Determine f(r) and update the database.
-f_r()
+#f_r()
 
 # Determine n(m) and update data base
-n_m()
+#n_m()
 
 # Determine the Q0 at this point as we have n_m
-q_0()
+#q_0()
 
 # Determine total(m) and update data base
-total_m()
+#total_m()
 
 # Determine r(m) and update database
-real_m()
+#real_m()
 
 # Determine q(m) and update database
-q_m()
+#q_m()
 
 # Plot n(m), q(m) and total(m)
-plot_m()
+#plot_m()
 
 # Calculate LR
-lr()
+#lr()
 
 # Calculate Reliability
-rel()
+#rel()
 
 # Plot LR vs Reliability
 

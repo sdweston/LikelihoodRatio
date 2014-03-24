@@ -25,6 +25,12 @@ def f_r():
 # Lets run a querry
 # table4 for atlas.elais and atlas.cdfs are not consistent. Rename column dbmaj,dbmin to be majaxis,minaxis for both tables !
 
+# We are running against atlas_dr3 now, so need to join tables.
+    sql1=("select t1.cid,t2.swire_index_spitzer,t1.majaxis,t1.minaxis,t1.sint,t1.rms,t2.r_arcsec "
+          from %s.table4 as t1 left outer join %s.matches t2 "
+          on t2.cid=t1.cid "
+          order by t1.cid;")
+
     db.query("select t1.cid,t2.swire_index_spitzer,t1.majaxis,t1.minaxis,t1.sint,t1.rms,t2.r_arcsec \
           from %s.table4 as t1 left outer join %s.matches t2 \
           on t2.cid=t1.cid \
