@@ -18,17 +18,27 @@ USE `atlas_dr3`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `elais_name`
+-- Table structure for table `cdfs_matches`
 --
 
-DROP TABLE IF EXISTS `elais_name`;
+DROP TABLE IF EXISTS `cdfs_matches`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `elais_name` (
-  `id` varchar(8) NOT NULL COMMENT 'Component identification number',
-  `survey` varchar(6) DEFAULT NULL,
-  `name` varchar(20) DEFAULT NULL COMMENT 'Full catalogue name',
-  PRIMARY KEY (`id`)
+CREATE TABLE `cdfs_matches` (
+  `cid` char(8) NOT NULL DEFAULT '',
+  `swire_index_spitzer` int(11) NOT NULL,
+  `f_r` decimal(15,13) DEFAULT NULL,
+  `dx` float DEFAULT NULL COMMENT 'seperation in x = (ra1-ra2) * cos (dec1)',
+  `dy` float DEFAULT NULL COMMENT 'dy = dec1-dec2',
+  `r_decdeg` float DEFAULT NULL COMMENT 'Angular seperation - sqrt (sq(dx) + sq(dy))\nDecimal degrees',
+  `r_arcsec` float DEFAULT NULL COMMENT 'ang sep in arc sec',
+  `snr` float DEFAULT NULL,
+  `flux` float DEFAULT NULL COMMENT 'Magnitude/Flux of none radio source',
+  `lr` decimal(28,9) DEFAULT NULL,
+  `reliability` decimal(28,9) DEFAULT NULL,
+  `p_not` decimal(15,13) DEFAULT NULL,
+  KEY `idx_cid` (`cid`),
+  KEY `idx_swireid` (`swire_index_spitzer`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -41,4 +51,4 @@ CREATE TABLE `elais_name` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-31  9:15:07
+-- Dump completed on 2014-03-31  9:15:15

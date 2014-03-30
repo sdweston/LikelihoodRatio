@@ -18,18 +18,26 @@ USE `atlas_dr3`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `elais_name`
+-- Table structure for table `cdfs_radio_pairs`
 --
 
-DROP TABLE IF EXISTS `elais_name`;
+DROP TABLE IF EXISTS `cdfs_radio_pairs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `elais_name` (
-  `id` varchar(8) NOT NULL COMMENT 'Component identification number',
-  `survey` varchar(6) DEFAULT NULL,
-  `name` varchar(20) DEFAULT NULL COMMENT 'Full catalogue name',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `cdfs_radio_pairs` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cid1` varchar(8) DEFAULT NULL,
+  `cid2` varchar(8) DEFAULT NULL,
+  `flux1` decimal(6,2) DEFAULT NULL,
+  `flux2` decimal(6,2) DEFAULT NULL,
+  `ang_sep_arcsec` decimal(10,6) DEFAULT NULL,
+  `flag` varchar(2) DEFAULT NULL,
+  `deconv1` float DEFAULT NULL,
+  `deconv2` float DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_cid1` (`cid1`),
+  KEY `idx_cid2` (`cid2`)
+) ENGINE=InnoDB AUTO_INCREMENT=2402 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -41,4 +49,4 @@ CREATE TABLE `elais_name` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-31  9:15:07
+-- Dump completed on 2014-03-31  9:15:13
