@@ -26,10 +26,14 @@ def f_r():
 # table4 for atlas.elais and atlas.cdfs are not consistent. Rename column dbmaj,dbmin to be majaxis,minaxis for both tables !
 
 # We are running against atlas_dr3 now, so need to join tables.
-    sql1=("select t1.cid,t2.swire_index_spitzer,t1.majaxis,t1.minaxis,t1.sint,t1.rms,t2.r_arcsec "
-          "from %s.table4 as t1 left outer join %s.matches t2 "
-          "on t2.cid=t1.cid "
+    sql1=("select t1.cid, t1.swire_index_spitzer, t2.deconv, t2.deconv, t3.sint, t3.snr, t1.r_arcsec "
+          " from "+schema+"."+field+"_matches as t1, "+schema+"."+field+"_deconv as t2, "+schema+"."+field+"_radio_properties as t3 "
+          " where t1.cid=t2.id "
+          " and t1.cid=t3.id "
           "order by t1.cid;")
+		  
+    print sql1,"\n"  
+    db.query(sql1)
 
 #    db.query("select t1.cid,t2.swire_index_spitzer,t1.majaxis,t1.minaxis,t1.sint,t1.rms,t2.r_arcsec \
 #          from %s.table4 as t1 left outer join %s.matches t2 \
@@ -64,7 +68,7 @@ def f_r():
         dbmaj=row[2]
         dbmin=row[3]
         sint=float(row[4])
-        rms=float(row[5])
+        snr=float(row[5])
         if row[6]==None:
             continue
         r=float(row[6])
@@ -88,9 +92,6 @@ def f_r():
         DBMAJ=float(dbmaj)
         DBMIN=float(dbmin)
 
-        RMS=rms/1000
-#    print "RMS           : ",RMS
-
 # ACE - ancillary catalogue error, arcsec's
 
         ACE=0.1
@@ -99,9 +100,8 @@ def f_r():
 
         IRE=0.6
 
-# Work out SNR
 # In DR3 we have SNR !
-        SNR = sint/RMS
+        SNR = snr
 		
 #    print "SNR           : ",SNR
 
@@ -133,8 +133,8 @@ def f_r():
 #        print "    Update the database with the f(r) values"
 		
 # Populate new table with cid,BS,SNR,f(r), or put back into matches table.
-        db.query("update %s.matches set f_r=%s,snr=%s where cid='%s' \
-                  and swire_index_spitzer='%s';" % (field, f_r, SNR, cid, index_spitzer))
+        db.query("update "+schema+"."+field+"_matches set f_r=%s,snr=%s where cid='%s' \
+                  and swire_index_spitzer='%s';" % (f_r, SNR, cid, index_spitzer))
 
 # End of do block
 

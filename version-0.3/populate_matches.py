@@ -58,17 +58,17 @@ def pm():
 
 # Close connection to the database
 
-    db.close()
+#    db.close()
 
 # Next delete field records that are a member of a radio pair
 
 # Connect to the local database with the atlas uid
 
-    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+#    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
-    sql2=("delete from atlas_dr3.cdfs_matches where cid in (select cid1 from atlas_dr3.cdfs_radio_pairs where flag='rd');")
+    sql2=("delete from "+schema+"."+field+"_matches where cid in (select cid1 from "+schema+"."+field+"_radio_pairs where flag='rd');")
 
-    sql3=("delete from atlas_dr3.cdfs_matches where cid in (select cid2 from atlas_dr3.cdfs_radio_pairs where flag='rd');")
+    sql3=("delete from "+schema+"."+field+"_matches where cid in (select cid2 from "+schema+"."+field+"_radio_pairs where flag='rd');")
 
     print sql2,"\n"	
     db.query(sql2)

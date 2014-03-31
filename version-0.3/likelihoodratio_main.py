@@ -88,17 +88,27 @@ swire_sqsec=area_nr[1]
 # First pass for possible radio pairs, so that matches runs against new 
 # generated source for radio pair.
 
-answer=raw_input('Run radio pair search (y/n) : ')
+answer=raw_input('Run radio pair search (y/n)       : ')
 
 if (answer =='Y' or answer=='y'):
-    print "Run radio pair search  : ",answer,"\n"
+    print "Run radio pair search        : ",answer,"\n"
     rp()
 
 # Fine the nearest neighbour matches within search radius
-#pm()
+
+answer=raw_input('Run nearest neighbour match (y/n) : ')
+
+if (answer =='Y' or answer=='y'):
+    print "Run nearest neighbour match  : ",answer,"\n"
+    pm()
 
 # Determine f(r) and update the database.
-#f_r()
+
+answer=raw_input('Run f(r) calculations       (y/n) : ')
+
+if (answer =='Y' or answer=='y'):
+    print "Runing f(r) calculations                 : ",answer,"\n"
+    f_r()
 
 # Determine n(m) and update data base
 #n_m()
