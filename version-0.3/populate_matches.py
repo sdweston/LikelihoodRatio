@@ -41,7 +41,7 @@ def pm():
               "(t1.ra-t2.RA_SPITZER)*cos(t1.decl), "
               "t1.decl-t2.DEC_SPITZER, "
               "sqrt(pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+pow(t1.decl-t2.DEC_SPITZER,2))*3600, "
-              "t2.irac_3_6_micron_flux_mujy "
+			  "t2.irac_3_6_micron_flux_mujy "
               "from "+schema+"."+field+"_coords as t1, "+swire_schema+".swire as t2 "
               "where pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+" 
               "pow(t1.decl-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2) "

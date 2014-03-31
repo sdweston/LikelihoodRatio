@@ -27,14 +27,14 @@ def f_r():
 
 # We are running against atlas_dr3 now, so need to join tables.
     sql1=("select t1.cid,t2.swire_index_spitzer,t1.majaxis,t1.minaxis,t1.sint,t1.rms,t2.r_arcsec "
-          from %s.table4 as t1 left outer join %s.matches t2 "
-          on t2.cid=t1.cid "
-          order by t1.cid;")
+          "from %s.table4 as t1 left outer join %s.matches t2 "
+          "on t2.cid=t1.cid "
+          "order by t1.cid;")
 
-    db.query("select t1.cid,t2.swire_index_spitzer,t1.majaxis,t1.minaxis,t1.sint,t1.rms,t2.r_arcsec \
-          from %s.table4 as t1 left outer join %s.matches t2 \
-          on t2.cid=t1.cid \
-          order by t1.cid;" % (field,field))
+#    db.query("select t1.cid,t2.swire_index_spitzer,t1.majaxis,t1.minaxis,t1.sint,t1.rms,t2.r_arcsec \
+#          from %s.table4 as t1 left outer join %s.matches t2 \
+#          on t2.cid=t1.cid \
+#          order by t1.cid;" % (field,field))
 
 		  
 # store_result() returns the entire result set to the client immediately.
@@ -100,8 +100,9 @@ def f_r():
         IRE=0.6
 
 # Work out SNR
-
+# In DR3 we have SNR !
         SNR = sint/RMS
+		
 #    print "SNR           : ",SNR
 
 # Work out FWHM

@@ -55,6 +55,7 @@ if answer !='':
     print "New nearest neighbour search radius : ",answer,"\n"
 
 execfile('area_none_radio_survey.py')
+execfile('radio_pairs.py')
 execfile('populate_matches.py')
 execfile('f_r.py')
 execfile('n_m.py')
@@ -72,8 +73,8 @@ print_header()
 # First truncate all the working tables in the database
 
 # Calculate the spherical area of the none-radio survey being used
-# for cross matching to get an accurate measure of the area for determing
-# the bacground source density per unit area.
+# for cross matching to get an accurate measure of the area for determining
+# the background source density per unit area.
 
 area_nr=area_none_radio_survey()
 print "Area's returned  : %f %f" % (area_nr[0],area_nr[1])
@@ -84,8 +85,17 @@ atlas_sqasec=area_nr[0]
 global swire_sqsec
 swire_sqsec=area_nr[1]
 
+# First pass for possible radio pairs, so that matches runs against new 
+# generated source for radio pair.
+
+answer=raw_input('Run radio pair search (y/n) : ')
+
+if (answer =='Y' or answer=='y'):
+    print "Run radio pair search  : ",answer,"\n"
+    rp()
+
 # Fine the nearest neighbour matches within search radius
-pm()
+#pm()
 
 # Determine f(r) and update the database.
 #f_r()
