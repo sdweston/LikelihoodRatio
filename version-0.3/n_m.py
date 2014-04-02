@@ -26,10 +26,12 @@ def n_m():
     print "limits : ",swire_ra1,swire_ra2,swire_dec1,swire_dec2
     print "\n DB Schemas : ",field,swire_schema
 	
-    db.query("select IRAC_3_6_micron_FLUX_MUJY FROM %s.swire \
-         where IRAC_3_6_micron_FLUX_MUJY != -9.9 \
-         and ra_spitzer > %s and ra_spitzer < %s \
-         and dec_spitzer > %s and dec_spitzer < %s;" % (swire_schema,swire_ra1,swire_ra2,swire_dec1,swire_dec2))
+    sql1=("select IRAC_3_6_micron_FLUX_MUJY FROM "+swire_schema+".swire "
+          " where IRAC_3_6_micron_FLUX_MUJY != -9.9 "
+          " and ra_spitzer > "+str(swire_ra1)+" and ra_spitzer < "+str(swire_ra2)+
+          " and dec_spitzer > "+str(swire_dec1)+" and dec_spitzer < "+str(swire_dec2)+";")
+    print sql1,"\n"
+    db.query(sql1)
 
 # limits for elais_s1		 
 #         and ra_spitzer > 8.0 and ra_spitzer < 9.5 ;" % (swire_schema))
@@ -105,7 +107,9 @@ def n_m():
     db.query("set autocommit=0;")
 
 # first is the lookup table empty, if yes then use insert if no then use update
-    db.query("select count(*) from %s.n_m_lookup;" % (swire_schema))
+    sql2=("select count(*) from "+swire_schema+".n_m_lookup;")
+    db.query(sql2)
+	
     r=db.store_result()
     rows=r.fetch_row(maxrows=1)
     for row in rows:
@@ -121,9 +125,11 @@ def n_m():
         log10_f=bins[item]
 #       Update the database with the n(m) values	
         if r_count == 0:	
-           db.query("insert into %s.n_m_lookup(i,n_m,log10_f,md) values ('%d','%f','%f','%f');" % (swire_schema, i,n_m,log10_f,hist[item]))
+           sql3=("insert into "+swire_schema+".n_m_lookup(i,n_m,log10_f,md) values ('"+str(i)+"','"+str(n_m)+"','"+str(log10_f)+"','"+str(hist[item])+"');")
+           db.query(sql3)
         else:
-           db.query("update %s.n_m_lookup set n_m=%f, log10_f=%f, md=%f where i=%d;" % (swire_schema, n_m, log10_f, hist[item],i))
+           sql3=("update "+swire_schema+".n_m_lookup set n_m="+str(n_m)+", log10_f="+str(log10_f)+", md="+str(hist[item])+" where i="+str(i)+";")
+           db.query(sql3)
         db.commit()
         i=i+1
 

@@ -111,7 +111,12 @@ if (answer =='Y' or answer=='y'):
     f_r()
 
 # Determine n(m) and update data base
-#n_m()
+
+answer=raw_input('Run n(m) calculations       (y/n) : ')
+
+if (answer =='Y' or answer=='y'):
+    print "Runing n(m) calculations                 : ",answer,"\n"
+    n_m()
 
 # Determine the Q0 at this point as we have n_m
 #q_0()
