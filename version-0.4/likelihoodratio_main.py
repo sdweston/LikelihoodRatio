@@ -48,11 +48,13 @@ print "Field : ",field," ; swire_schema : ",swire_schema
 
 # notify use of nearest neigbour search radius
 
-answer=raw_input('Nearest neighbour search radius (%s arcsec) :' % (sr))
+answer=raw_input('Nearest neighbour search radius (15 arcsec) :')
 
 if answer !='':
-    sr=answer
-    print "New nearest neighbour search radius : ",answer,"\n"
+    sr=float(answer)
+    print "New nearest neighbour search radius : ",sr,"\n"
+else:
+    sr=15.0
 
 execfile('area_none_radio_survey.py')
 execfile('radio_pairs.py')

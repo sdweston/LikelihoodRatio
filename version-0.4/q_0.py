@@ -84,6 +84,14 @@ def q_0():
 #==============================================================================
 # Lets calculate Q_0
 
+    density=(sum_real_m/swire_sqsec)
+    print " (sum_real_m/swire_sqsec) : %f" % density
+	
+    print " Search Radius            : %f" % sr
+	
+    search_area=math.pi*math.pow(sr,2)
+    print " Pi x sr ** 2             : %f sqsec" % search_area
+
     q_0=(nxid - ((sum_real_m/swire_sqsec)*math.pi*math.pow(sr,2)*nrs)) / nrs
 	
     if q_0 > 1.0: q_0=0.75

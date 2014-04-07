@@ -18,7 +18,6 @@ area_pct=0.03
 
 # Search Radius, arc sec
 global sr
-sr=15.0
 
 # Number of radio sources in radio catalogue
 # What is the definition of NRS ? Number of radio sources with a match, or the total number of radio sources.
