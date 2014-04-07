@@ -22,8 +22,8 @@ def lr():
 
 # Lets run a querry
 
-    db.query("select cid,swire_index_spitzer,f_r,flux from %s.matches \
-              where f_r is not null and flux > -9.0;" % (field))
+    db.query("select cid,swire_index_spitzer,f_r,flux from "+schema+"."+field+"_matches \
+              where f_r is not null and flux > -9.0;")
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -76,8 +76,8 @@ def lr():
     
 #   update table with likelihood ratio.
 
-        db.query("update %s.matches set lr=%s where cid='%s' \
-                  and swire_index_spitzer='%s';" % (field,lr, cid, index_spitzer))
+        db.query("update "+schema+"."+field+"_matches set lr=%s where cid='%s' \
+                  and swire_index_spitzer='%s';" % (lr, cid, index_spitzer))
 
 # End of do block
 

@@ -33,14 +33,16 @@ def real_m():
     db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
 
 # Lets run a querry
-    db.query("SELECT count(distinct cid) FROM %s.matches;" % (field))
+    sql1=("SELECT count(distinct cid) FROM "+schema+"."+field+"_matches;")
+    db.query(sql1)
     r=db.store_result()
     rows=r.fetch_row(maxrows=1)
     for row in rows:
         nrs=int(row[0])
         print "    Number of Radio Sources : ",nrs
 
-    db.query("select total_m,n_m FROM %s.n_m_lookup;" % (swire_schema))
+    sql2=("select total_m,n_m FROM "+swire_schema+".n_m_lookup;" )
+    db.query(sql2)
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -84,8 +86,10 @@ def real_m():
     # r is 10"
     # c is real(m)
 
+#   For 0.2_dr3 we had the following:
+#      Assume a % of area lost due to contamination from forground stars
+#      area_pct=0.96   
 
-    
 #        bck_grd=(b/(swire_sqsec * (1-area_pct))) * nrs * math.pi * math.pow(sr,2)
 # try loosing the pct area lost correction
         bck_grd=(b/(swire_sqsec)) * nrs * math.pi * math.pow(sr,2)
@@ -112,8 +116,8 @@ def real_m():
     for item in xrange(len(total_m)):
         r_m=real_m[item]
         b_m=background_m[item]
-        db.query("update %s.n_m_lookup set real_m='%f', bckgrd_m='%f' \
-                  where i='%d';" % (swire_schema, r_m, b_m, i))
+        db.query("update "+swire_schema+".n_m_lookup set real_m='%f', bckgrd_m='%f' \
+                  where i='%d';" % ( r_m, b_m, i))
         db.commit()
         i=i+1
 

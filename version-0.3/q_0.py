@@ -30,14 +30,19 @@ def q_0():
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # Count the number of radio sources
-	
-    db.query("select count(*) \
-	     FROM %s.table4;" % (field))
+# So need to count the number of radio sources, but single count those marked as in a pair.
+
+    sql1=("select "
+          "(select count(*) from "+schema+"."+field+"_radio_properties) - "
+          "(select count(*)/2 from "+schema+"."+field+"_radio_pairs where flag='rd') "
+          "as Radio_Count; ")
+    db.query(sql1)
 
     r=db.store_result()
     rows=r.fetch_row(maxrows=1)
     for row in rows:
-        nrs=int(row[0])
+        print row[0]
+        nrs=int(float(row[0]))
 
 # Close connection to the database
     db.close()
@@ -45,8 +50,8 @@ def q_0():
 # Count the number of xid's (matches)
 
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")	
-    db.query("select count(*) \
-	     FROM %s.matches;" % (field))
+    sql2=("select count(*) from "+schema+"."+field+"_matches;")
+    db.query(sql2)
 
     r=db.store_result()
     rows=r.fetch_row(maxrows=1)
@@ -60,7 +65,8 @@ def q_0():
 
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")	
 
-    db.query("select sum(n_m) from %s.n_m_lookup;" % (swire_schema))
+    sql3=("select sum(n_m) from "+swire_schema+".n_m_lookup;")
+    db.query(sql3)
     r=db.store_result()
     rows=r.fetch_row(maxrows=1)
     for row in rows:

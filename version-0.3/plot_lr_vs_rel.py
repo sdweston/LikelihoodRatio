@@ -1,6 +1,6 @@
 #===========================================================================
 #
-# reliability.py
+# plot_m.py
 #
 # Python script to query SWIRE_ES1 mysql database to determine the
 # LR the likelihood ratio.
@@ -12,20 +12,17 @@
 # March 2013
 #===========================================================================
 
-def rel():
+def plot_lr_rel():
 
-    print "\nStarting Reliability calculations and db updates"
+    print "\nStarting Plot Likelihood Ratio vs Reliability"
 
-# Connect to the local database with the atlas uid
+#   Connect to the local database with the atlas uid
 
     db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
 
 # select from matches the sum of L_i grouped by radio source
 
-    db.query("select cid,sum(lr) \
-              from "+schema+"."+field+"_matches \
-		      where lr is not null \
-		      group by cid;" )
+    db.query("select lr,reliability from "+schema+"."+field+"_matches where reliability > 0.0 and reliability < 1.0;" )
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -41,48 +38,22 @@ def rel():
 
 # rows is a tuple, convert it to a list
 
-    print "    Calculate Reliability values and Update database "
     LR=[]
     REL=[]
+ 
 
     for row in rows:
-#    print row
-        cid=row[0]
-        sum_lr=float(row[1])
-		
-        sys.stdout.write('.')
-    
-# now select each row from matches for each radio source where the flux is not null
-
-        db.query("select swire_index_spitzer,lr \
-                  from "+schema+"."+field+"_matches \
-	              where lr is not null \
-	              and cid like '%s';" % (cid))
-
-        r2=db.store_result()
-        strings=r2.fetch_row(maxrows=1000)
-
-        for string in strings:
-#        print string
-            index_spitzer=(string[0])
-            lr=float(string[1])   
-		
-#       and calculate the reliability
-
-            rel= lr / (sum_lr + (1-Q))
-            LR.append(lr)
-            REL.append(rel)
-#        print 'Reliability : %f ' % rel
+        
+        LR.append(float(row[0]))
+        REL.append(float(row[1]))
+        
 	
-#       Now update the matches table with the reliability
-
-            db.query("update "+schema+"."+field+"_matches set reliability=%s where cid='%s' \
-                      and swire_index_spitzer='%s';" % (rel, cid, index_spitzer))
-	
-# End of do block
+#    End of do block
 
 # Close connection to the database
     db.close()
+
+# Now plot the data
 
     print "Plot LR vs Reliability"
 
@@ -97,7 +68,8 @@ def rel():
     fname=output_dir + plot_fname
     plt.savefig(fname,orientation='landscape')
     plt.show()
-
-    print "End"
+	
+    
+    print "End Plotting\n"
 
 

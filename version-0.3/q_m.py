@@ -20,9 +20,29 @@ def q_m():
 
     db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
 
+# First determine sum[real(m_i)]
+# I am wondering why q_m_swire_es1 had a fixed value: sum_real_m=810.785563462 ??
+
+    sql1=("select sum(real_m) from "+swire_schema+".n_m_lookup;")
+    db.query(sql1)
+
+    r=db.store_result()
+    rows=r.fetch_row(maxrows=1)
+    for row in rows:
+        print row[0]
+        sum_real_m=float(row[0])
+    print "Sum of real_m : ",sum_real_m
+	
+    db.close()
+
+	# Connect to the local database with the atlas uid
+
+    db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
+	
 # Lets run a querry
 
-    db.query("select real_m FROM %s.n_m_lookup;" % (swire_schema))
+    sql2=("select real_m from "+swire_schema+".n_m_lookup;")
+    db.query(sql2)
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -48,6 +68,8 @@ def q_m():
 #can do this for you. (And MySQLdb does do this for you.) To have automatic 
 #type conversion done, you need to create a type converter dictionary, and pass 
 #this to connect() as the conv keyword parameter.
+
+# what to do when sum_real_m=0.0, can't have divide by Zero.
 
     q_m=[]
     for row in rows:

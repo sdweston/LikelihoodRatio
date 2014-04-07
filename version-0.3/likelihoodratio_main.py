@@ -66,6 +66,7 @@ execfile('q_m.py')
 execfile('plot_m.py')
 execfile('likelihoodratio.py')
 execfile('reliability.py')
+execfile('plot_lr_vs_rel.py')
 
 auks()
 print_header()	
@@ -121,24 +122,63 @@ if (answer =='Y' or answer=='y'):
 # Determine the Q0 at this point as we have n_m
 #q_0()
 
+print "You need Q0 for q(m) & Rel calculations latter"
+answer=raw_input('Run q0 calculations         (y/n) : ')
+
+if (answer =='Y' or answer=='y'):
+    print "Runing q0 ) calculations                 : ",answer,"\n"
+    q_0()
+
 # Determine total(m) and update data base
-#total_m()
+
+answer=raw_input('Run total(m) calculations   (y/n) : ')
+
+if (answer =='Y' or answer=='y'):
+    print "Runing total(m) calculations             : ",answer,"\n"
+    total_m()
+
 
 # Determine r(m) and update database
+
+answer=raw_input('Run real(m) calculations    (y/n) : ')
+
+if (answer =='Y' or answer=='y'):
+    print "Runing real(m) calculations              : ",answer,"\n"
+    real_m()
 #real_m()
 
 # Determine q(m) and update database
+
+answer=raw_input('Run q(m) calculations       (y/n) : ')
+
+if (answer =='Y' or answer=='y'):
+    print "Runing q(m) calculations                 : ",answer,"\n"
+    q_m()
+
 #q_m()
 
 # Plot n(m), q(m) and total(m)
-#plot_m()
+plot_m()
 
 # Calculate LR
-#lr()
+
+answer=raw_input('Run LR  calculations       (y/n) : ')
+
+if (answer =='Y' or answer=='y'):
+    print "Runing LR calculations                  : ",answer,"\n"
+    lr()
+
 
 # Calculate Reliability
-#rel()
+
+answer=raw_input('Run Rel  calculations       (y/n) : ')
+
+if (answer =='Y' or answer=='y'):
+    print "Runing Rel calculations                  : ",answer,"\n"
+    rel()
 
 # Plot LR vs Reliability
+
+plot_lr_rel()
 
 print_end()
