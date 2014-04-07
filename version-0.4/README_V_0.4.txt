@@ -1,4 +1,4 @@
-Version 0.3
+Version 0.4
 
 This is to start modifying the pipeline to deal with radio doubles and IR doubles.
 
@@ -29,3 +29,9 @@ field_radio_properties		DR3 component radio values
 field_sindex
 
 field_matches				DR3 working table for LR
+
+This code runs through, still some issues:
+
+1. cdfs it gets a value of Q0 > 1, but for elais Q0=0.752139
+
+2. check handling of radio pairs
