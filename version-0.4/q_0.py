@@ -86,6 +86,8 @@ def q_0():
 
     q_0=(nxid - ((sum_real_m/swire_sqsec)*math.pi*math.pow(sr,2)*nrs)) / nrs
 	
+    if q_0 > 1.0: q_0=0.75
+	
     print "Q0                      : %f" % q_0
 	
     Q=q_0
