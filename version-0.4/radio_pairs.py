@@ -136,6 +136,18 @@ def rp():
           " from "+schema+"."+field+"_radio_pairs"
           " where flag='rd';")
     db.query(sql12)
+	
+# I forgot deconv as this is used for f(r), and with no f(r) value it won't produce a LR and Reliability
+
+   sql13=("insert into "+schema+"."+field+"_deconv "
+          "  (id, deconv,deconv_err)"
+          " select id,"
+          "      sqrt(power((select deconv from "+schema+"."+field+"_deconv where id=cid1),2)+power((select deconv from "+schema+"."+field+"_deconv where id=cid2),2)),"
+	      "      sqrt(power((select deconv_err from "+schema+"."+field+"_deconv where id=cid1),2)+power((select deconv_err from "+schema+"."+field+"_deconv where id=cid2),2))"
+          " from "+schema+"."+field+"_radio_pairs"
+          " where flag='rd';")
+    db.query(sql13)
+
 		  
 # Close connection to the database
     db.close()
