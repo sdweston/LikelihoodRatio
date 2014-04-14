@@ -20,9 +20,9 @@ import sys
 import os
 
 
-radio_image_fits='d:\\elaiss1\\atlas_elaiss1_map.fits'
+radio_image_fits='d:\\elais\\atlas_elaiss1_map.fits'
 
-nonradio_image_fits='d:\\elaiss1\\elais_s1_factor2.fits'
+nonradio_image_fits='d:\\elais\\elais_s1_factor2.fits'
 
 print "Starting Postage Stamps"
 
@@ -33,11 +33,16 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 # Lets run a querry
 # This gets a list of the possible radio pairs  
 
-db.query("select t1.cid,t1.swire_index_spitzer,t2.ra_deg,t2.dec_deg,t1.reliability \
-          from atlas.elais_matches as t1, atlas.atlasdr3_fullcmpcat as t2 \
-          where t1.reliability > 0.8 \
-          and t1.cid=t2.cid \
-          limit 20000;")
+"+schema+"."+field+"
+
+sql1=("select t1.cid,t1.swire_index_spitzer,t2.ra,t2.decl,t1.reliability "
+      "    from "+schema+"."+field+"_matches as t1, "+schema+"."+field+"_coords as t2 "
+      "    where t1.reliability > 0.8 "
+      "    and t1.cid=t2.id "
+      "    and t1.cid not like 'E%' "
+      "    limit 20000;")
+print sql1,"\n"
+db.query(sql1)
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server

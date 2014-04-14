@@ -19,10 +19,12 @@ import math
 import sys
 import os
 
+schema='atlas_dr3' 
+field='elais'
 
-radio_image_fits='d:\\elaiss1\\atlas_elaiss1_map.fits'
+radio_image_fits='d:\\elais\\atlas_elais_map.fits'
 
-nonradio_image_fits='d:\\elaiss1\\elais_s1_factor2.fits'
+nonradio_image_fits='d:\\elais\\elais_s1_factor2.fits'
 
 print "Starting Postage Stamps"
 
@@ -33,17 +35,14 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 # Lets run a querry
 # This gets a list of the possible radio pairs  
 
-db.query("select cid1 , \
-	        (select ra_deg from elais_s1.coords where cid=cid1) ra1,  \
-                (select dec_deg from elais_s1.coords where cid=cid1) dec1, \
-                cid2, \
-                (select ra_deg from elais_s1.coords where cid=cid2) ra2,\
-	        (select dec_deg from elais_s1.coords where cid=cid2) dec2 \
-          from elais_s1.radio_pairs \
-          where flux1/flux2 > 1.0 \
-          and flux1/flux2 < 2.1 \
-          and ang_sep_arcsec/sqrt(flux1+flux2) > 2.0 \
-          and ang_sep_arcsec/sqrt(flux1+flux2) < 10.0;")
+sql1=("select t1.cid,t1.swire_index_spitzer,t2.ra,t2.decl,t1.reliability "
+      "    from "+schema+"."+field+"_matches as t1, "+schema+"."+field+"_coords as t2 "
+      "    where t1.reliability > 0.8 "
+      "    and t1.cid=t2.id "
+      "    and t1.cid not like 'E%' "
+      "    limit 20000;")
+print sql1,"\n"
+db.query(sql1)
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server
@@ -55,43 +54,47 @@ r=db.use_result()
 
 # fetch results, returning char we need float !
 
-rows=r.fetch_row(maxrows=1000)
+rows=r.fetch_row(maxrows=0)
 
 # Close connection to the database
 db.close()
 
 #print rows
 
-# Connect to the local database with the atlas uid
-
-db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
-
 for row in rows:
     cid1=row[0]
-    ra_radio1=row[1]
-    dec_radio1=row[2]
-    cid2=row[3]
-    ra_radio2=row[4]
-    dec_radio2=row[5]
-    print "Radio Pair :",cid1,ra_radio1,dec_radio1,cid2,ra_radio2,dec_radio2
+    swire_id=row[1]
+    ra_radio1=row[2]
+    dec_radio1=row[3]
+    rel=row[4]
+
+    print "Match :",cid1,swire_id,ra_radio1,dec_radio1
     f_ra_radio1=float(ra_radio1)
     f_dec_radio1=float(dec_radio1)
-    f_ra_radio2=float(ra_radio2)
-    f_dec_radio2=float(dec_radio2)
+
+# Connect to the local database with the atlas uid
+
+    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 
+#   So now get coords for spitzer match
+    sql=("SELECT ra_spitzer, dec_spitzer \
+              from swire_es1.swire \
+              where index_spitzer="+swire_id+";")
+    print sql,"\n"
+    db.query(sql)
 
-#   So now find all records for the pair of radio source (cid)
+#   Get the returned rows and print out, for each non-radio candidate
+#   within the search radius of the radio source
 
-    db.query("SELECT t1.elais_s1_cid,t2.index_spitzer, t2.ra_spitzer, t2.dec_spitzer, \
-             format(t1.lr,4), format(t1.reliability,4) \
-             FROM elais_s1.matches t1, swire_es1.es1_swire t2 \
-             where t1.lr is not null \
-             and (t1.elais_s1_cid='%s' or t1.elais_s1_cid='%s') \
-	     and t1.swire_index_spitzer=t2.index_spitzer ;" % (cid1,cid2))
-             
+    r=db.use_result()
+    sub_rows=r.fetch_row(maxrows=2)
+    
+# Close connection to the database
+    db.close()
+    
+#------------------------------------------------------------------------------             
 #   Create a DS9 region file for this radio source
-
 
     region_file_name=cid1+'_'+ra_radio1+'_'+dec_radio1+'.reg'
     f=open(region_file_name,'w')
@@ -99,57 +102,46 @@ for row in rows:
     # put a cross for the radio source
     f.write('global color=red\n')
     f.write('fk5;circle( '+ra_radio1+' , '+dec_radio1+' ,1") # point=cross text={'+cid1+'}\n')
-    f.write('fk5;circle( '+ra_radio2+' , '+dec_radio2+' ,1") # point=cross text={'+cid2+'}\n')
-
-
-#   Get the returned rows and print out, for each non-radio candidate
-#   within the search radius of the radio source
-
-    r=db.use_result()
-    sub_rows=r.fetch_row(maxrows=5000)
-
+ 
 #   Define start coords for full txt string for object
     t_ra1=f_ra_radio1+0.02
     t_dec1=f_dec_radio1+0.01
     idx_sub_row=1
-
+    print sub_rows
+    
     for sub_row in sub_rows:
-        index_spitzer=sub_row[1]
-        ra_spitzer=sub_row[2]
-        dec_spitzer=sub_row[3]
-        lr=sub_row[4]
-        rel=sub_row[5]
-        print "Spitzer Candidate: ",index_spitzer,ra_spitzer,dec_spitzer,lr,rel
+        ra_spitzer=sub_row[0]
+        dec_spitzer=sub_row[1]
+        
+    print "Spitzer Candidate: ",swire_id,ra_spitzer,dec_spitzer
 
-        # add lines to the region file to identify the non-radio candidates
+    # add lines to the region file to identify the non-radio candidates
 
-        f.write('global color=yellow\n')
-        f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,1") # point=cross\n')
-        f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,0.05") # text={'+str(idx_sub_row)+'}\n')
-        # put in the values of spitzer_index, relibility & likelihood
-        f.write('fk5;circle('+str(t_ra1)+' , '+str(t_dec1)+',0.1") # text={'+str(idx_sub_row)+' : '+index_spitzer+', '+lr+', '+rel+'}\n')
-        t_dec1=t_dec1-0.002
-        idx_sub_row=idx_sub_row+1
+    f.write('global color=yellow\n')
+    f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,1") # point=cross\n')
+    f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,0.05") # text={'+str(idx_sub_row)+'}\n')
+    # put in the values of spitzer_index, relibility & likelihood
+    f.write('fk5;circle('+str(t_ra1)+' , '+str(t_dec1)+',0.1") # text={'+str(idx_sub_row)+' : '+swire_id+' '+rel+'}\n')
 
     # Close ihe region file
     f.close()
 
-
+#------------------------------------------------------------------------------
     # Now create DS9 commands and execute
 
     contour_file_name=cid1+'_'+ra_radio1+'_'+dec_radio1+'.con'
-    postage_stamp_filename1='d:\\elaiss1\\150_arcsec\\atlas_'+cid1+'_'+cid2+'.jpeg'
+    postage_stamp_filename1='D:\elais\dr3_radio_pairs\\atlas_'+cid1+'.jpeg'
     
     cmd1='ds9 -zscale -invert '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
-         ' 150 150 wcs fk5 arcsec -contour open -contour loadlevels contour_ds9.lev -contour yes ' + \
+         ' 100 100 wcs fk5 arcsec -contour open -contour loadlevels contour_ds9.lev -contour yes ' + \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
          '-contour save '+contour_file_name+' -contour close -zoom to fit ' +\
          '-saveimage '+postage_stamp_filename1+' 100 -exit'
 #    print cmd1
  
-    postage_stamp_filename='d:\\elaiss1\\150_arcsec\\swire_'+cid1+'_'+cid2+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
+    postage_stamp_filename='D:\elais\dr3_radio_pairs\\'+cid1+'_'+swire_id+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
     cmd2='ds9 -zscale -invert '+ nonradio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
-         ' 150 150 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
+         ' 100 100 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
          ' -contour close -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
 #    print cmd2
@@ -159,9 +151,6 @@ for row in rows:
 
 
 # End of do block
-
-# Close connection to the database
-db.close()
 
 print "End"
 
