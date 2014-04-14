@@ -39,6 +39,12 @@ def rp():
     print sql2,"\n"
     db.query(sql2)
 	
+# delete entries from deconv
+
+    sql2a="delete from "+schema+"."+field+"_deconv where id not like '"+prefix+"%';"
+    print sql2a,"\n"
+    db.query(sql2a)
+	
 # truncate the radio pairs table ready for another run
 
     sql3="truncate table "+schema+"."+field+"_radio_pairs;"
@@ -107,6 +113,7 @@ def rp():
          " and flux1/flux2 < 2.1"
          " and ang_sep_arcsec/sqrt(flux1+flux2) > 2.0"
          " and ang_sep_arcsec/sqrt(flux1+flux2) < 10.0;")
+    print sql9,"\n"
     db.query(sql9)
 	
 # From the entries in field_radio_pairs
@@ -122,6 +129,7 @@ def rp():
 	      "      sqrt(power((select decl_err from "+schema+"."+field+"_coords where id=cid1),2)+power((select decl_err from "+schema+"."+field+"_coords where id=cid2),2))"
           " from "+schema+"."+field+"_radio_pairs"
           " where flag='rd';")
+    print sql11,"\n"
     db.query(sql11)
 	
     sql12=("insert into "+schema+"."+field+"_radio_properties"
@@ -135,17 +143,19 @@ def rp():
 	      "      sqrt(power((select sint_err from "+schema+"."+field+"_radio_properties where id=cid1),2)+power((select sint_err from "+schema+"."+field+"_radio_properties where id=cid2),2))"
           " from "+schema+"."+field+"_radio_pairs"
           " where flag='rd';")
+    print sql12,"\n"
     db.query(sql12)
 	
 # I forgot deconv as this is used for f(r), and with no f(r) value it won't produce a LR and Reliability
 
-   sql13=("insert into "+schema+"."+field+"_deconv "
+    sql13=("insert into "+schema+"."+field+"_deconv "
           "  (id, deconv,deconv_err)"
           " select id,"
           "      sqrt(power((select deconv from "+schema+"."+field+"_deconv where id=cid1),2)+power((select deconv from "+schema+"."+field+"_deconv where id=cid2),2)),"
 	      "      sqrt(power((select deconv_err from "+schema+"."+field+"_deconv where id=cid1),2)+power((select deconv_err from "+schema+"."+field+"_deconv where id=cid2),2))"
           " from "+schema+"."+field+"_radio_pairs"
           " where flag='rd';")
+    print sql13,"\n"
     db.query(sql13)
 
 		  
