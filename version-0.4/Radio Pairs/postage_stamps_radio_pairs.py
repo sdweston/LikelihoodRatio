@@ -106,7 +106,7 @@ for row in rows:
     cmd1='ds9 -zscale -invert '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 150 150 wcs fk5 arcsec -contour open -contour loadlevels contour_ds9.lev -contour yes ' + \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
-         '-contour save '+contour_file_name+' -contour close -zoom to fit ' +\
+         '-contour save '+contour_file_name+' -contour close -zoom to fit -grid yes ' +\
          '-saveimage '+postage_stamp_filename1+' 100 '
 #    print cmd1
  
@@ -114,7 +114,7 @@ for row in rows:
     cmd2='ds9 -zscale -invert '+ nonradio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 150 150 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
-         ' -contour close -zoom to fit -saveimage '+postage_stamp_filename+' 100 '
+         ' -contour close -zoom to fit -grid yes -saveimage '+postage_stamp_filename+' 100 '
 #    print cmd2
 
     os.system(cmd1)
