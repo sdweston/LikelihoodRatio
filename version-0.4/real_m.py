@@ -32,7 +32,8 @@ def real_m():
 #    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
     db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
 
-# Lets run a querry
+# Lets run a querry to find the number of radio sources.
+
     sql1=("SELECT count(distinct cid) FROM "+schema+"."+field+"_matches;")
     db.query(sql1)
     r=db.store_result()
@@ -41,7 +42,41 @@ def real_m():
         nrs=int(row[0])
         print "    Number of Radio Sources : ",nrs
 
-    sql2=("select total_m,n_m FROM "+swire_schema+".n_m_lookup;" )
+# Have to allow for over-blended objects from atlas for number of radio sources NRM
+#
+# First how many overblended objects - NOB
+# SELECT count(*) FROM atlas_dr3.elais_coords
+# where length(id) > 6;
+
+    sql1a=("SELECT count(*) FROM "+schema+"."+field+"_matches where length(id) > 6;")
+    db.query(sql1a)
+    r=db.store_result()
+    rows=r.fetch_row(maxrows=1)
+    for row in rows:
+        nob=int(row[0])
+        print "    Number of over blended components : ",nob
+#
+# Second group these to once source - NS
+# select count(*)
+# from
+# (SELECT count(*) FROM atlas_dr3.elais_coords
+# where length(id) > 6
+# group by substr(id,1,6)) as a1;
+#
+
+    sql1b=("SELECT count(*) FROM ( select count(*) from "+schema+"."+field+"_matches where length(id) > 6 group by substr(id,1,6)) as a1;")
+    db.query(sql1b)
+    r=db.store_result()
+    rows=r.fetch_row(maxrows=1)
+    for row in rows:
+        ns=int(row[0])
+        print "    Number of blended sources : ",ns
+
+# True_NRS=NRS - NOB + NS		
+    nrs=nrs-nob+ns
+	
+	
+	sql2=("select total_m,n_m FROM "+swire_schema+".n_m_lookup;" )
     db.query(sql2)
 
 # store_result() returns the entire result set to the client immediately.
@@ -92,6 +127,10 @@ def real_m():
 
 #        bck_grd=(b/(swire_sqsec * (1-area_pct))) * nrs * math.pi * math.pow(sr,2)
 # try loosing the pct area lost correction
+#
+# swire area = nrs * pi * r(100 sec) ** 2
+# b = ir_density, script to find all ir sources within 100 seconds of a radio source.
+
         bck_grd=(b/(swire_sqsec)) * nrs * math.pi * math.pow(sr,2)
         c= a - bck_grd
         total_m.append(a)

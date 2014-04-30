@@ -25,13 +25,18 @@ def n_m():
 # Lets run a querry
     print "limits : ",swire_ra1,swire_ra2,swire_dec1,swire_dec2
     print "\n DB Schemas : ",field,swire_schema
-	
+
+# Prior to V 0.4 we took the whole none-radio catalogue
     sql1=("select IRAC_3_6_micron_FLUX_MUJY FROM "+swire_schema+".swire "
           " where IRAC_3_6_micron_FLUX_MUJY != -9.9 "
           " and ra_spitzer > "+str(swire_ra1)+" and ra_spitzer < "+str(swire_ra2)+
           " and dec_spitzer > "+str(swire_dec1)+" and dec_spitzer < "+str(swire_dec2)+";")
     print sql1,"\n"
     db.query(sql1)
+	
+# Version 0.4, use a 100" search radius around each radio source. Exclude a smaller search radius when looking for 
+# candidates. So need to take area between SR and 100". This is going to be intensive searching.
+# Also need to exclude over-blended radio components and treat as one radio source.	
 
 # limits for elais_s1		 
 #         and ra_spitzer > 8.0 and ra_spitzer < 9.5 ;" % (swire_schema))
