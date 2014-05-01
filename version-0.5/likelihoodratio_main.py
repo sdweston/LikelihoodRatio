@@ -56,6 +56,10 @@ if answer !='':
 else:
     sr=15.0
 
+# Define outer search radius for n_m and real_m calculations, 100" seconds
+
+sr_out=100.0
+	
 execfile('area_none_radio_survey.py')
 execfile('radio_pairs.py')
 execfile('populate_matches.py')

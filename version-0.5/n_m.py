@@ -14,6 +14,8 @@
 
 def n_m():
 
+    global nir
+
     print "\nStarting n(m) calculations and db updates"
 
     execfile('constants.py')
@@ -23,7 +25,7 @@ def n_m():
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # Lets run a querry
-    print "limits : ",swire_ra1,swire_ra2,swire_dec1,swire_dec2
+#    print "limits : ",swire_ra1,swire_ra2,swire_dec1,swire_dec2
     print "\n DB Schemas : ",field,swire_schema
 
 # Prior to V 0.4 we took the whole none-radio catalogue
@@ -31,12 +33,28 @@ def n_m():
           " where IRAC_3_6_micron_FLUX_MUJY != -9.9 "
           " and ra_spitzer > "+str(swire_ra1)+" and ra_spitzer < "+str(swire_ra2)+
           " and dec_spitzer > "+str(swire_dec1)+" and dec_spitzer < "+str(swire_dec2)+";")
-    print sql1,"\n"
-    db.query(sql1)
+#    print sql1,"\n"
+#    db.query(sql1)
 	
-# Version 0.4, use a 100" search radius around each radio source. Exclude a smaller search radius when looking for 
+# Version 0.5, use a 100" search radius around each radio source. Exclude a smaller search radius when looking for 
 # candidates. So need to take area between SR and 100". This is going to be intensive searching.
-# Also need to exclude over-blended radio components and treat as one radio source.	
+# Also need to exclude over-blended radio components and treat as one radio source.
+
+    sql1a=("select t2.IRAC_3_6_micron_FLUX_MUJY "
+           "FROM "+swire_schema+".swire as t2, "+schema+"."+field+"_coords as t1 "
+           "WHERE IRAC_3_6_micron_FLUX_MUJY != -9.9 "
+           "and   pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+ "
+           "      pow(t1.decl-t2.DEC_SPITZER,2) >= pow("+str(sr)+"/3600,2) "
+           "and   pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+ "
+           "      pow(t1.decl-t2.DEC_SPITZER,2) <= pow("+str(sr_out)+"/3600,2) "
+           "limit 0,20000000;")
+    print sql1a,"\n"
+    db.query(sql1a)
+	
+# Note limit above in sql, mysql is usualy set to only retrieve 1000 rows. We have large 100's of thousands of entrys so
+# need a bigger limit to get all records !
+# 18446744073709551615 isn't just some number though; it's the max value of a bigint
+# Is this a limitation of mysql when we get to v.v.large datasets for XID ?? Well thats 1.8 x 10^19.
 
 # limits for elais_s1		 
 #         and ra_spitzer > 8.0 and ra_spitzer < 9.5 ;" % (swire_schema))
@@ -63,8 +81,14 @@ def n_m():
 
     db.close()
 
-#print rows
+# Lets count how many sources we have from the matching catalogue, in this case IR
 
+    nir=0   
+    for row in rows:
+        nir += 1
+    	
+    print "    Number of over IR sources : ",nir
+	
 # rows is a tuple, convert it to a list
 
     lst_rows=list(rows)

@@ -17,6 +17,7 @@ def real_m():
     global sum_real_m
     global nrs
 
+
     print "\nStarting real(m) calculations and db updates"
 
     execfile('constants.py')
@@ -48,7 +49,7 @@ def real_m():
 # SELECT count(*) FROM atlas_dr3.elais_coords
 # where length(id) > 6;
 
-    sql1a=("SELECT count(*) FROM "+schema+"."+field+"_matches where length(id) > 6;")
+    sql1a=("SELECT count(*) FROM "+schema+"."+field+"_matches where length(cid) > 6;")
     db.query(sql1a)
     r=db.store_result()
     rows=r.fetch_row(maxrows=1)
@@ -64,7 +65,7 @@ def real_m():
 # group by substr(id,1,6)) as a1;
 #
 
-    sql1b=("SELECT count(*) FROM ( select count(*) from "+schema+"."+field+"_matches where length(id) > 6 group by substr(id,1,6)) as a1;")
+    sql1b=("SELECT count(*) FROM ( select count(*) from "+schema+"."+field+"_matches where length(cid) > 6 group by substr(cid,1,6)) as a1;")
     db.query(sql1b)
     r=db.store_result()
     rows=r.fetch_row(maxrows=1)
@@ -75,8 +76,22 @@ def real_m():
 # True_NRS=NRS - NOB + NS		
     nrs=nrs-nob+ns
 	
-	
-	sql2=("select total_m,n_m FROM "+swire_schema+".n_m_lookup;" )
+# Find the number of background ir sources between R_s and R_100, 10 <= r <= 100
+# select count(*)
+# from
+# (select t1.id,
+#       t2.index_spitzer,
+#       t2.IRAC_3_6_micron_FLUX_MUJY, 
+#       sqrt(pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+pow(t1.decl-t2.DEC_SPITZER,2))*3600 as "angsep arcsec"
+# FROM swire_cdfs.swire as t2, atlas_dr3.cdfs_coords as t1
+# where IRAC_3_6_micron_FLUX_MUJY != -9.9
+# and   pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+
+#      pow(t1.decl-t2.DEC_SPITZER,2) >= pow("+str(sr)+"/3600,2)
+# and   pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+
+#       pow(t1.decl-t2.DEC_SPITZER,2) <= pow("+str(sr_out)+"/3600,2)
+# limit 0,20000000) as a1;
+		
+    sql2=("select total_m,n_m FROM "+swire_schema+".n_m_lookup;" )
     db.query(sql2)
 
 # store_result() returns the entire result set to the client immediately.
@@ -131,7 +146,13 @@ def real_m():
 # swire area = nrs * pi * r(100 sec) ** 2
 # b = ir_density, script to find all ir sources within 100 seconds of a radio source.
 
-        bck_grd=(b/(swire_sqsec)) * nrs * math.pi * math.pow(sr,2)
+        search_area=(nrs*math.pi * math.pow(sr,2))-(nrs*math.pi * math.pow(sr_out,2))
+		
+#        bck_grd=(b/(swire_sqsec)) * nrs * math.pi * math.pow(sr,2)
+#       NIR is defined in n_m.py, so hard coding here for testing. 
+#       cdfs nir = 423621
+        nir=423621
+        bck_grd=(nir/(search_area)) * nrs * math.pi * math.pow(sr,2)
         c= a - bck_grd
         total_m.append(a)
         n_m.append(b)
