@@ -29,6 +29,12 @@ def print_end():
 
 #===================================================================================================
 
+# From Nick 1/5/2014 - Atlas beam
+# For now we can use these numbers which date from 2012:
+# CDFS  beam  16.8  x  6.9  arcsec    
+# ELAIS  beam  12.2  x  7.6  arcsec
+# where I think the smaller number is the x-error.
+
 # ask which field to process
 answer=raw_input('Which field cdfs/elais ?')
 print "\nentered : ",answer,"\n"
@@ -37,10 +43,14 @@ if answer == 'cdfs':
    schema='atlas_dr3' 
    field='cdfs'
    swire_schema='swire_cdfs'
+   beam_y=16.8
+   beam_x=6.9
 else:
    schema='atlas_dr3' 
    field='elais'
    swire_schema='swire_es1'
+   beam_y=12.2
+   beam_x=7.6
    
 print "Field : ",field," ; swire_schema : ",swire_schema
 
