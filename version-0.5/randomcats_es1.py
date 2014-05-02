@@ -1,5 +1,6 @@
-# randomcats.py
-# This program makes a random catalogue based on the FUSION catalogue
+# randomcats_es1.py
+# This program makes a random catalogue based on the ATLAS elais radio catalogue
+# As per Bonzini et al, 2012
 
 import sys
 import math

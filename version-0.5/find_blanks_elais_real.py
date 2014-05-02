@@ -1,5 +1,6 @@
 # randomcats.py
 # This program makes a random catalogue based on the FUSION catalogue
+# Based on method Bonzini et al 2012
 
 import sys
 import math
@@ -23,7 +24,7 @@ sr=20.0
 
 db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
-db.query("select count(*),max(ra),min(ra),max(declination),min(declination) from atlas_dr3.elais_randomcat;")
+db.query("select count(*),max(ra),min(ra),max(decl),min(decl) from atlas_dr3.elais_coords;")
 
 r=db.use_result()
 
@@ -48,7 +49,7 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # Lets run a querry, find the number of records
 
-db.query("select ra,declination from atlas_dr3.elais_randomcat;")
+db.query("select ra,decl from atlas_dr3.elais_coords;")
 
 r=db.use_result()
 
@@ -118,7 +119,7 @@ print "number of blanks :",n_blanks
 width = 0.7*(bins[1]-bins[0])
 center = (bins[:-1]+bins[1:])/2
 
-f=open('Blanks_'+field+'.csv','w')
+f=open('Blanks_'+field+'_real.csv','w')
 for x in xrange(1,20):
     out_str="hist[%d] : %d \n" % (x,hist[x])
     f.write(out_str)

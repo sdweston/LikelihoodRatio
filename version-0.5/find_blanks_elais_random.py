@@ -1,5 +1,9 @@
-# randomcats.py
-# This program makes a random catalogue based on the FUSION catalogue
+# find_blanks_elais_real.py
+# This program takes the random radio catalogue, then find nearest neigbour from fusion
+# to radio source and record its radius, Based on method Bonzini et al 2012.
+# Next cumulative bin the data by radius. 
+# This will be used to find 1-Q0 as per Flueren et al 2012.
+# 
 
 import sys
 import math
@@ -16,7 +20,7 @@ from astropysics.constants import c,G
 schema="atlas_dr3"
 field="elais"
 swire_schema='swire_es1'
-sr=20.0
+sr=15.0
 
 #===================================================================================================
 #
@@ -114,18 +118,18 @@ db.close()
         
 print "number of blanks :",n_blanks
 
-(hist,bins)=numpy.histogram(f_radius,bins=20,range=[0.0,20.0])
+(hist,bins)=numpy.histogram(f_radius,bins=15,range=[0.0,15.0])
 width = 0.7*(bins[1]-bins[0])
 center = (bins[:-1]+bins[1:])/2
 
-f=open('Blanks_'+field+'.csv','w')
-for x in xrange(1,20):
+f=open('Blanks_'+field+'_random.csv','w')
+for x in xrange(1,15):
     out_str="hist[%d] : %d \n" % (x,hist[x])
     f.write(out_str)
     
 # Need a cumulative histogram
 
-for x in xrange(2,20):
+for x in xrange(2,15):
     hist[x]=hist[x]+hist[x-1]
 
 plt.bar(center, hist, align = 'center',width = width,linewidth=0)
@@ -145,7 +149,7 @@ plt.show()
 
 #f=open('random_cats_cdfs.csv','w')
 f.write('====Cumulative Histogram====\n')
-for x in xrange(1,20):
+for x in xrange(1,15):
     out_str="hist[%d] : %d \n" % (x,hist[x])
     f.write(out_str)
 f.close()
