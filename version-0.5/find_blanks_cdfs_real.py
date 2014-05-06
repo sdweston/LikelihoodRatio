@@ -1,5 +1,6 @@
 # randomcats.py
 # This program makes a random catalogue based on the FUSION catalogue
+# Based on method Bonzini et al 2012
 
 import sys
 import math
@@ -14,8 +15,8 @@ import pylab as p
 from astropysics.constants import c,G
 
 schema="atlas_dr3"
-field="elais"
-swire_schema='swire_es1'
+field="cdfs"
+swire_schema='swire_cdfs'
 sr=20.0
 
 #===================================================================================================
@@ -23,7 +24,7 @@ sr=20.0
 
 db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
-db.query("select count(*),max(ra),min(ra),max(declination),min(declination) from atlas_dr3.elais_randomcat;")
+db.query("select count(*),max(ra),min(ra),max(decl),min(decl) from atlas_dr3.cdfs_coords;")
 
 r=db.use_result()
 
@@ -48,7 +49,7 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # Lets run a querry, find the number of records
 
-db.query("select ra,declination from atlas_dr3.elais_randomcat;")
+db.query("select ra,decl from atlas_dr3.cdfs_coords;")
 
 r=db.use_result()
 
@@ -108,18 +109,15 @@ for row in rows:
     if nm==0:
         n_blanks=n_blanks+1
 
-   
 print "number of blanks :",n_blanks
 
-(hist,bins)=numpy.histogram(f_radius,bins=20,range=[0.0,20.0])
+(hist,bins)=numpy.histogram(f_radius,bins=int(sr),range=[0.0,sr])
 width = 0.7*(bins[1]-bins[0])
 center = (bins[:-1]+bins[1:])/2
 
-print hist
-
-f=open('Blanks_'+field+'.csv','w')
+f=open('Blanks_'+field+'_real.csv','w')
 for x in xrange(0,20):
-    sql3=("insert into atlas_dr3.elais_q0(radius,nb_random) values ('"+str(x+1)+"','"+str(hist[x])+"');")
+    sql3=("update atlas_dr3.cdfs_q0 set nb_real="+str(hist[x])+" where radius="+str(x+1)+";")
     print sql3,"\n"
     db.query(sql3)
     db.commit()
@@ -130,12 +128,14 @@ for x in xrange(0,20):
 
 for x in xrange(0,20):
     if x > 0: hist[x]=hist[x]+hist[x-1]
-    sql4=("update atlas_dr3.elais_q0 set nr_random="+str(hist[x])+" where radius="+str(x+1)+";")
+    sql4=("update atlas_dr3.cdfs_q0 set nr_real="+str(hist[x])+" where radius="+str(x+1)+";")
     print sql4,"\n"
     db.query(sql4)
     db.commit()
 
+
 # Close connection to the database
+
 db.close()
 
 plt.bar(center, hist, align = 'center',width = width,linewidth=0)

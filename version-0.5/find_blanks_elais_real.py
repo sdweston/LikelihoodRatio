@@ -109,10 +109,6 @@ for row in rows:
     if nm==0:
         n_blanks=n_blanks+1
 
-# Close connection to the database
-
-db.close()
-        
 print "number of blanks :",n_blanks
 
 (hist,bins)=numpy.histogram(f_radius,bins=20,range=[0.0,20.0])
@@ -120,14 +116,27 @@ width = 0.7*(bins[1]-bins[0])
 center = (bins[:-1]+bins[1:])/2
 
 f=open('Blanks_'+field+'_real.csv','w')
-for x in xrange(1,20):
+for x in xrange(0,20):
+    sql3=("update atlas_dr3.elais_q0 set nb_real="+str(hist[x])+" where radius="+str(x+1)+";")
+    print sql3,"\n"
+    db.query(sql3)
+    db.commit()
     out_str="hist[%d] : %d \n" % (x,hist[x])
     f.write(out_str)
-    
+
 # Need a cumulative histogram
 
-for x in xrange(2,20):
-    hist[x]=hist[x]+hist[x-1]
+for x in xrange(0,20):
+    if x > 0: hist[x]=hist[x]+hist[x-1]
+    sql4=("update atlas_dr3.elais_q0 set nr_real="+str(hist[x])+" where radius="+str(x+1)+";")
+    print sql4,"\n"
+    db.query(sql4)
+    db.commit()
+
+
+# Close connection to the database
+
+db.close()
 
 plt.bar(center, hist, align = 'center',width = width,linewidth=0)
 #plt.hist(hist, bins=15, cumulative=True)
@@ -146,7 +155,7 @@ plt.show()
 
 #f=open('random_cats_cdfs.csv','w')
 f.write('====Cumulative Histogram====\n')
-for x in xrange(1,20):
+for x in xrange(0,20):
     out_str="hist[%d] : %d \n" % (x,hist[x])
     f.write(out_str)
 f.close()
