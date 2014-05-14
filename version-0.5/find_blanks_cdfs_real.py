@@ -22,6 +22,8 @@ sr=20.0
 #===================================================================================================
 #
 
+print sys.argv[0],"\n"
+
 db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 db.query("select count(*),max(ra),min(ra),max(decl),min(decl) from atlas_dr3.cdfs_coords;")
