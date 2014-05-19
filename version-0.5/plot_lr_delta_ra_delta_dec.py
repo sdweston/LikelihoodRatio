@@ -26,6 +26,10 @@ from matplotlib.ticker import MaxNLocator
 
 output_dir='D:/temp/'
 
+# Define reliability limit
+
+rel_lim='0.99'
+
 # Database 
 global db_host
 db_host='localhost'
@@ -43,13 +47,9 @@ db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
 
 # select from matches the sum of L_i grouped by radio source
 
-sql01="select t2.ra-t3.ra_spitzer, t2.declination-t3.dec_spitzer \
-     from atlas.elais_matches t1, atlas.dr3_elais_cmpcat t2, \
-     swire_es1.es1 t3 \
-     where t1.cid=t2.id \
-     and t1.swire_index_spitzer=t3.index_spitzer \
-     and t1.reliability > 0.8"
-
+sql01="SELECT dx,dy FROM atlas_dr3.elais_matches \
+      where reliability > "+rel_lim+";"
+	  
 db.query(sql01)
           
 # store_result() returns the entire result set to the client immediately.
@@ -98,6 +98,44 @@ fname=output_dir + plot_fname
 plt.savefig(fname)
 plt.show()
 
+# Now bin the data by "r" for delta_x and delta_y and plot bins.
+
+(hist,bins)=numpy.histogram(delta_ra,bins=40,range=[-5.0,5.0])
+width = 0.7*(bins[1]-bins[0])
+center = (bins[:-1]+bins[1:])/2
+
+plt.bar(center, hist, align = 'center',width = width,linewidth=0)
+plot_title='Delta RA'
+plt.title(plot_title)
+plt.grid(True)
+plt.ylabel('n(delta_ra)')
+plt.xlabel('Delta RA (arcsec)')
+plot_fname='atlas_elais_delta_ra.ps'
+output_dir='D:/temp/'
+fname=output_dir + plot_fname
+plt.savefig(fname)
+plt.show()
+
+(hist,bins)=numpy.histogram(delta_dec,bins=40,range=[-5.0,5.0])
+width = 0.7*(bins[1]-bins[0])
+center = (bins[:-1]+bins[1:])/2
+
+plt.bar(center, hist, align = 'center',width = width,linewidth=0)
+plot_title='Delta DEC'
+plt.title(plot_title)
+plt.grid(True)
+plt.ylabel('n(delta_dec)')
+plt.xlabel('Delta DEC (arcsec)')
+plot_fname='atlas_elais_delta_dec.ps'
+output_dir='D:/temp/'
+fname=output_dir + plot_fname
+plt.savefig(fname)
+plt.show()
+
+# Fit a Gaussian and determine FWHM.
+
+# Take FWHM for Simga_x and Sigma_y
+
 #==================================================================
 
 print "Field ECDFS\n"
@@ -105,12 +143,8 @@ db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
 
 # select from matches the sum of L_i grouped by radio source
 
-sql02="select t2.ra-t3.ra_spitzer, t2.declination-t3.dec_spitzer \
-     from atlas.ecdfs_matches t1, atlas.dr3_ecdfs_cmpcat t2, \
-     swire_cdfs.cdfs t3 \
-     where t1.cid=t2.id \
-     and t1.swire_index_spitzer=t3.index_spitzer \
-     and t1.reliability > 0.8"
+sql02="SELECT dx,dy FROM atlas_dr3.cdfs_matches \
+      where reliability > "+rel_lim+";"
 
 db.query(sql02)
           
@@ -159,4 +193,40 @@ plt.show()
 
 print "End Plotting\n"
 
+# Now bin the data by "r" for delta_x and delta_y and plot bins.
 
+(hist,bins)=numpy.histogram(delta_ra,bins=40,range=[-5.0,5.0])
+width = 0.7*(bins[1]-bins[0])
+center = (bins[:-1]+bins[1:])/2
+
+plt.bar(center, hist, align = 'center',width = width,linewidth=0)
+plot_title='Delta RA'
+plt.title(plot_title)
+plt.grid(True)
+plt.ylabel('n(delta_ra)')
+plt.xlabel('Delta RA (arcsec)')
+plot_fname='atlas_cdfs_delta_ra.ps'
+output_dir='D:/temp/'
+fname=output_dir + plot_fname
+plt.savefig(fname)
+plt.show()
+
+(hist,bins)=numpy.histogram(delta_dec,bins=40,range=[-5.0,5.0])
+width = 0.7*(bins[1]-bins[0])
+center = (bins[:-1]+bins[1:])/2
+
+plt.bar(center, hist, align = 'center',width = width,linewidth=0)
+plot_title='Delta DEC'
+plt.title(plot_title)
+plt.grid(True)
+plt.ylabel('n(delta_dec)')
+plt.xlabel('Delta DEC (arcsec)')
+plot_fname='atlas_cdfs_delta_dec.ps'
+output_dir='D:/temp/'
+fname=output_dir + plot_fname
+plt.savefig(fname)
+plt.show()
+
+# Fit a Gaussian and determine FWHM.
+
+# Take FWHM for Simga_x and Sigma_y
