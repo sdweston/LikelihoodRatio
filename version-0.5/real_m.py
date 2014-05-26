@@ -146,12 +146,22 @@ def real_m():
 # swire area = nrs * pi * r(100 sec) ** 2
 # b = ir_density, script to find all ir sources within 100 seconds of a radio source.
 
-        search_area=(nrs*math.pi * math.pow(sr,2))-(nrs*math.pi * math.pow(sr_out,2))
+        search_area=(nrs*math.pi * math.pow(sr_out,2))-(nrs*math.pi * math.pow(sr,2))
 		
 #        bck_grd=(b/(swire_sqsec)) * nrs * math.pi * math.pow(sr,2)
 #       NIR is defined in n_m.py, so hard coding here for testing. 
 #       cdfs nir = 423621
-        nir=423621
+#        nir=423621
+
+        if field == 'cdfs':
+               nir=423621
+        else:
+               nir=223530
+
+        print "Search Area : ",search_area
+        print "NIR         : ",nir
+        print "NRS         : ",nrs
+		
         bck_grd=(nir/(search_area)) * nrs * math.pi * math.pow(sr,2)
         c= a - bck_grd
         total_m.append(a)
