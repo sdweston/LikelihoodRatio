@@ -3,13 +3,13 @@
 # q_0.py
 #
 # Python script to query mysql database to determine the
-# Q (D.J.B. Smith et al, 2010)
+# Q0
 #
 #===========================================================================
 #
 # S. Weston
 # AUT University
-# March 2013
+# May 2014
 #===========================================================================
 
 def q_0():
@@ -18,87 +18,78 @@ def q_0():
     print "\nStarting q0 calculation"
 
     execfile('constants.py')
-
-# Constants for the non-radio survey area
-# sqdeg - square degrees
-# sqasec - square arc seconds
-    
-    sqasec=area_nr
+	
+    print "simga_radio :",sigma_radio
+    print "\n"
+    b=1/(2*(sigma_radio**2))
+    print "b           :",b
 
 # Connect to the local database with the atlas uid
 
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
-# Count the number of radio sources
-# So need to count the number of radio sources, but single count those marked as in a pair.
+    sql1=("SELECT radius,nr_random,nr_real, "
+      " (1-(nr_random/(select count(*) from atlas_dr3."+field+"_coords))), "
+      " (1-(nr_real/(select count(*) from atlas_dr3."+field+"_coords))), "
+      " (1-(nr_real/(select count(*) from atlas_dr3."+field+"_coords)))/(1-(nr_random/(select count(*) from atlas_dr3."+field+"_coords))) "
+      " FROM atlas_dr3."+field+"_q0 ")
 
-    sql1=("select "
-          "(select count(*) from "+schema+"."+field+"_radio_properties) - "
-          "(select count(*)/2 from "+schema+"."+field+"_radio_pairs where flag='rd') "
-          "as Radio_Count; ")
+    print sql1,"\n"
     db.query(sql1)
 
-    r=db.store_result()
-    rows=r.fetch_row(maxrows=1)
-    for row in rows:
-        print row[0]
-        nrs=int(float(row[0]))
+    r=db.use_result()
+
+# fetch results, returning char we need float !
+
+    rows=r.fetch_row(maxrows=10)
 
 # Close connection to the database
+
     db.close()
-	
-# Count the number of xid's (matches)
 
-    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")	
-    sql2=("select count(*) from "+schema+"."+field+"_matches;")
-    db.query(sql2)
+    x=numpy.empty([10],dtype=float)
+    y=numpy.empty([10],dtype=float)
 
-    r=db.store_result()
-    rows=r.fetch_row(maxrows=1)
+    i=0
     for row in rows:
-        nxid=int(row[0])
+        print row
+        radius=float(row[0])
+        real_random=float(row[5])
+        print radius,real_random
+        x[i]=radius
+        y[i]=real_random
+        i=i+1
 
-# Close connection to the database
-    db.close()
-	
-# Get Sum_m n(m)
 
-    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")	
+    def func(x,a):
+        return 1-a+a*numpy.exp(-b*x**2)
 
-    sql3=("select sum(n_m) from "+swire_schema+".n_m_lookup;")
-    db.query(sql3)
-    r=db.store_result()
-    rows=r.fetch_row(maxrows=1)
-    for row in rows:
-        sum_real_m=int(float(row[0]))
+    popt,pcov=curve_fit(func,x,y)
 
-    db.close()
+    print "a = %s " % (popt[0])
 
-# =============================================================================
-	
-    print "Area square arcsec      : %f" % swire_sqsec
-    print "Number of Radio Sources : %d" % nrs
-    print "Number of XID's         : %d" % nxid
-    print "Sum Real(m)             : %d" % sum_real_m
+    xx=numpy.linspace(1.0,10.0,num=100)
+    yy=func(xx,*popt)
 
-#==============================================================================
-# Lets calculate Q_0
-
-    density=(sum_real_m/swire_sqsec)
-    print " (sum_real_m/swire_sqsec) : %f" % density
-	
-    print " Search Radius            : %f" % sr
-	
-    search_area=math.pi*math.pow(sr,2)
-    print " Pi x sr ** 2             : %f sqsec" % search_area
-
-    q_0=(nxid - ((sum_real_m/swire_sqsec)*math.pi*math.pow(sr,2)*nrs)) / nrs
-	
-    if q_0 > 1.0: q_0=0.75
-	
-    print "Q0                      : %f" % q_0
-	
-    Q=q_0
+#plot_title=field+" Q0 = %s " % (popt[0])
+    plot_title=field+" y = %s * x ** (- r^2/2 Simga^2) " % (popt[0])
+    plt.title(plot_title)
+    plt.xlabel('Radius (arcsec)')
+    plt.ylabel('Real/Random Normalised')
+    plt.plot(x,y,'ro',label="Original Data")
+    plt.plot(xx,yy,label="Fitted Curve")
+    plt.axis([0,11,0,1])
+    plt.legend(loc='upper right')
+    plt.grid()
+#output_dir='I:/PhD 2012/Marsfield April 2014/'
+    output_dir='D:/temp/'
+    filename=field+'_q0.ps'
+    fullname=output_dir+filename
+    plt.savefig(fullname)
+    plt.show()
+ 
+    print "Q0                      : %f" % popt[0]
+    Q=popt[0]
 
     print "End or q_0\n"
 

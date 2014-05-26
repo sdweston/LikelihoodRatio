@@ -18,12 +18,14 @@ if answer == 'cdfs':
    swire_schema='swire_cdfs'
    beam_y=16.8
    beam_x=6.9
+   b=0.374
 else:
    schema='atlas_dr3' 
    field='elais'
    swire_schema='swire_es1'
    beam_y=12.2
    beam_x=7.6
+   b=1.426
    
 # Connect to the local database with the atlas uid
 
@@ -61,21 +63,19 @@ for row in rows:
     y[i]=real_random
     i=i+1
 
-#def func(x,a,b):
-#    return 1-a+a*np.exp(-b*x**2)
 
-def func(x,a,b):
-    return a*x**b
+def func(x,a):
+    return 1-a+a*np.exp(-b*x**2)
 
 popt,pcov=curve_fit(func,x,y)
 
-print "a = %s , b = %s" % (popt[0], popt[1])
+print "a = %s " % (popt[0])
 
 xx=np.linspace(1.0,10.0,num=100)
 yy=func(xx,*popt)
 
 #plot_title=field+" Q0 = %s " % (popt[0])
-plot_title=field+" y = %s * x ** (%s)" % (popt[0], popt[1])
+plot_title=field+" y = %s * x ** (- r^2/2 Simga^2) " % (popt[0])
 plt.title(plot_title)
 plt.xlabel('Radius (arcsec)')
 plt.ylabel('Real/Random Normalised')

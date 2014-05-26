@@ -18,6 +18,7 @@ def f_r():
 
     print "Starting f(r) calculations and db updates"
 
+
 # Connect to the local database with the atlas uid
 
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
@@ -44,6 +45,11 @@ def f_r():
         print sigma_y_radio
         print sigma_x_radio
  	db.close()
+	
+    sigma_radio=math.sqrt((sigma_x_radio)**2 + (sigma_y_radio)**2)
+    print "Sigma Radio : ",sigma_radio
+    print "\n"
+    global sigma_radio
 	
 # Lets run a querry
 # table4 for atlas.elais and atlas.cdfs are not consistent. Rename column dbmaj,dbmin to be majaxis,minaxis for both tables !
@@ -116,10 +122,10 @@ def f_r():
 
 # Calculate Sigma
 
-        sigma_x=math.sqrt((sigma_x_radio)**2 + ACE**2 + IRE**2)
+        sigma_x=math.sqrt((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
 #    print "Sigma X       : ",sigma_x
 
-        sigma_y=math.sqrt((sigma_y_radio)**2 + ACE**2 + IRE**2)
+        sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
 #    print "Sigma Y       : ",sigma_y
 
 #   sigma is the mean of sigma_x and sigma_y

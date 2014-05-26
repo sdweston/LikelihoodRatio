@@ -4,6 +4,7 @@ import _mysql
 import numpy
 import scipy
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 import astropysics as astro
 import pylab
 import sys
@@ -134,6 +135,7 @@ if (answer =='Y' or answer=='y'):
 
 # Determine f(r) and update the database.
 
+print "You need sigma from f(r) for Q_0 calculations latter"
 answer=raw_input('Run f(r) calculations       (y/n) : ')
 
 if (answer =='Y' or answer=='y'):
