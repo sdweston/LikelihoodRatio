@@ -32,19 +32,20 @@ def pm():
 	
 #   limit 0,3000000;
 #   First find all matches, change tables to use atlas_dr3 schema.
+#   Need to allow for position offset between catalogues, Middelberg 2007
     
     print "find all matches within search radius\n"
 	
     sql1=("insert into "+schema+"."+field+"_matches(cid,swire_index_spitzer,dx,dy,r_arcsec,flux) "
               "select t1.id, "
               "t2.Index_Spitzer, "
-              "(t1.ra-t2.RA_SPITZER)*cos(t1.decl), "
-              "t1.decl-t2.DEC_SPITZER, "
-              "sqrt(pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+pow(t1.decl-t2.DEC_SPITZER,2))*3600, "
+              "(t1.ra-"+str(posn_offset_ra)+"-t2.RA_SPITZER)*cos(t1.decl-"+str(posn_offset_dec)+"), "
+              "t1.decl-"+str(posn_offset_dec)+"-t2.DEC_SPITZER, "
+              "sqrt(pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_SPITZER)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+pow(t1.decl-"+str(posn_offset_dec)+"-t2.DEC_SPITZER,2))*3600, "
 			  "t2.irac_3_6_micron_flux_mujy "
               "from "+schema+"."+field+"_coords as t1, "+swire_schema+".swire as t2 "
-              "where pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+" 
-              "pow(t1.decl-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2) "
+              "where pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_SPITZER)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+" 
+              "pow(t1.decl-"+str(posn_offset_dec)+"-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2) "
               " and   t2.ra_spitzer > "+str(ra1)+" and t2.ra_spitzer < "+str(ra2)+" "
               " and   t2.dec_spitzer > "+str(dec1)+" and t2.dec_spitzer < "+str(dec2)+" limit 0,3000000; ")
 

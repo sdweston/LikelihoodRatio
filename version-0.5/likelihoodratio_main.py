@@ -29,11 +29,17 @@ def print_end():
 
 #===================================================================================================
 
+# From Tom Franzen, final beam parameters
 # From Nick 1/5/2014 - Atlas beam
 # For now we can use these numbers which date from 2012:
 # CDFS  beam  16.8  x  6.9  arcsec    
 # ELAIS  beam  12.2  x  7.6  arcsec
 # where I think the smaller number is the x-error.
+
+# NOTE: Middelberg 2007
+# Tested for Radio-IR position offsets in ELAIS field, they found:
+# ra_offset=(0.08 +-0.03)", dec_offset=(0.06+-0.03)"
+# Need to allow for this
 
 # ask which field to process
 answer=raw_input('Which field cdfs/elais ?')
@@ -43,14 +49,21 @@ if answer == 'cdfs':
    schema='atlas_dr3' 
    field='cdfs'
    swire_schema='swire_cdfs'
-   beam_y=16.8
-   beam_x=6.9
+   beam_maj=16.8
+   beam_min=6.9
+   beam_posn_ang=1.0
+   posn_offset_ra=0.0
+   posn_offset_dec=0.0
 else:
    schema='atlas_dr3' 
    field='elais'
    swire_schema='swire_es1'
-   beam_y=12.2
-   beam_x=7.6
+   beam_maj=12.2
+   beam_min=7.6
+   beam_posn_ang=-11.0
+#  See Middelberg et al 2007
+   posn_offset_ra=0.06
+   posn_offset_dec=0.08
    
 print "Field : ",field," ; swire_schema : ",swire_schema
 

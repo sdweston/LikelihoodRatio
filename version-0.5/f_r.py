@@ -22,11 +22,36 @@ def f_r():
 
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
+	# Ivison et al 2007
+# sigma = 0.6 x (FWHM / SNR)
+# select avg(0.6*(FWHM/snr)) 
+# FROM atlas_dr3.cdfs_radio_properties;
+
+# Nick Seymour: For our purposes we can assume the PA is 0 deg. 
+# It will negligibly affect our normalised errors which take into 
+# account the shape of the beam.
+
+# Find sigma_x_radio and sigma_y_radio
+
+    sql2=("select avg(0.6*("+str(beam_maj)+"/snr)),avg(0.6*("+str(beam_min)+"/snr)) "
+           "FROM atlas_dr3.cdfs_radio_properties; ")
+    db.query(sql2)
+    r=db.use_result()
+    rows=r.fetch_row()
+    for row in rows:
+        sigma_y_radio=float(row[0])
+        sigma_x_radio=float(row[1])
+        print sigma_y_radio
+        print sigma_x_radio
+ 	db.close()
+	
 # Lets run a querry
 # table4 for atlas.elais and atlas.cdfs are not consistent. Rename column dbmaj,dbmin to be majaxis,minaxis for both tables !
 
+    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+
 # We are running against atlas_dr3 now, so need to join tables.
-    sql1=("select t1.cid, t1.swire_index_spitzer, t2.deconv, t2.deconv, t3.sint, t3.snr, t1.r_arcsec "
+    sql1=("select t1.cid, t1.swire_index_spitzer, t3.sint, t3.snr, t1.r_arcsec "
           " from "+schema+"."+field+"_matches as t1, "+schema+"."+field+"_deconv as t2, "+schema+"."+field+"_radio_properties as t3 "
           " where t1.cid=t2.id "
           " and t1.cid=t3.id "
@@ -65,32 +90,14 @@ def f_r():
     for row in rows:
         cid=row[0]
         index_spitzer=row[1]
-        dbmaj=row[2]
-        dbmin=row[3]
-        sint=float(row[4])
-        snr=float(row[5])
-        if row[6]==None:
+        sint=float(row[2])
+        snr=float(row[3])
+        if row[4]==None:
             continue
-        r=float(row[6])
+        r=float(row[4])
     
 #    print cid, index_spitzer,dbmaj,dbmin,sint,rms,r
         sys.stdout.write('.')
-    
-
-# if dbmaj or dbmin are a string "None" then continue with next iteration
-
-        if dbmaj==None:
-            continue
-        if dbmin==None:
-            continue
-
-# Need Sint & rms in same units muJy
-# Sint is in mJy 10-3
-# rms is in muJy 10-6
-
-#    print "CID           : ",cid
-        DBMAJ=float(dbmaj)
-        DBMIN=float(dbmin)
 
 # ACE - ancillary catalogue error, arcsec's
 
@@ -109,10 +116,10 @@ def f_r():
 
 # Calculate Sigma
 
-        sigma_x=math.sqrt((DBMAJ/(2*SNR))**2 + ACE**2 + IRE**2)
+        sigma_x=math.sqrt((sigma_x_radio)**2 + ACE**2 + IRE**2)
 #    print "Sigma X       : ",sigma_x
 
-        sigma_y=math.sqrt((DBMIN/(2*SNR))**2 + ACE**2 + IRE**2)
+        sigma_y=math.sqrt((sigma_y_radio)**2 + ACE**2 + IRE**2)
 #    print "Sigma Y       : ",sigma_y
 
 #   sigma is the mean of sigma_x and sigma_y
@@ -127,6 +134,7 @@ def f_r():
         f_r=(1/(2*math.pi*sigma**2)) * math.exp(-r**2/2*sigma**2)
         F_R.append(f_r)
         RADIUS.append(r)
+
 #    print "cid   index_spitzer   f(r) : ",cid,index_spitzer,f_r
 #    print "\n"
 
