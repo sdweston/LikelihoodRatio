@@ -21,6 +21,7 @@ def real_m():
     print "\nStarting real(m) calculations and db updates"
 
     execfile('constants.py')
+    execfile('get_nir.py')
 
 # Constants for the non-radio survey area
 # sqdeg - square degrees
@@ -128,14 +129,7 @@ def real_m():
     search_area=(nrs*math.pi * math.pow(sr_out,2))-(nrs*math.pi * math.pow(sr,2))
 		
 #        bck_grd=(b/(swire_sqsec)) * nrs * math.pi * math.pow(sr,2)
-#       NIR is defined in n_m.py, so hard coding here for testing. 
-#       cdfs nir = 423621
-#        nir=423621
-
-    if field == 'cdfs':
-       nir=423621
-    else:
-       nir=223530
+#       NIR is defined in n_m.py
 
     print "Search Area : ",search_area
     print "NIR         : ",nir

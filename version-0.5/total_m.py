@@ -73,6 +73,19 @@ def total_m():
 #    print "bins"
 #    print bins
 
+    
+    width = 0.7*(bins[1]-bins[0])
+    center = (bins[:-1]+bins[1:])/2
+    plt.bar(center, hist, align = 'center',width = width,linewidth=0)
+    plot_title=field+' total(m)'
+    plt.title(plot_title)
+    plt.ylabel('total(f)')
+    plt.xlabel('log10(f)')
+    plot_fname='atlas_'+field+'_totalm_vs_log10f.ps'
+    fname=output_dir + plot_fname
+    plt.savefig(fname)
+    plt.show()
+
 # We have the binned data as a histogram, now insert it into table n_m_lookup
 
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
