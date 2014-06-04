@@ -18,6 +18,7 @@ def q_0():
     print "\nStarting q0 calculation"
 
     execfile('constants.py')
+    execfile('get_sigma_radio.py')
 	
     print "simga_radio :",sigma_radio
     print "\n"
@@ -90,6 +91,16 @@ def q_0():
  
     print "Q0                      : %f" % popt[0]
     Q=popt[0]
+
+# Connect to the local database with the atlas uid
+
+    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+	
+# Put Q0 into the working table, so don't have to re-run this each time
+
+    db.query("update atlas_dr3.atlas_dr3_working set q0=%s \
+	          where field like '%s';" % (Q,field))
+    db.close()
 
     print "End or q_0\n"
 

@@ -35,7 +35,7 @@ def f_r():
 # Find sigma_x_radio and sigma_y_radio
 
     sql2=("select avg(0.6*("+str(beam_maj)+"/snr)),avg(0.6*("+str(beam_min)+"/snr)) "
-           "FROM atlas_dr3.cdfs_radio_properties; ")
+           "FROM atlas_dr3."+field+"_radio_properties; ")
     db.query(sql2)
     r=db.use_result()
     rows=r.fetch_row()
@@ -50,12 +50,20 @@ def f_r():
     print "Sigma Radio : ",sigma_radio
     print "\n"
     global sigma_radio
-	
+
+			  
 # Lets run a querry
 # table4 for atlas.elais and atlas.cdfs are not consistent. Rename column dbmaj,dbmin to be majaxis,minaxis for both tables !
 
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
+# Put sigma_radio into the working table, so don't have to re-run this each time
+
+    sql_update_sigma=("update atlas_dr3.atlas_dr3_working "
+                      "set sigma="+str(sigma_radio)+" where field like '"+field+"';")
+    print sql_update_sigma,"\n"
+    db.query(sql_update_sigma)
+	
 # We are running against atlas_dr3 now, so need to join tables.
     sql1=("select t1.cid, t1.swire_index_spitzer, t3.sint, t3.snr, t1.r_arcsec "
           " from "+schema+"."+field+"_matches as t1, "+schema+"."+field+"_deconv as t2, "+schema+"."+field+"_radio_properties as t3 "

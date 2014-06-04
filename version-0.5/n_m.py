@@ -79,10 +79,6 @@ def n_m():
 
     rows=r.fetch_row(maxrows=0)
 
-# Close connection to the database
-
-    db.close()
-
 # Lets count how many sources we have from the matching catalogue, in this case IR
 
     nir=0   
@@ -90,6 +86,18 @@ def n_m():
         nir += 1
     	
     print "    Number of over IR sources : ",nir
+	
+# Put sigma_radio into the working table, so don't have to re-run this each time
+
+    sql_update_nir=("update atlas_dr3.atlas_dr3_working "
+                      "set nir="+str(nir)+" where field like '"+field+"';")
+    print sql_update_nir,"\n"
+    db.query(sql_update_nir)
+
+# Close connection to the database
+
+    db.close()
+
 	
 # rows is a tuple, convert it to a list
 
