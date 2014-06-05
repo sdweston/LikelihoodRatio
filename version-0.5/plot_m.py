@@ -22,7 +22,7 @@ def plot_m():
 
 # select from matches the sum of L_i grouped by radio source
 
-    db.query("SELECT i,log10_f,total_m,real_m,bckgrd_m FROM %s.n_m_lookup;" % (swire_schema))
+    db.query("SELECT i,log10_f,total_m,real_m,n_m FROM %s.n_m_lookup;" % (swire_schema))
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
