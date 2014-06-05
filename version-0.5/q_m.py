@@ -70,6 +70,7 @@ def q_m():
 #this to connect() as the conv keyword parameter.
 
 # what to do when sum_real_m=0.0, can't have divide by Zero.
+# Take lowest non-zero value / 2
 
     q_m=[]
     for row in rows:

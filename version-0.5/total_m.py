@@ -21,9 +21,19 @@ def total_m():
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # Lets run a querry
+# We used to take the whole catalogue but now as Bonzini et al 2012 take the smaller search radius that
+# we xid within.
 
-    sql1=("select flux FROM "+schema+"."+field+"_matches where flux > -8.0;")
-    db.query(sql1)
+#    sql1=("select flux FROM "+schema+"."+field+"_matches where flux > -8.0;")
+	
+    sql1a=("select t2.IRAC_3_6_micron_FLUX_MUJY "
+           "FROM "+swire_schema+".swire as t2, "+schema+"."+field+"_coords as t1 "
+           "WHERE IRAC_3_6_micron_FLUX_MUJY != -9.9 "
+           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_SPITZER)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
+           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2) "
+           "limit 0,20000000;")
+    print sql1a,"\n"
+    db.query(sql1a)
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -92,10 +102,14 @@ def total_m():
     db.query("set autocommit=0;")
 
     print "    Update database with n(m) values"
+
+    search_area=nrs*math.pi * math.pow(sr,2)
 	
     i=1
     for item in xrange(len(hist)):
-        total_m=hist[item]
+	
+#   The total(m) needs to be a density function per unit arcsec^2
+        total_m=hist[item]/search_area
         log10_f=bins[item]
         db.query("update "+swire_schema+".n_m_lookup set total_m='%f' \
                   where i='%d';" % (total_m, i))

@@ -19,6 +19,7 @@ def n_m():
     print "\nStarting n(m) calculations and db updates"
 
     execfile('constants.py')
+    execfile('get_nrs.py')
 
 # Connect to the local database with the atlas uid
 
@@ -157,9 +158,16 @@ def n_m():
 # If the row count from above is zero then insert into the db table, if row count is > 0 then update
     print "    Update database with n(m) values"
  	
+    print nrs, sr_out,sr
+    
+    search_area=nrs *(math.pi * math.pow(sr_out,2) - math.pi * math.pow(sr,2))
+		
     i=1
     for item in xrange(len(hist)):
-        n_m=hist[item]
+
+#   The n(m) needs to be a density function per unit arcsec^2
+        n_m=hist[item]/search_area
+
 #        print " n_m md/area arcsec^2 : %14.9f %14.9f" % (hist[item], n_m) 
         log10_f=bins[item]
 #       Update the database with the n(m) values	

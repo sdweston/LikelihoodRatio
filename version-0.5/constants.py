@@ -19,33 +19,7 @@ area_pct=0.03
 # Search Radius, arc sec
 global sr
 
-# Number of radio sources in radio catalogue
-# What is the definition of NRS ? Number of radio sources with a match, or the total number of radio sources.
-#   nrs=SELECT count(distinct elais_s1_cid) FROM elais_s1.matches;
-
-global nrs
-
-#db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
-
-#db.query("SELECT count(distinct elais_s1_cid) FROM elais_s1.matches;")
-#r=db.store_result()
-#rows=r.fetch_row(maxrows=1)
-#for row in rows:
-#nrs=int(row[0])
-		
-#print "Number of Radio Sources : ",nrs
-
-#db.close()
-
-
-# Q probability that real counterpart is above
-# the detection limit
-
-#Q=0.8
-# This is now calculated in q_0.py (D.J.B. Smith et al, 2010)
-
 # Location to put plot files etc
-
 global output_dir
 output_dir='d:/temp/'
 

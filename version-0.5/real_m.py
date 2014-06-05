@@ -157,18 +157,16 @@ def real_m():
 #
 # swire area = nrs * pi * r(100 sec) ** 2
 	
-        bck_grd=(nir/(search_area)) * nrs * math.pi * math.pow(sr,2)
-        c= a - bck_grd
+        c= a - b
         total_m.append(a)
         n_m.append(b)
-        print " %14.9f %14.9f %14.9f %14.9f" % (a, b, c, bck_grd)
+        print " %14.9f %14.9f %14.9f " % (a, b, c)
         if c < 0:
            c=0
        
         sum_real_m=sum_real_m+c
         real_m.append(c)
-        background_m.append(bck_grd)
-        print " %14.9f %14.9f %14.9f %14.9f" % (a, b, c, bck_grd)
+        print " %14.9f %14.9f %14.9f " % (a, b, c)
 
     print "    Sum real(m) : " ,sum_real_m
 
@@ -180,9 +178,8 @@ def real_m():
     i=1
     for item in xrange(len(total_m)):
         r_m=real_m[item]
-        b_m=background_m[item]
-        db.query("update "+swire_schema+".n_m_lookup set real_m='%f', bckgrd_m='%f' \
-                  where i='%d';" % ( r_m, b_m, i))
+        db.query("update "+swire_schema+".n_m_lookup set real_m='%f' \
+                  where i='%d';" % ( r_m, i))
         db.commit()
         i=i+1
 
