@@ -22,7 +22,7 @@ def plot_lr_rel():
 
 # select from matches the sum of L_i grouped by radio source
 
-    db.query("select lr,reliability,log10(lr) from "+schema+"."+field+"_matches where reliability > 0.0 and reliability < 1.0;" )
+    db.query("select lr,reliability from "+schema+"."+field+"_matches where reliability > 0.0 and reliability < 1.0;" )
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -40,16 +40,12 @@ def plot_lr_rel():
 
     LR=[]
     REL=[]
-    LOG10_LR=[]
- 
-
+  
     for row in rows:
         
         LR.append(float(row[0]))
         REL.append(float(row[1]))
-        LOG10_LR.append(float(row[2]))
-        
-	
+ 	
 #    End of do block
 
 # Close connection to the database
@@ -74,6 +70,7 @@ def plot_lr_rel():
     plt.show()
 
 # Bin Reliability and plot	
+# Smith et al 2011 Figure 4
 
 #    (hist,bins)=numpy.histogram(f_rows,bins=60,range=[-1.0,5.0])
     (hist,bins)=numpy.histogram(REL,bins=10,range=[0.0,1.0])
@@ -103,6 +100,7 @@ def plot_lr_rel():
     plt.show()
 	
 # Bin LR and plot
+# Smith et al 2011 Figure 4
 
     (hist,bins)=numpy.histogram(LR,bins=100,range=[0.0,1000.0])
     width = 1.0*(bins[1]-bins[0])
