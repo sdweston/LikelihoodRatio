@@ -14,6 +14,8 @@
 
 def rel():
 
+    execfile('get_q0.py')
+
     print "\nStarting Reliability calculations and db updates"
 
 # Connect to the local database with the atlas uid
@@ -69,7 +71,7 @@ def rel():
 		
 #       and calculate the reliability
 
-            rel= lr / (sum_lr + (1-Q))
+            rel= lr / (sum_lr + (1-Q0))
             LR.append(lr)
             REL.append(rel)
 #        print 'Reliability : %f ' % rel

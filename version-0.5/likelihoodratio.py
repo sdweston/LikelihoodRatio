@@ -1,8 +1,8 @@
 #===========================================================================
 #
-# lr_swire_es1.py
+# likelihoodratio.py
 #
-# Python script to query SWIRE_ES1 mysql database to determine the
+# Python script to query mysql database to determine the
 # LR the likelihood ratio.
 #
 #===========================================================================
@@ -70,7 +70,8 @@ def lr():
 
 #    print "n(m) %20.9f q(m) %20.9f " % (n_m, q_m)
               
-        lr = (q_m * f_r) / (n_m / atlas_sqasec)
+#        lr = (q_m * f_r) / (n_m / atlas_sqasec)
+        lr = (q_m * f_r) / (n_m)
         
 #   print "Likelihood Ratio : %f " % lr
     
