@@ -53,7 +53,7 @@ def plot_lr_rel():
 # Close connection to the database
     db.close()
 
-# Now plot the data
+# Now plot Rel vs LR
 
     print "Plot LR vs Reliability"
 
@@ -64,11 +64,32 @@ def plot_lr_rel():
     plt.title(plot_title)
     plt.ylabel('Reliability')
     plt.xlabel('Likelihood Ratio')
+    plt.grid(True)
+    plt.ylim((-0.1,1.1))
     plot_fname='atlas_' +field+ '_rel_vs_lr.ps'
     fname=output_dir + plot_fname
     plt.savefig(fname,orientation='landscape')
     plt.show()
+
+# Bin Reliability and plot	
+
+#    (hist,bins)=numpy.histogram(f_rows,bins=60,range=[-1.0,5.0])
+    (hist,bins)=numpy.histogram(REL,bins=10,range=[0.0,1.0])
+    width = 1.0*(bins[1]-bins[0])
+    center = (bins[:-1]+bins[1:])/2
+    plt.yscale('log')
+    plt.xlim((-0.1,1.1))
+    plt.ylabel('N(counterparts)')
+    plt.xlabel('Reliability')
+#   edgecolor, linestyle, linewidth
+    plt.bar(center, hist, align = 'center',fill=False,edgecolor='0.0', width = width,linewidth=1)
+#    plt.plot(center, hist, 'k--', linewidth=1.5)
+    plot_fname='atlas_' +field+ '_N_vs_rel.ps'
+    fname=output_dir + plot_fname
+    plt.savefig(fname,orientation='landscape')
+    plt.show()
 	
+# Bin LR and plot
     
     print "End Plotting\n"
 
