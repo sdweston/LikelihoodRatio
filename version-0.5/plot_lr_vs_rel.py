@@ -22,7 +22,7 @@ def plot_lr_rel():
 
 # select from matches the sum of L_i grouped by radio source
 
-    db.query("select lr,reliability from "+schema+"."+field+"_matches where reliability > 0.0 and reliability < 1.0;" )
+    db.query("select lr,reliability,log10(lr) from "+schema+"."+field+"_matches where reliability > 0.0 and reliability < 1.0;" )
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -40,12 +40,14 @@ def plot_lr_rel():
 
     LR=[]
     REL=[]
+    LOG10_LR=[]
  
 
     for row in rows:
         
         LR.append(float(row[0]))
         REL.append(float(row[1]))
+        LOG10_LR.append(float(row[2]))
         
 	
 #    End of do block
@@ -90,6 +92,21 @@ def plot_lr_rel():
     plt.show()
 	
 # Bin LR and plot
+
+    (hist,bins)=numpy.histogram(LOG10_LR,bins=10,range=[0.0,10.0])
+    width = 1.0*(bins[1]-bins[0])
+    center = (bins[:-1]+bins[1:])/2
+    plt.yscale('log')
+#    plt.xscale('log')
+    plt.ylabel('N(counterparts)')
+    plt.xlabel('Likelihood Ratio')
+#   edgecolor, linestyle, linewidth
+    plt.bar(center, hist, align = 'center',fill=False,edgecolor='0.0', width = width,linewidth=1)
+#    plt.plot(center, hist, 'k--', linewidth=1.5)
+    plot_fname='atlas_' +field+ '_N_vs_lr.ps'
+    fname=output_dir + plot_fname
+    plt.savefig(fname,orientation='landscape')
+    plt.show()
     
     print "End Plotting\n"
 
