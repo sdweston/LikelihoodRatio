@@ -15,6 +15,7 @@
 def total_m():
 
     print "\nStarting total(m) calculations and db updates"
+    execfile('get_nrs.py')
 
 # Connect to the local database with the atlas uid
 
@@ -120,7 +121,7 @@ def total_m():
 
 # Close connection to the database
     db.close()
-
+	
     print "End of total(m)\n"
 
 

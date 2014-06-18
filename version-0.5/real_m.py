@@ -187,6 +187,31 @@ def real_m():
 
 # Close connection to the database
     db.close()
+	
+# From Steve & Loretta, REAL_M can't be 0. So find the zero values and set them to be 
+# 1/2 of the lowest non-zero value
+
+    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+	
+    sql_real_m_min=("select min(real_m)/2 from "+swire_schema+".n_m_lookup "
+                    "where real_m > 0.0")
+	
+    db.query(sql_real_m_min)
+	
+    r=db.use_result()
+
+    rows=r.fetch_row(maxrows=0)
+    lst_rows=list(rows)
+    for row in lst_rows:
+        real_m_min=row[0]
+
+	
+    sql_real_m_update=("update swire_cdfs.n_m_lookup "
+                       "set real_m="+real_m_min+" "
+                       "where real_m=0.0;")
+    db.query(sql_real_m_update)
+	
+    db.close()
 
     print "End or real(m)\n"
 

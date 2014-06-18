@@ -64,7 +64,7 @@ def plot_lr_rel():
     plt.xlabel('Likelihood Ratio')
     plt.grid(True)
     plt.ylim((-0.1,1.1))
-    plot_fname='atlas_' +field+ '_rel_vs_lr.ps'
+    plot_fname='atlas_' +field+ '_rel_vs_lr.pdf'
     fname=output_dir + plot_fname
     plt.savefig(fname,orientation='landscape')
     plt.show()
@@ -73,7 +73,7 @@ def plot_lr_rel():
 # Smith et al 2011 Figure 4
 
 #    (hist,bins)=numpy.histogram(f_rows,bins=60,range=[-1.0,5.0])
-    (hist,bins)=numpy.histogram(REL,bins=10,range=[0.0,1.0])
+    (hist,bins)=numpy.histogram(REL,bins=20,range=[0.0,1.0])
     print bins,'\n'
     print hist,'\n'
     width = 1.0*(bins[1]-bins[0])
@@ -83,26 +83,37 @@ def plot_lr_rel():
     plt.title(plot_title)
     plt.yscale('log')
     plt.grid(True)
-#    plt.xlim((-0.1,1.1))
     plt.ylabel('N(counterparts)')
     plt.xlabel('Reliability')
+
 #   edgecolor, linestyle, linewidth
 #    plt.bar(center, hist, align = 'center',fill=False,edgecolor='0.0', width = width,linewidth=1)
 #    plt.plot(center, hist, 'k-')
-    common_params = dict(bins=10,
+    common_params = dict(bins=20,
                          range=(0,1))
     common_params['histtype'] = 'step'
     plt.hist(REL,**common_params)
 #    pylab.hist(hist, bins=bins, normed=1,histtype='step')
-    plot_fname='atlas_' +field+ '_N_vs_rel.ps'
+    plot_fname='atlas_' +field+ '_N_vs_rel.pdf'
     fname=output_dir + plot_fname
+    ax=plt.gca()
+    ax.relim()
+    plt.ylim(ymin=0)
     plt.savefig(fname,orientation='landscape')
     plt.show()
 	
 # Bin LR and plot
 # Smith et al 2011 Figure 4
+# For elais range=[0.0,100.0] , cdfs range=[0.0,1000.0]
 
-    (hist,bins)=numpy.histogram(LR,bins=100,range=[0.0,1000.0])
+    if field == 'cdfs':
+       range_min=0.0
+       range_max=1000.0
+    else :
+       range_min=0.0
+       range_max=100.0
+	
+    (hist,bins)=numpy.histogram(LR,bins=100,range=[range_min,range_max])
     width = 1.0*(bins[1]-bins[0])
     center = 0.5*(bins[:-1]+bins[1:])
     print bins,'\n'
@@ -116,11 +127,11 @@ def plot_lr_rel():
 #   edgecolor, linestyle, linewidth
 #    plt.bar(center, hist, align = 'center',fill=False,edgecolor='0.0', width = width,linewidth=1)
     common_params = dict(bins=100,
-                         range=(0,1000))
+                         range=(range_min,range_max))
     common_params['histtype'] = 'step'
     plt.hist(LR,**common_params)
 #    plt.plot(center, hist, 'k--', linewidth=1.5)
-    plot_fname='atlas_' +field+ '_N_vs_lr.ps'
+    plot_fname='atlas_' +field+ '_N_vs_lr.pdf'
     fname=output_dir + plot_fname
     plt.savefig(fname,orientation='landscape')
     plt.show()

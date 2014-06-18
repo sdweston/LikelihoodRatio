@@ -16,6 +16,8 @@ def q_m():
 
     print "\nStarting q(m) calculations and db updates"
 
+    execfile('get_q0.py')
+	
 # Connect to the local database with the atlas uid
 
     db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
@@ -70,13 +72,12 @@ def q_m():
 #this to connect() as the conv keyword parameter.
 
 # what to do when sum_real_m=0.0, can't have divide by Zero.
-# Take lowest non-zero value / 2
 
     q_m=[]
     for row in rows:
         a=float(row[0])
-        print a, sum_real_m, Q
-        b=(a / sum_real_m ) * Q
+        print a, sum_real_m, Q0
+        b=(a / sum_real_m ) * Q0
 #        print "q(m) ",b
         q_m.append(b)
 
