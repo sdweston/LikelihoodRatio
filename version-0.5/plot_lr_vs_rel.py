@@ -1,6 +1,6 @@
 #===========================================================================
 #
-# plot_m.py
+# plot_lr_vs_rel.py
 #
 # Python script to query SWIRE_ES1 mysql database to determine the
 # LR the likelihood ratio.
@@ -93,12 +93,10 @@ def plot_lr_rel():
                          range=(0,1))
     common_params['histtype'] = 'step'
     plt.hist(REL,**common_params)
+    plt.ylim(0.9999)
 #    pylab.hist(hist, bins=bins, normed=1,histtype='step')
     plot_fname='atlas_' +field+ '_N_vs_rel.pdf'
     fname=output_dir + plot_fname
-    ax=plt.gca()
-    ax.relim()
-    plt.ylim(ymin=0)
     plt.savefig(fname,orientation='landscape')
     plt.show()
 	
