@@ -92,7 +92,7 @@ def real_m():
 #       pow(t1.decl-t2.DEC_SPITZER,2) <= pow("+str(sr_out)+"/3600,2)
 # limit 0,20000000) as a1;
 		
-    sql2=("select total_m,n_m FROM "+swire_schema+".n_m_lookup;" )
+    sql2=("select total_m,n_m FROM "+schema+"."+field+"_n_m_lookup;" )
     db.query(sql2)
 
 # store_result() returns the entire result set to the client immediately.
@@ -178,7 +178,7 @@ def real_m():
     i=1
     for item in xrange(len(total_m)):
         r_m=real_m[item]
-        db.query("update "+swire_schema+".n_m_lookup set real_m='%f' \
+        db.query("update "+schema+"."+field+"_n_m_lookup set real_m='%f' \
                   where i='%d';" % ( r_m, i))
         db.commit()
         i=i+1
@@ -193,7 +193,7 @@ def real_m():
 
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 	
-    sql_real_m_min=("select min(real_m)/2 from "+swire_schema+".n_m_lookup "
+    sql_real_m_min=("select min(real_m)/2 from "+schema+"."+field+"_n_m_lookup "
                     "where real_m > 0.0")
 	
     db.query(sql_real_m_min)
@@ -206,7 +206,7 @@ def real_m():
         real_m_min=row[0]
 
 	
-    sql_real_m_update=("update swire_cdfs.n_m_lookup "
+    sql_real_m_update=("update "+schema+"."+field+"_n_m_lookup "
                        "set real_m="+real_m_min+" "
                        "where real_m=0.0;")
     db.query(sql_real_m_update)

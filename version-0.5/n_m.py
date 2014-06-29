@@ -147,7 +147,7 @@ def n_m():
     db.query("set autocommit=0;")
 
 # first is the lookup table empty, if yes then use insert if no then use update
-    sql2=("select count(*) from "+swire_schema+".n_m_lookup;")
+    sql2=("select count(*) from "+schema+"."+field+"_n_m_lookup;")
     db.query(sql2)
 	
     r=db.store_result()
@@ -172,10 +172,10 @@ def n_m():
         log10_f=bins[item]
 #       Update the database with the n(m) values	
         if r_count == 0:	
-           sql3=("insert into "+swire_schema+".n_m_lookup(i,n_m,log10_f,md) values ('"+str(i)+"','"+str(n_m)+"','"+str(log10_f)+"','"+str(hist[item])+"');")
+           sql3=("insert into "+schema+"."+field+"_n_m_lookup(i,n_m,log10_f,md) values ('"+str(i)+"','"+str(n_m)+"','"+str(log10_f)+"','"+str(hist[item])+"');")
            db.query(sql3)
         else:
-           sql3=("update "+swire_schema+".n_m_lookup set n_m="+str(n_m)+", log10_f="+str(log10_f)+", md="+str(hist[item])+" where i="+str(i)+";")
+           sql3=("update "+schema+"."+field+"_n_m_lookup set n_m="+str(n_m)+", log10_f="+str(log10_f)+", md="+str(hist[item])+" where i="+str(i)+";")
            db.query(sql3)
         db.commit()
         i=i+1

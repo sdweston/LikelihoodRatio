@@ -112,7 +112,7 @@ def total_m():
 #   The total(m) needs to be a density function per unit arcsec^2
         total_m=hist[item]/search_area
         log10_f=bins[item]
-        db.query("update "+swire_schema+".n_m_lookup set total_m='%f' \
+        db.query("update "+schema+"."+field+"_n_m_lookup set total_m='%f' \
                   where i='%d';" % (total_m, i))
         db.commit()
         i=i+1

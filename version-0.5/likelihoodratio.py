@@ -55,9 +55,9 @@ def lr():
 	
         log10_f=math.log10(flux)
 	
-        db.query("select log10_f,n_m,q_m from %s.n_m_lookup \
+        db.query("select log10_f,n_m,q_m from %s.%s_n_m_lookup \
                   where %s > log10_f - 0.05 \
-                  and %s < log10_f + 0.05;" % (swire_schema,log10_f, log10_f))
+                  and %s < log10_f + 0.05;" % (schema,field,log10_f, log10_f))
 	
         r2=db.store_result()
         strings=r2.fetch_row(maxrows=1)

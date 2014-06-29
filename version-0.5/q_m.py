@@ -25,7 +25,7 @@ def q_m():
 # First determine sum[real(m_i)]
 # I am wondering why q_m_swire_es1 had a fixed value: sum_real_m=810.785563462 ??
 
-    sql1=("select sum(real_m) from "+swire_schema+".n_m_lookup;")
+    sql1=("select sum(real_m) from "+schema+"."+field+"_n_m_lookup;")
     db.query(sql1)
 
     r=db.store_result()
@@ -43,7 +43,7 @@ def q_m():
 	
 # Lets run a querry
 
-    sql2=("select real_m from "+swire_schema+".n_m_lookup;")
+    sql2=("select real_m from "+schema+"."+field+"_n_m_lookup;")
     db.query(sql2)
 
 # store_result() returns the entire result set to the client immediately.
@@ -92,8 +92,8 @@ def q_m():
     i=1
     for item in xrange(len(q_m)):
 #        print item
-        db.query("update %s.n_m_lookup set q_m='%f' \
-                  where i='%d';" % (swire_schema, q_m[item], i))
+        db.query("update %s.%s_n_m_lookup set q_m='%f' \
+                  where i='%d';" % (schema,field,q_m[item],i))
         db.commit()
         i=i+1
 
