@@ -35,7 +35,7 @@ r=db.store_result()
 rows=r.fetch_row(maxrows=1)
 for row in rows:
     nrs=float(row[0])
-    print "    Number of Radio Sources : ",nrs
+#    print "    Number of Radio Sources : ",nrs
 
 # Have to allow for over-blended objects from atlas for number of radio sources NRM
 #
@@ -49,7 +49,7 @@ r=db.store_result()
 rows=r.fetch_row(maxrows=1)
 for row in rows:
     nob=float(row[0])
-    print "    Number of over blended components : ",nob
+#    print "    Number of over blended components : ",nob
 #
 # Second group these to once source - NS
 # select count(*)
@@ -65,11 +65,13 @@ r=db.store_result()
 rows=r.fetch_row(maxrows=1)
 for row in rows:
     ns=float(row[0])
-    print "    Number of blended sources : ",ns
+#    print "    Number of blended sources : ",ns
 
 # True_NRS=NRS - NOB + NS
 # We know have catalogue with over blended sources merged, so don't need this any more		
 #nrs=nrs-nob+ns
 # But do we still need blended ?
+
+print "    Number of Radio Sources : ",nrs
 	
 db.close()
