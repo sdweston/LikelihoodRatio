@@ -29,7 +29,7 @@ db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
 
 # Lets run a querry to find the number of radio sources.
 
-sql1=("SELECT count(distinct cid) FROM "+schema+"."+field+"_matches;")
+sql1=("SELECT count(distinct(cid)) FROM "+schema+"."+field+"_matches;")
 db.query(sql1)
 r=db.store_result()
 rows=r.fetch_row(maxrows=1)
@@ -67,7 +67,9 @@ for row in rows:
     ns=float(row[0])
     print "    Number of blended sources : ",ns
 
-# True_NRS=NRS - NOB + NS		
-nrs=nrs-nob+ns
+# True_NRS=NRS - NOB + NS
+# We know have catalogue with over blended sources merged, so don't need this any more		
+#nrs=nrs-nob+ns
+# But do we still need blended ?
 	
 db.close()
