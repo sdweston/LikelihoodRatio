@@ -139,7 +139,7 @@ def real_m():
     n_m=[]
     real_m=[]
     background_m=[]
-    print "    Total(m) n(m) r(m) backgrd"
+    print "    r(m)           Total(m)       n(m)"
     for row in rows:
     # a is total(m)
         a=float(row[0])
@@ -160,13 +160,13 @@ def real_m():
         c= a - b
         total_m.append(a)
         n_m.append(b)
-        print " %14.9f %14.9f %14.9f " % (a, b, c)
+        print " %14.9f %14.9f %14.9f " % (c, a, b)
         if c < 0:
            c=0
        
         sum_real_m=sum_real_m+c
         real_m.append(c)
-        print " %14.9f %14.9f %14.9f " % (a, b, c)
+#        print " %14.9f %14.9f %14.9f " % (c, a, b)
 
     print "    Sum real(m) : " ,sum_real_m
 
@@ -178,6 +178,9 @@ def real_m():
     i=1
     for item in xrange(len(total_m)):
         r_m=real_m[item]
+        sql_update=("update "+schema+"."+field+"_n_m_lookup set real_m='%f' \
+                  where i='%d';" % ( r_m, i))
+        print sql_update
         db.query("update "+schema+"."+field+"_n_m_lookup set real_m='%f' \
                   where i='%d';" % ( r_m, i))
         db.commit()
@@ -187,7 +190,7 @@ def real_m():
 
 # Close connection to the database
     db.close()
-	
+
 # From Steve & Loretta, REAL_M can't be 0. So find the zero values and set them to be 
 # 1/2 of the lowest non-zero value
 
@@ -204,11 +207,12 @@ def real_m():
     lst_rows=list(rows)
     for row in lst_rows:
         real_m_min=row[0]
+        print "real(m) min : ",real_m_min
 
 	
     sql_real_m_update=("update "+schema+"."+field+"_n_m_lookup "
-                       "set real_m="+real_m_min+" "
-                       "where real_m=0.0;")
+                       " set real_m="+real_m_min+ 
+                       " where real_m=0.0;")
     db.query(sql_real_m_update)
 	
     db.close()

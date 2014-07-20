@@ -185,8 +185,9 @@ answer=raw_input('Run q(m) calculations       (y/n) : ')
 if (answer =='Y' or answer=='y'):
     print "Runing q(m) calculations                 : ",answer,"\n"
     q_m()
-    # Plot n(m), q(m) and total(m)
-    plot_m()
+
+# Plot n(m), q(m) and total(m)
+plot_m()
 
 # Calculate LR
 

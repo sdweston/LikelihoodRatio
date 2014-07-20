@@ -50,7 +50,6 @@ def plot_m():
         real_m.append(float(row[3]))
         bckgrd.append(float(row[4]))
 	
-	
 #    End of do block
 
 # Close connection to the database
@@ -58,16 +57,49 @@ def plot_m():
 
 # Now plot the data
 
-    plt.yscale('log')
+
     plt.plot(log10_f, total_m,'k.',log10_f,real_m,'g+',log10_f,bckgrd,'ro')
     plot_title=field+'  Log10(f) vs Total(m)'
     plt.title(plot_title)
-    plt.ylabel('Total(m)')
+    plt.yscale('log')
+    plt.ylabel('N')
     plt.xlabel('log10(f)')
-    plt.legend(["Total(m)","Real(m)","Background"])
+    plt.legend(["Total(m)","Real(m)","n(m) - Background"])
     plot_fname='atlas_'+field+'_magnitude_dependance.ps'
     fname=output_dir + plot_fname
     plt.savefig(fname)
+    plt.show()
+	
+# create a stepped histogram
+
+    width=(log10_f[2]-log10_f[1])/2
+    print "Width : ",width
+#offset the x for horizontal, repeat the y for vertical:
+    x=[]
+    y1=[]
+    y2=[]
+    y3=[]
+	
+    i=0
+    for item in log10_f:
+        print item
+        x.append(item-width)
+        y1.append(total_m[i])
+        y2.append(real_m[i])
+        y3.append(bckgrd[i])
+        x.append(item+width)
+        y1.append(total_m[i])
+        y2.append(real_m[i])
+        y3.append(bckgrd[i])
+        i=i+1
+	
+    print x
+    print y1	
+#    plt.plot(x,y1,linestyle='_',color='k')
+    plt.plot(x, y1,'k:',x,y2,'g-',x,y3,'r--')
+    plt.yscale('log')
+    plt.ylabel('total(m)')
+    plt.xlabel('log10(f)')
     plt.show()
     
     print "End Plotting\n"
