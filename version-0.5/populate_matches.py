@@ -38,16 +38,16 @@ def pm():
 	
     sql1=("insert into "+schema+"."+field+"_matches(cid,swire_index_spitzer,dx,dy,r_arcsec,flux) "
               "select t1.id, "
-              "t2.Index_Spitzer, "
-              "(t1.ra-"+str(posn_offset_ra)+"-t2.RA_SPITZER)*cos(t1.decl-"+str(posn_offset_dec)+"), "
-              "t1.decl-"+str(posn_offset_dec)+"-t2.DEC_SPITZER, "
-              "sqrt(pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_SPITZER)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+pow(t1.decl-"+str(posn_offset_dec)+"-t2.DEC_SPITZER,2))*3600, "
-			  "t2.irac_3_6_micron_flux_mujy "
-              "from "+schema+"."+field+"_coords as t1, "+swire_schema+".swire as t2 "
-              "where pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_SPITZER)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+" 
-              "pow(t1.decl-"+str(posn_offset_dec)+"-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2) "
-              " and   t2.ra_spitzer > "+str(ra1)+" and t2.ra_spitzer < "+str(ra2)+" "
-              " and   t2.dec_spitzer > "+str(dec1)+" and t2.dec_spitzer < "+str(dec2)+" limit 0,3000000; ")
+              "t2.ID_12, "
+              "(t1.ra-"+str(posn_offset_ra)+"-t2.ra_12)*cos(t1.decl-"+str(posn_offset_dec)+"), "
+              "t1.decl-"+str(posn_offset_dec)+"-t2.dec_12, "
+              "sqrt(pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_12)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_12,2))*3600, "
+			  "t2.flux_ap2_36 "
+              "from "+schema+"."+field+"_coords as t1, fusion."+field+" as t2 "
+              "where pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_12)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+" 
+              "pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_12,2) <= pow("+str(sr)+"/3600,2) "
+              " and   t2.ra_12 > "+str(ra1)+" and t2.ra_12 < "+str(ra2)+" "
+              " and   t2.dec_12 > "+str(dec1)+" and t2.dec_12 < "+str(dec2)+" limit 0,3000000; ")
 
 
     print sql1,"\n"

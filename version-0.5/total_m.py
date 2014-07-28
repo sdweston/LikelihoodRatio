@@ -27,11 +27,11 @@ def total_m():
 
 #    sql1=("select flux FROM "+schema+"."+field+"_matches where flux > -8.0;")
 	
-    sql1a=("select t2.IRAC_3_6_micron_FLUX_MUJY "
-           "FROM "+swire_schema+".swire as t2, "+schema+"."+field+"_coords as t1 "
-           "WHERE IRAC_3_6_micron_FLUX_MUJY != -9.9 "
-           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_SPITZER)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
-           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2) "
+    sql1a=("select t2.flux_ap2_36 "
+           "FROM fusion."+field+" as t2, "+schema+"."+field+"_coords as t1 "
+           "WHERE flux_ap2_36 != -9.9 "
+           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_12)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
+           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_12,2) <= pow("+str(sr)+"/3600,2) "
            "limit 0,20000000;")
     print sql1a,"\n"
     db.query(sql1a)

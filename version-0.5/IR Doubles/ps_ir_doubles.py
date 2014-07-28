@@ -122,9 +122,9 @@ for row in rows:
 
 
 #   So now get coords for spitzer match
-        sql5=("SELECT ra_spitzer, dec_spitzer, irac_3_6_micron_flux_mujy \
-              from swire_"+answer+".swire \
-              where index_spitzer="+swire_id+";")
+        sql5=("SELECT ra_12, dec_12, flux_ap2_36, redshift \
+              from fusion."+answer+"  \
+              where id_12="+swire_id+";")
         db.query(sql5)
         r=db.use_result()
         sub_rows=r.fetch_row(maxrows=10)
@@ -133,8 +133,9 @@ for row in rows:
             ra_spitzer=sub_row[0]
             dec_spitzer=sub_row[1]
             f_3_6=sub_row[2]
+            redshift=sub_row[3]
         
-        print >> f1, cid1,ra_radio,dec_radio,idx_sub_row,swire_id,ra_spitzer,dec_spitzer,rel,f_3_6
+        print >> f1, cid1,ra_radio,dec_radio,idx_sub_row,swire_id,ra_spitzer,dec_spitzer,rel,f_3_6,redshift
 
         # add lines to the region file to identify the non-radio candidates
 
@@ -171,8 +172,8 @@ for row in rows:
 		 ' -saveimage '+postage_stamp_filename+' 100 -exit '
 #    print cmd2
 
-    os.system(cmd1)
-    os.system(cmd2)
+#    os.system(cmd1)
+#    os.system(cmd2)
 	
 f1.close()
 

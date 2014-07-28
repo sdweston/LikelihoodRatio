@@ -30,10 +30,10 @@ def n_m():
     print "\n DB Schemas : ",field,swire_schema
 
 # Prior to V 0.4 we took the whole none-radio catalogue
-    sql1=("select IRAC_3_6_micron_FLUX_MUJY FROM "+swire_schema+".swire "
-          " where IRAC_3_6_micron_FLUX_MUJY != -9.9 "
-          " and ra_spitzer > "+str(swire_ra1)+" and ra_spitzer < "+str(swire_ra2)+
-          " and dec_spitzer > "+str(swire_dec1)+" and dec_spitzer < "+str(swire_dec2)+";")
+    sql1=("select flux_ap2_36 FROM fusion."+field+" "
+          " where flux_ap2_36 != -9.9 "
+          " and ra_12 > "+str(swire_ra1)+" and ra_12 < "+str(swire_ra2)+
+          " and dec_12 > "+str(swire_dec1)+" and dec_12 < "+str(swire_dec2)+";")
 #    print sql1,"\n"
 #    db.query(sql1)
 	
@@ -43,13 +43,13 @@ def n_m():
 
 # 26/5/2014 : Allow for catalogue position offset. posn_offset_ra, posn_offset_dec
 
-    sql1a=("select t2.IRAC_3_6_micron_FLUX_MUJY "
-           "FROM "+swire_schema+".swire as t2, "+schema+"."+field+"_coords as t1 "
-           "WHERE IRAC_3_6_micron_FLUX_MUJY != -9.9 "
-           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_SPITZER)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
-           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.DEC_SPITZER,2) >= pow("+str(sr)+"/3600,2) "
-           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_SPITZER)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
-           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.DEC_SPITZER,2) <= pow("+str(sr_out)+"/3600,2) "
+    sql1a=("select t2.flux_ap2_36 "
+           "FROM fusion."+field+" as t2, "+schema+"."+field+"_coords as t1 "
+           "WHERE flux_ap2_36 != -9.9 "
+           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_12)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
+           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_12,2) >= pow("+str(sr)+"/3600,2) "
+           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_12)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
+           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_12,2) <= pow("+str(sr_out)+"/3600,2) "
            "limit 0,20000000;")
     print sql1a,"\n"
     db.query(sql1a)
@@ -60,13 +60,13 @@ def n_m():
 # Is this a limitation of mysql when we get to v.v.large datasets for XID ?? Well thats 1.8 x 10^19.
 
 # limits for elais_s1		 
-#         and ra_spitzer > 8.0 and ra_spitzer < 9.5 ;" % (swire_schema))
+#         and ra_12 > 8.0 and ra_12 < 9.5 ;" % (swire_schema))
 		 
-#         and dec_spitzer < -43.0 and dec_spitzer > -44.5;")
+#         and dec_12 < -43.0 and dec_12 > -44.5;")
 
 # limits for ecdfs
-#        and ra_spitzer > 51.6 and ra_spitzer < 54.0 \
-#         and dec_spitzer > -29.0 and dec_spitzer < -27.0;")
+#        and ra_12 > 51.6 and ra_12 < 54.0 \
+#         and dec_12 > -29.0 and dec_12 < -27.0;")
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -119,7 +119,7 @@ def n_m():
     f_rows=[]
     for row in lst_rows:
 
-#   a = IRAC_3_6_micron_FLUX_MUJY
+#   a = flux_ap2_36
         a=map(float,row)
         b=math.log10(a[0])
 #    print "Flux %4.8f Log10_Flux %4.8f " % (a[0], b)
