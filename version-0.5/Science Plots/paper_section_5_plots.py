@@ -34,25 +34,54 @@ db_passwd='atlas'
 
 print "\nStarting Plot Science"
 
+# ask which field to process
+answer=raw_input('Which field cdfs/elais ?')
+print "\nentered : ",answer,"\n"
+
+if answer == 'cdfs':
+   schema='atlas_dr3' 
+   field='cdfs'
+   swire_schema='swire_cdfs'
+else:
+   schema='atlas_dr3' 
+   field='elais'
+   swire_schema='swire_es1'
+
+# We need two plots:
+#
+#  Plot 1 - IR_Flux_3_6 / Flux_Radio, binned by number
+#
+#  Plot 2 - Flux_Radio by Z
+#
+#  Possibly IR colour colour plots
+#
+# NOTE: IR flux is uJy and Radio is mJy. Need to be same units, make all mJy.
+
+# select from matches the IR Flux, Radio Flux, Redshift etc so we can do some science
+
+# First get the reliable matches, where Rel > 0.8
+
 #   Connect to the local database with the atlas uid
 
 db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
 
-# select from matches the IR Flux, Radio Flux, Redshift etc so we can do some science
+sql1=("SELECT t1.swire_index_spitzer, t1.cid,  "
+      "       (t2.flux_ap2_36/1000)/t3.sp, "
+      "       (t2.flux_ap2_80/1000)/t3.sp, "
+      "       t2.flux_ap2_36/t2.flux_ap2_45, "
+      "       t2.flux_ap2_36,t2.flux_ap2_45,t2.flux_ap2_58,t2.flux_ap2_80  "
+      "from "+schema+"."+field+"_matches t1, fusion."+field+" t2, "+schema+"."+field+"_radio_properties t3 "
+      "     where t1.swire_index_spitzer=t2.id_12 "
+      "     and t1.cid=t3.id  "
+      "     and t2.flux_ap2_36 is not null "
+      "     and t2.flux_ap2_45 is not null "
+      "     and t2.flux_ap2_58 is not null "
+      "     and t2.flux_ap2_80 is not null "
+      "     and t3.sp > 0.0 "
+      "     and t1.reliability > 0.8;")
 
-db.query("SELECT t1.swire_index_spitzer, t1.cid,  \
-                     t2.irac_3_6_micron_flux_mujy, \
-                     t2.irac_4_5_micron_flux_mujy, \
-                     t2.irac_5_8_micron_flux_mujy, \
-                     t2.irac_8_0_micron_flux_mujy, \
-                     t3.sp, \
-                     t3.sint, \
-	             t2.redshift \
-              from elais_s1.matches t1, swire_es1.swire t2, elais_s1.table4 t3 \
-              where t1.swire_index_spitzer=t2.index_spitzer \
-              and t1.cid=t3.cid \
-              and t2.irac_5_8_micron_flux_mujy > 0.0 \
-              and t1.reliability > 0.8;")
+print sql1,"\n"
+db.query(sql1)
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -68,66 +97,137 @@ rows=r.fetch_row(maxrows=5000)
 
 # rows is a tuple, convert it to a list
 
-ir_3_6_flux_mujy=[]
-ir_4_5_flux_mujy=[]
-ir_5_8_flux_mujy=[]
-ir_8_0_flux_mujy=[]
-r_sp_1_4_flux_mjy=[]
-r_sint_1_4_flux_mjy=[]
-redshift=[]
-	
-i1_i2=[]
-i3_i4=[]
-
-r_sint_mujy=[]
+IR_36_45_rel=[]
+IR_36_58_rel=[]
+IR_80_45_rel=[]
+IR_80_58_rel=[]
+IR36_Radio_Sp_rel=[]
+IR80_Radio_Sp_rel=[]
 
 for row in rows:
-
-    ir_3_6_flux_mujy.append(float(row[2]))
-    ir_4_5_flux_mujy.append(float(row[3]))
-    ir_5_8_flux_mujy.append(float(row[4]))
-    ir_8_0_flux_mujy.append(float(row[5]))
-    r_sp_1_4_flux_mjy.append(float(row[6]))
-    r_sint_1_4_flux_mjy.append(float(row[7]))
-    redshift.append(float(row[8]))
-	
-    i1_i2.append(float(row[5])/float(row[3]))
-    i3_i4.append(float(row[4])/float(row[2]))
-
-    r_sint_mujy.append(float(row[7])*1000)
-	
+#    print row
+    IR36_Radio_Sp_rel.append(float(row[2]))
+    IR80_Radio_Sp_rel.append(float(row[3]))
+    IR_36_45_rel.append(float(row[4]))
+    IR_36_58_rel.append(float(row[5])/float(row[7]))
+    IR_80_45_rel.append(float(row[8])/float(row[6]))
+    IR_80_58_rel.append(float(row[8])/float(row[7]))
 	        	
 #    End of do block
 
 # Close connection to the database
 db.close()
 
+# Now get the un-reliable matches, where Rel < 0.8
+
+#   Connect to the local database with the atlas uid
+
+db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)
+
+sql2=("SELECT t1.swire_index_spitzer, t1.cid,  "
+      "       (t2.flux_ap2_36/1000)/t3.sp, "
+      "       t2.flux_ap2_36/t2.flux_ap2_45, "
+      "       (t2.flux_ap2_36/1000)/t3.sint "
+      "from "+schema+"."+field+"_matches t1, fusion."+field+" t2, "+schema+"."+field+"_radio_properties t3 "
+      "     where t1.swire_index_spitzer=t2.id_12 "
+      "     and t1.cid=t3.id  "
+      "     and t2.flux_ap2_36 is not null "
+      "     and t2.flux_ap2_45 is not null "
+      "     and t2.flux_ap2_58 is not null "
+      "     and t2.flux_ap2_80 is not null "
+      "    and t1.reliability < 0.8;")
+
+print sql2,"\n"
+db.query(sql2)
+
+# store_result() returns the entire result set to the client immediately.
+# The other is to use use_result(), which keeps the result set in the server 
+#and sends it row-by-row when you fetch.
+
+#r=db.store_result()
+# ...or...
+r=db.use_result()
+
+# fetch results, returning char we need float !
+
+rows=r.fetch_row(maxrows=5000)
+
+# rows is a tuple, convert it to a list
+
+IR36_Radio_Sp_unrel=[]
+IR_36_45_unrel=[]
+
+for row in rows:
+       
+    IR36_Radio_Sp_unrel.append(float(row[2]))
+    IR_36_45_unrel.append(float(row[3]))
+	        	
+#    End of do block
+
+# Close connection to the database
+db.close()
+
+# Now Bin the data !
+
+
+
+# Plot the binned data.
+
+
 # Now plot the data
 
-plt.yscale('log')
-plt.xscale('log')
-plt.plot(i1_i2, i3_i4,'k.')
-#plot_title=field+'  ir_8p0/ir_4p5 vs ir_5p8/ir_3p6'
-plt.title(' Colour Index ir_8p0/ir_4p5 vs ir_5p8/ir_3p6')
-plt.ylabel('ir_8p0/ir_4p5')
-plt.xlabel('ir_5p8/ir_3p6')
-#    plot_fname='atlas_'+field+'_magnitude_dependance.ps'
-#    fname=output_dir + plot_fname
-#    plt.savefig(fname)
+plt.hist(IR_36_45_rel,bins=20,histtype='step',color='blue')
+plt.hist(IR_36_45_unrel,bins=20,histtype='step',color='red')
+
+plt.title(field)
+plt.ylabel('N')
+plt.xlabel('S_3.6 / S_4.5')
 plt.show()
 
-plt.yscale('log')
-plt.xscale('log')
-plt.plot(i1_i2,r_sint_mujy,'k.',i3_i4,r_sint_mujy,'g+')
-#plot_title=field+'  ir_3_6/ir_4_5 muJy vs Flux 1.4 muJy'
-plt.title(' Colour Index ir_3_6/ir_4_5 vs Flux 1.4')
-plt.xlabel('ir_3_6/ir_4_5 muJy')
-plt.ylabel('Flux 1.4 muJy')
-#    plot_fname='atlas_'+field+'_magnitude_dependance.ps'
-#    fname=output_dir + plot_fname
-#    plt.savefig(fname)
+(hist,bins)=numpy.histogram(IR36_Radio_Sp_rel,bins=40)
+plt.hist(IR36_Radio_Sp_rel,bins=bins,histtype='step',color='blue')
+plt.hist(IR36_Radio_Sp_unrel,bins=bins,histtype='step',color='red')
+
+#plt.yscale('log')
+plt.title(field)
+plt.grid(True)
+plt.ylabel('N')
+plt.xlabel('S_3.6 / S_Radio')
 plt.show()
-1
-print "End Plotting\n"
+
+# Lets do colour colour IR to Radio
+# S_36/S_Radio vs S_80/S_Radio
+
+# Select required columns as some have null ! Select pairs where one is not null
+
+plt.scatter(IR36_Radio_Sp_rel,IR80_Radio_Sp_rel)
+plt.title(field)
+plt.grid(True)
+plt.xlim(0.0)
+plt.ylim(0.0)
+plt.ylabel('S_8.0 / S_Radio')
+plt.xlabel('S_3.6 / S_Radio')
+plt.show()
+
+plt.scatter(IR_36_58_rel,IR_80_58_rel)
+plt.title(field)
+plt.grid(True)
+plt.xlim(0.0)
+plt.ylim(0.0)
+plt.ylabel('S_8.0 / S_5.8')
+plt.xlabel('S_3.6 / S_5.8')
+plt.show()
+
+plt.scatter(IR_36_45_rel,IR_80_45_rel)
+plt.title(field)
+plt.grid(True)
+plt.xlim(0.0)
+plt.ylim(0.0)
+plt.ylabel('S_8.0 / S_4.5')
+plt.xlabel('S_3.6 / S_4.5')
+plt.show()
+
+
+
 
 
