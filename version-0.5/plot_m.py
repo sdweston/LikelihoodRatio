@@ -59,10 +59,14 @@ def plot_m():
 
 
     plt.plot(log10_f, total_m,'k.',log10_f,real_m,'g+',log10_f,bckgrd,'ro')
-    plot_title=field+'  Log10(f) vs Total(m)'
+    plot_title=field+'  Log10(f) vs #(m)'
     plt.title(plot_title)
+<<<<<<< .mine
+    plt.ylabel('#(m)')
+=======
     plt.yscale('log')
     plt.ylabel('N')
+>>>>>>> .r191
     plt.xlabel('log10(f)')
     plt.legend(["Total(m)","Real(m)","n(m) - Background"])
     plot_fname='atlas_'+field+'_magnitude_dependance.ps'
