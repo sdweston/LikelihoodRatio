@@ -72,13 +72,25 @@ print "Field : ",field," ; swire_schema : ",swire_schema
 
 # notify use of nearest neigbour search radius
 
-answer=raw_input('Nearest neighbour search radius (15 arcsec) :')
+answer=raw_input('Nearest neighbour search radius (10 arcsec) :')
 
 if answer !='':
     sr=float(answer)
     print "New nearest neighbour search radius : ",sr,"\n"
 else:
-    sr=15.0
+    sr=10.0
+
+# Magnitude Distribution of Background Sources - Method
+
+print "Magnitude Distribution of Background Sources Method\n"
+print " 1 - search radii \n"
+print " 2 - whole background catalogue \n"
+mdbs=raw_input('Which method 1 or 2 (default 2) :')
+
+if mdbs !='1' and mdbs!='2':
+   mdbs='2'
+
+print "\nMethod : ",mdbs,"\n"
 
 # Define outer search radius for n_m and real_m calculations, 100" seconds
 

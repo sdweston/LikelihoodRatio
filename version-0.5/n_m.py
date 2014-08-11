@@ -51,8 +51,17 @@ def n_m():
            "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_12)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
            "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_12,2) <= pow("+str(sr_out)+"/3600,2) "
            "limit 0,20000000;")
-    print sql1a,"\n"
-    db.query(sql1a)
+
+	
+# Based on answer to which method of Magnitude Distribution to use
+# run the appropriate database query
+
+    if mdbs=='1':
+       print sql1a,"\n"
+       db.query(sql1a)
+    else:
+       print sql1,"\n"
+       db.query(sql1)
 	
 # Note limit above in sql, mysql is usualy set to only retrieve 1000 rows. We have large 100's of thousands of entrys so
 # need a bigger limit to get all records !
@@ -159,8 +168,13 @@ def n_m():
     print "    Update database with n(m) values"
  	
     print nrs, sr_out,sr
-    
-    search_area=nrs *(math.pi * math.pow(sr_out,2) - math.pi * math.pow(sr,2))
+
+# Search area dependant on method of magnitude distribution of background sources:
+
+    if mdbs=='1':
+       search_area=nrs *(math.pi * math.pow(sr_out,2) - math.pi * math.pow(sr,2))
+    else:
+	   search_area=swire_sqsec
 		
     i=1
     for item in xrange(len(hist)):

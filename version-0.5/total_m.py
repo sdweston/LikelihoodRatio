@@ -24,8 +24,9 @@ def total_m():
 # Lets run a querry
 # We used to take the whole catalogue but now as Bonzini et al 2012 take the smaller search radius that
 # we xid within.
+# We now have two methods, so based on mdbs
 
-#    sql1=("select flux FROM "+schema+"."+field+"_matches where flux > -8.0;")
+    sql1=("select flux FROM "+schema+"."+field+"_matches where flux > -8.0;")
 	
     sql1a=("select t2.flux_ap2_36 "
            "FROM fusion."+field+" as t2, "+schema+"."+field+"_coords as t1 "
@@ -33,8 +34,16 @@ def total_m():
            "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_12)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
            "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_12,2) <= pow("+str(sr)+"/3600,2) "
            "limit 0,20000000;")
-    print sql1a,"\n"
-    db.query(sql1a)
+
+# Based on answer to which method of Magnitude Distribution to use
+# run the appropriate database query
+
+    if mdbs=='1':
+       print sql1a,"\n"
+       db.query(sql1a)
+    else:
+       print sql1,"\n"
+       db.query(sql1)
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
