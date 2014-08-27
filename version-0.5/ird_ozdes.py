@@ -13,6 +13,12 @@ print "\nentered : ",answer,"\n"
 
 db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
+# Preperation, truncate tables etc
+
+sql00=("truncate table atlas_dr3."+answer+"_ird_ozdes;")
+db.query(sql00)
+
+
 # Find the possible IR multiples, from those radio sources with more than one IR candidate
 # between the reliability figures.
 
@@ -104,7 +110,15 @@ for row in rows:
             dec=ozdes[2]
             ang_sep=ozdes[3]
             z=ozdes[4]
-#            print "ozdes :",id," ",ra," ",dec," ",z," ",ang_sep
+            print "ozdes :",id," ",ra," ",dec," ",z," ",ang_sep
+
+# Insert this row into table "field"_ird_ozdes, truncate table outside loop first
+
+#            sql3=("insert into "+schema+"."+field+"_ird_ozdes(cid,ozdes_id,ra,decl) \
+            sql3=("insert into atlas_dr3."+answer+"_ird_ozdes(cid,ozdes_id,ra,decl) \
+                   values ('"+cid1+"','"+id+"',"+ra+","+dec+");")
+            print sql3
+            db.query(sql3)
 
     print "\n"
 			  
