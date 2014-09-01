@@ -22,11 +22,40 @@ import astropysics as astro
 import pylab
 import sys
 
+pie=math.pi
+
 #def f_r_plot():
 
-field="elais_s1"
+# ask which field to process
+answer=raw_input('Which field cdfs/elais ?')
+print "\nentered : ",answer,"\n"
 
-print "Starting f(r) calculations and db updates"
+print "Plotting f(r) calculations vs radius"
+
+if answer == 'cdfs':
+   schema='atlas_dr3' 
+   field='cdfs'
+   swire_schema='swire_cdfs'
+   beam_maj=16.8
+   beam_min=6.9
+   beam_posn_ang=1.0
+   posn_offset_ra=0.0
+#   snr = 5.0 #cdfs snr_min
+   snr=23135.61 # cdfs snr_max
+#   snr=60.20 # cdfs snr_avg
+else:
+   schema='atlas_dr3' 
+   field='elais'
+   swire_schema='swire_es1'
+   beam_maj=12.2
+   beam_min=7.6
+   beam_posn_ang=-11.0
+   snr=5.0 #elais snr_min
+#   snr = 47.94 # elais snr_avg
+#   snr=8125 # elais snr_max
+#  See Middelberg et al 2007
+   posn_offset_ra=0.06
+   posn_offset_dec=0.08
 
 # Connect to the local database with the atlas uid
 
@@ -35,7 +64,7 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 # Lets run a querry
 # table4 for atlas.elais and atlas.cdfs are not consistent. Rename column dbmaj,dbmin to be majaxis,minaxis for both tables !
 
-sql1="select f_r,r_arcsec from "+field+".matches where f_r is not null"
+sql1="select f_r,r_arcsec from atlas_dr3."+field+"_matches where f_r is not null"
 db.query(sql1)
 
 		  
@@ -70,16 +99,55 @@ for row in rows:
 # Close connection to the database
 db.close()
 
+# Calculate the f(r) function using avg(snr) and beam_maj, beam_min
+
+# ACE - ancillary catalogue error, arcsec's
+
+ACE=0.1
+
+# IRE - intrensic radio error, arcsec's
+
+IRE=0.6
+
+#    print "SNR           : ",SNR
+
+# Work out FWHM
+
+# Calculate Sigma
+
+#sigma_x=math.sqrt((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
+sigma_x=((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
+#    print "Sigma X       : ",sigma_x
+
+#sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
+sigma_y=((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
+#    print "Sigma Y       : ",sigma_y
+
+#   sigma is the mean of sigma_x and sigma_y
+#   sum in quadrature ?
+#sigma=(sigma_x + sigma_y)/2
+sigma=math.sqrt(sigma_x + sigma_y)
+#    print "Sigma         : ",sigma
+
+x = numpy.linspace(0,10,1000) # 1000 linearly spaced numbers
+y = numpy.exp(-x**2/(2*sigma**2))*(1/(2*pie*sigma**2))
+
+#
+
 plt.plot(r_arcsec, f_r,'k.')
+plt.plot(x,y)
 plot_title='ATLAS ' +field+ ' f(r) vs r'
 plt.title(plot_title)
 plt.ylabel('f(r)')
 plt.xlabel('r (arcsec)')
 
-output_dir="F:/temp/"
-plot_fname='atlas_' +field+ '_fr_vs_r.ps'
+plt.xlim(0.0,10.0)
+plt.ylim(0.0,0.45)
+
+output_dir="D:/temp/"
+plot_fname='atlas_' +field+ '_fr_vs_r.eps'
 fname=output_dir + plot_fname
-plt.savefig(fname)
+plt.savefig(fname,format="eps")
 plt.show()
 
 print "\nEnd of Plot f(r)"

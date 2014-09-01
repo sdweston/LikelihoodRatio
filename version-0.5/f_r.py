@@ -169,6 +169,9 @@ def f_r():
     plt.ylabel('f(r)')
     plt.xlabel('r (arcsec)')
 
+    plt.xlim(0.0,10.0)
+    plt.ylim(0.0,0.45)
+
     plot_fname='atlas_' +field+ '_fr_vs_r.ps'
     fname=output_dir + plot_fname
     plt.savefig(fname)

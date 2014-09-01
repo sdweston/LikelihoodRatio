@@ -18,5 +18,14 @@ r=db.use_result()
 rows=r.fetch_row(maxrows=1)
 for row in rows:
     Q0=float(row[0])
+    str_q0=row[0]
 	
 db.close()
+
+# Allow a user input for Q0, if not given then take the calculated value from the database.
+
+answer=raw_input('Value for Q_0 ('+str_q0+') : ')
+if answer!='':
+   Q0=float(answer)
+   
+print "Q0 : ",Q0
