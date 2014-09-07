@@ -41,8 +41,8 @@ if answer == 'cdfs':
    beam_posn_ang=1.0
    posn_offset_ra=0.0
 #   snr = 5.0 #cdfs snr_min
-   snr=23135.61 # cdfs snr_max
-#   snr=60.20 # cdfs snr_avg
+   snr=60.20 # cdfs snr_avg
+#   snr=23135.61 # cdfs snr_max
 else:
    schema='atlas_dr3' 
    field='elais'
@@ -50,8 +50,8 @@ else:
    beam_maj=12.2
    beam_min=7.6
    beam_posn_ang=-11.0
-   snr=5.0 #elais snr_min
-#   snr = 47.94 # elais snr_avg
+#   snr=5.0 #elais snr_min
+   snr = 47.94 # elais snr_avg
 #   snr=8125 # elais snr_max
 #  See Middelberg et al 2007
    posn_offset_ra=0.06
@@ -78,7 +78,7 @@ r=db.use_result()
 
 # fetch results, returning char we need float !
 
-rows=r.fetch_row(maxrows=5000)
+rows=r.fetch_row(maxrows=6000)
 
 # rows is a tuple, convert it to a list
 
@@ -88,11 +88,15 @@ rows=r.fetch_row(maxrows=5000)
 
 r_arcsec=[]
 f_r=[]
+irows=0
 
 for row in rows:
 
         f_r.append(float(row[0]))
         r_arcsec.append(float(row[1]))
+        irows=irows+1
+
+print "Rows : ",irows
         
 # End of do block
 
@@ -115,12 +119,13 @@ IRE=0.6
 
 # Calculate Sigma
 
+# 0.655 see Smith et al 2011, Page 7
 #sigma_x=math.sqrt((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
-sigma_x=((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
+sigma_x=((0.655*(beam_min/snr))**2 + ACE**2 + IRE**2)
 #    print "Sigma X       : ",sigma_x
 
 #sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
-sigma_y=((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
+sigma_y=((0.655*(beam_maj/snr))**2 + ACE**2 + IRE**2)
 #    print "Sigma Y       : ",sigma_y
 
 #   sigma is the mean of sigma_x and sigma_y
@@ -142,7 +147,8 @@ plt.ylabel('f(r)')
 plt.xlabel('r (arcsec)')
 
 plt.xlim(0.0,10.0)
-plt.ylim(0.0,0.45)
+plt.yscale('log')
+plt.ylim(0.0,0.25)
 
 output_dir="D:/temp/"
 plot_fname='atlas_' +field+ '_fr_vs_r.eps'

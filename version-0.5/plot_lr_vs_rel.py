@@ -129,9 +129,9 @@ def plot_lr_rel():
     common_params['histtype'] = 'step'
     plt.hist(LR,**common_params)
 #    plt.plot(center, hist, 'k--', linewidth=1.5)
-    plot_fname='atlas_' +field+ '_N_vs_lr.pdf'
+    plot_fname='atlas_' +field+ '_N_vs_lr.eps'
     fname=output_dir + plot_fname
-    plt.savefig(fname,orientation='landscape')
+    plt.savefig(fname,orientation='landscape',format="eps")
     plt.show()
     
     print "End Plotting\n"

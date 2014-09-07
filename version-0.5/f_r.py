@@ -130,14 +130,17 @@ def f_r():
 
 # Calculate Sigma
 
-        sigma_x=math.sqrt((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
+#        sigma_x=math.sqrt((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
+        sigma_x=((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
 #    print "Sigma X       : ",sigma_x
 
-        sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
+#        sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
+        sigma_y=((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
 #    print "Sigma Y       : ",sigma_y
 
-#   sigma is the mean of sigma_x and sigma_y
-        sigma=(sigma_x + sigma_y)/2
+#   sigma is the mean of sigma_x and sigma_y, or quadrature (in paper quadrature)
+#        sigma=(sigma_x + sigma_y)/2
+        sigma=math.sqrt(sigma_x + sigma_y)
 #    print "Sigma         : ",sigma
 
 # r is the radial distance between the radio source and the aux catalogue source
@@ -170,11 +173,11 @@ def f_r():
     plt.xlabel('r (arcsec)')
 
     plt.xlim(0.0,10.0)
-    plt.ylim(0.0,0.45)
+    plt.ylim(0.0,0.25)
 
-    plot_fname='atlas_' +field+ '_fr_vs_r.ps'
+    plot_fname='atlas_' +field+ '_fr_vs_r.eps'
     fname=output_dir + plot_fname
-    plt.savefig(fname)
+    plt.savefig(fname,format="eps")
     plt.show()
 
     print "\nEnd of f(r)"
