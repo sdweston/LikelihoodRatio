@@ -66,9 +66,9 @@ def plot_m():
     plt.ylabel('N')
     plt.xlabel('log10(f)')
 #    plt.legend(["Total(m)","Real(m)","n(m) - Background"])
-    plot_fname='atlas_'+field+'_magnitude_dependance_%s.ps' %(Q0)
+    plot_fname='atlas_'+field+'_magnitude_dependance_%s.eps' %(Q0)
     fname=output_dir + plot_fname
-    plt.savefig(fname)
+    plt.savefig(fname,format="eps")
     plt.show()
 	
 # create a stepped histogram

@@ -84,9 +84,9 @@ def q_0():
     plt.grid()
 #output_dir='I:/PhD 2012/Marsfield April 2014/'
     output_dir='D:/temp/'
-    filename=field+'_q0.ps'
+    filename=field+'_q0.eps'
     fullname=output_dir+filename
-    plt.savefig(fullname)
+    plt.savefig(fullname,format="eps")
     plt.show()
  
     print "Q0                      : %f" % popt[0]

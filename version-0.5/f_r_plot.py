@@ -147,7 +147,7 @@ plt.ylabel('f(r)')
 plt.xlabel('r (arcsec)')
 
 plt.xlim(0.0,10.0)
-plt.yscale('log')
+#plt.yscale('log')
 plt.ylim(0.0,0.25)
 
 output_dir="D:/temp/"

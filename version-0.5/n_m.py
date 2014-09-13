@@ -145,9 +145,9 @@ def n_m():
     plt.title(plot_title)
     plt.ylabel('n(f)')
     plt.xlabel('log10(f)')
-    plot_fname='atlas_'+field+'_nf_vs_log10f.ps'
+    plot_fname='atlas_'+field+'_nf_vs_log10f.eps'
     fname=output_dir + plot_fname
-    plt.savefig(fname)
+    plt.savefig(fname,format="eps")
     plt.show()
     
 # We have the binned data as a histogram, now insert it into table n_m_lookup
