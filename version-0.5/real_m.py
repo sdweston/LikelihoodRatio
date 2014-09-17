@@ -75,7 +75,8 @@ def real_m():
         print "    Number of blended sources : ",ns
 
 # True_NRS=NRS - NOB + NS		
-    nrs=nrs-nob+ns
+#    nrs=nrs-nob+ns
+# No longer valid with latest ATLAS DR3.
 	
 # Find the number of background ir sources between R_s and R_100, 10 <= r <= 100
 # select count(*)
@@ -125,6 +126,8 @@ def real_m():
     print "Back Ground Area  : %f " % atlas_sqasec
 
 # b = ir_density, script to find all ir sources within 100 seconds of a radio source.
+# This is for Magnitude Distribution of Background Sources - Method 1 - search radii
+# what about method 2 ?
 
     search_area=(nrs*math.pi * math.pow(sr_out,2))-(nrs*math.pi * math.pow(sr,2))
 		

@@ -39,7 +39,7 @@ def rel():
 
 # fetch results, returning char we need float !
 
-    rows=r.fetch_row(maxrows=5000)
+    rows=r.fetch_row(maxrows=100000)
 
 # rows is a tuple, convert it to a list
 
@@ -52,7 +52,7 @@ def rel():
         cid=row[0]
         sum_lr=float(row[1])
 		
-        sys.stdout.write('.')
+#        sys.stdout.write('.')
     
 # now select each row from matches for each radio source where the flux is not null
 
@@ -62,7 +62,7 @@ def rel():
 	              and cid like '%s';" % (cid))
 
         r2=db.store_result()
-        strings=r2.fetch_row(maxrows=1000)
+        strings=r2.fetch_row(maxrows=100000)
 
         for string in strings:
 #        print string
@@ -74,6 +74,7 @@ def rel():
             rel= lr / (sum_lr + (1-Q0))
             LR.append(lr)
             REL.append(rel)
+            sys.stdout.write('.')
 #        print 'Reliability : %f ' % rel
 	
 #       Now update the matches table with the reliability

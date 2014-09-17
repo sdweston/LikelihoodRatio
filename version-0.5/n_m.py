@@ -29,11 +29,17 @@ def n_m():
 #    print "limits : ",swire_ra1,swire_ra2,swire_dec1,swire_dec2
     print "\n DB Schemas : ",field,swire_schema
 
+# Using FUSION servs-es1-data-fusion-sextractor.readme	18-Jul-2014 14:48, alot of the flus_ap2_36 (SWIRE_2013) entrys are Zero.
+# So lets try FLUX_APER_1_1 which is from http://irsa.ipac.caltech.edu/data/SPITZER/SWIRE/docs/delivery_doc_r2_v2.pdf
+	
+	   
 # Prior to V 0.4 we took the whole none-radio catalogue
-    sql1=("select flux_ap2_36 FROM fusion."+field+" "
-          " where flux_ap2_36 != -9.9 "
-          " and ra_12 > "+str(swire_ra1)+" and ra_12 < "+str(swire_ra2)+
-          " and dec_12 > "+str(swire_dec1)+" and dec_12 < "+str(swire_dec2)+";")
+#    sql1=("select flux_ap2_36 FROM fusion."+field+" "
+#          " where flux_ap2_36 != -9.9 "
+    sql1=("select flux_aper_2_1 FROM fusion."+field+" "
+          " where flux_aper_2_1 > 0 "
+          " and ra_1_1 > "+str(swire_ra1)+" and ra_1_1 < "+str(swire_ra2)+
+          " and dec_1_1 > "+str(swire_dec1)+" and dec_1_1 < "+str(swire_dec2)+";")
 #    print sql1,"\n"
 #    db.query(sql1)
 	
@@ -42,14 +48,21 @@ def n_m():
 # Also need to exclude over-blended radio components and treat as one radio source.
 
 # 26/5/2014 : Allow for catalogue position offset. posn_offset_ra, posn_offset_dec
+# 17/9/2014 : Mattia Vaccari - aper_2 fluxes are best used rather than aper_1 fluxes.
+#             that can make a difference for slightly extended galaxies.
+#             ra_12 is the average of servs irac1 and irac2 positions,
+#             when both are available, otherwise it's simply ra_1 or ra_2)
+#             and should be used at all times.
 
-    sql1a=("select t2.flux_ap2_36 "
+#    sql1a=("select t2.flux_ap2_36 "
+    sql1a=("select t2.flux_apper_2_1 "
            "FROM fusion."+field+" as t2, "+schema+"."+field+"_coords as t1 "
-           "WHERE flux_ap2_36 != -9.9 "
-           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_12)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
-           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_12,2) >= pow("+str(sr)+"/3600,2) "
-           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_12)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
-           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_12,2) <= pow("+str(sr_out)+"/3600,2) "
+#           "WHERE flux_ap2_36 != -9.9 "
+           "WHERE flux_aper_2_1 > 0 "
+           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_1_1)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
+           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_1_1,2) >= pow("+str(sr)+"/3600,2) "
+           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_1_1)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
+           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_1_1,2) <= pow("+str(sr_out)+"/3600,2) "
            "limit 0,20000000;")
 
 	

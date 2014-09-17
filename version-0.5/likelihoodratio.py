@@ -23,7 +23,7 @@ def lr():
 # Lets run a querry
 
     db.query("select cid,swire_index_spitzer,f_r,flux from "+schema+"."+field+"_matches \
-              where f_r is not null and flux > -9.0;")
+              where f_r is not null and flux > 0;")
           
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server 
@@ -35,7 +35,7 @@ def lr():
 
 # fetch results, returning char we need float !
 
-    rows=r.fetch_row(maxrows=5000)
+    rows=r.fetch_row(maxrows=100000)
 
 # rows is a tuple, convert it to a list
 
@@ -48,7 +48,7 @@ def lr():
         index_spitzer=row[1]
         f_r=float(row[2])
         flux=float(row[3])
-#    print "Flux %f" %flux
+#        print "Flux %f" %flux
         sys.stdout.write('.')
 
 #   check lookup table for values of q(m) and n(m)

@@ -199,7 +199,7 @@ if (answer =='Y' or answer=='y'):
     q_m()
 
 # Plot n(m), q(m) and total(m)
-#plot_m()
+plot_m()
 
 # Calculate LR
 

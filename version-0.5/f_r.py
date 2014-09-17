@@ -65,7 +65,8 @@ def f_r():
     db.query(sql_update_sigma)
 	
 # We are running against atlas_dr3 now, so need to join tables.
-    sql1=("select t1.cid, t1.swire_index_spitzer, t3.sint, t3.snr, t1.r_arcsec "
+#    sql1=("select t1.cid, t1.swire_index_spitzer, t3.sint, t3.snr, t1.r_arcsec "
+    sql1=("select t1.cid, t1.swire_index_spitzer, t3.sp, t3.snr, t1.r_arcsec "
           " from "+schema+"."+field+"_matches as t1, "+schema+"."+field+"_deconv as t2, "+schema+"."+field+"_radio_properties as t3 "
           " where t1.cid=t2.id "
           " and t1.cid=t3.id "
@@ -129,30 +130,33 @@ def f_r():
 # Work out FWHM
 
 # Calculate Sigma
-
-#        sigma_x=math.sqrt((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
-        sigma_x=((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
+#        Will need to allow for beam angle !
+#        sigma_x=math.sqrt((0.6*(beam_min/snr))**2)
+        sigma_x=((0.6*(beam_min/snr))**2 )
 #    print "Sigma X       : ",sigma_x
 
-#        sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
-        sigma_y=((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
+#        sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 )
+        sigma_y=((0.6*(beam_maj/snr))**2 )
 #    print "Sigma Y       : ",sigma_y
 
 #   sigma is the mean of sigma_x and sigma_y, or quadrature (in paper quadrature)
 #        sigma=(sigma_x + sigma_y)/2
-        sigma=math.sqrt(sigma_x + sigma_y)
+#       Do we need to sqrt here, when in f_r we square again. Save a calculation by not doing a sqrt.
+#        sigma=math.sqrt(sigma_x + sigma_y + ACE**2 + IRE**2)
+        sigma=(sigma_x + sigma_y + ACE**2 + IRE**2)
 #    print "Sigma         : ",sigma
 
 # r is the radial distance between the radio source and the aux catalogue source
 # r was returned from the sql in the matches table
 
 # Calculate f(r)
-
-        f_r=(1/(2*math.pi*sigma**2)) * math.exp(-r**2/2*sigma**2)
+#        By the formula it should be sigma**2, but see above why sqrt when we will sq again !
+#        f_r=(1/(2*math.pi*sigma**2)) * math.exp(-r**2/2*sigma**2)
+        f_r=(1/(2*math.pi*sigma)) * math.exp(-r**2/2*sigma)
         F_R.append(f_r)
         RADIUS.append(r)
 
-#    print "cid   index_spitzer   f(r) : ",cid,index_spitzer,f_r
+#       print "cid   index_spitzer sigma r f(r) : ",cid,index_spitzer,sigma,r,f_r
 #    print "\n"
 
 #        print "    Update the database with the f(r) values"
@@ -173,7 +177,7 @@ def f_r():
     plt.xlabel('r (arcsec)')
 
     plt.xlim(0.0,10.0)
-    plt.ylim(0.0,0.25)
+    plt.ylim(0.0,0.5)
 
     plot_fname='atlas_' +field+ '_fr_vs_r.eps'
     fname=output_dir + plot_fname

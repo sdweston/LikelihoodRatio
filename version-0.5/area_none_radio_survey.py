@@ -42,12 +42,12 @@ def area_none_radio_survey():
       dec1=-28.841196
       dec2=-27.213252
 
-#     Define an area of swire to determine n(m) over.
+#     Define an area of swire to search NN and determine n(m) over.
 	  
       swire_ra1=51.7
       swire_ra2=54.2
-      swire_dec1=-29.6
-      swire_dec2=-27.0
+      swire_dec1=-29.0
+      swire_dec2=-27.2
 
 
     else:
@@ -58,12 +58,12 @@ def area_none_radio_survey():
       dec1=-44.601035
       dec2=-42.899883
 	  
-#     Define an area of swire to determine n(m) over.
+#     Define an area of swire to search NN and determine n(m) over.
 	  
-      swire_ra1=7.6
-      swire_ra2=9.4
-      swire_dec1=-44.6
-      swire_dec2=-42.4
+      swire_ra1=8.4
+      swire_ra2=9.8
+      swire_dec1=-44.8
+      swire_dec2=-42.9
 
 	  
 #    print "ATLAS Area square degrees : %f" % area_sqdeg

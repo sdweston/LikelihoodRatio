@@ -121,21 +121,21 @@ IRE=0.6
 
 # 0.655 see Smith et al 2011, Page 7
 #sigma_x=math.sqrt((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
-sigma_x=((0.655*(beam_min/snr))**2 + ACE**2 + IRE**2)
+sigma_x=((0.655*(beam_min/snr))**2 )
 #    print "Sigma X       : ",sigma_x
 
 #sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
-sigma_y=((0.655*(beam_maj/snr))**2 + ACE**2 + IRE**2)
+sigma_y=((0.655*(beam_maj/snr))**2 )
 #    print "Sigma Y       : ",sigma_y
 
 #   sigma is the mean of sigma_x and sigma_y
 #   sum in quadrature ?
 #sigma=(sigma_x + sigma_y)/2
-sigma=math.sqrt(sigma_x + sigma_y)
+sigma=(sigma_x + sigma_y + ACE**2 + IRE**2)
 #    print "Sigma         : ",sigma
 
 x = numpy.linspace(0,10,1000) # 1000 linearly spaced numbers
-y = numpy.exp(-x**2/(2*sigma**2))*(1/(2*pie*sigma**2))
+y = numpy.exp(-x**2/(2*sigma))*(1/(2*pie*sigma))
 
 #
 
@@ -148,7 +148,7 @@ plt.xlabel('r (arcsec)')
 
 plt.xlim(0.0,10.0)
 #plt.yscale('log')
-plt.ylim(0.0,0.25)
+plt.ylim(0.0,0.5)
 
 output_dir="D:/temp/"
 plot_fname='atlas_' +field+ '_fr_vs_r.eps'

@@ -59,14 +59,14 @@ def plot_m():
 
 
     plt.plot(log10_f, total_m,'k.',log10_f,real_m,'g+',log10_f,bckgrd,'ro')
-    plot_title=field+'  Log10(f) vs #(m), Q0=%s' % (Q0)
+    plot_title=field+'  Log10(f) vs #(m)' 
     plt.title(plot_title)
     plt.ylabel('#(m)')
     plt.yscale('log')
     plt.ylabel('N')
     plt.xlabel('log10(f)')
-#    plt.legend(["Total(m)","Real(m)","n(m) - Background"])
-    plot_fname='atlas_'+field+'_magnitude_dependance_%s.eps' %(Q0)
+    plt.legend(["Total(m)","Real(m)","n(m) - Background"])
+    plot_fname='atlas_'+field+'_magnitude_dependance.eps' 
     fname=output_dir + plot_fname
     plt.savefig(fname,format="eps")
     plt.show()
