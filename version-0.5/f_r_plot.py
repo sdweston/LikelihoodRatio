@@ -140,15 +140,15 @@ y = numpy.exp(-x**2/(2*sigma))*(1/(2*pie*sigma))
 #
 
 plt.plot(r_arcsec, f_r,'k.')
-plt.plot(x,y)
+#plt.plot(x,y)
 plot_title='ATLAS ' +field+ ' f(r) vs r'
 plt.title(plot_title)
 plt.ylabel('f(r)')
 plt.xlabel('r (arcsec)')
 
 plt.xlim(0.0,10.0)
-#plt.yscale('log')
-plt.ylim(0.0,0.5)
+plt.yscale('log')
+#plt.ylim(0.0,0.5)
 
 output_dir="D:/temp/"
 plot_fname='atlas_' +field+ '_fr_vs_r.eps'
