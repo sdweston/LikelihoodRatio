@@ -28,22 +28,13 @@ def total_m():
 
     sql1=("select flux FROM "+schema+"."+field+"_matches where flux > 0;")
 
-# Using FUSION servs-es1-data-fusion-sextractor.readme	18-Jul-2014 14:48, alot of the flus_ap2_36 (SWIRE_2013) entrys are Zero.
-# So lets try FLUX_APER_1_1 which is from http://irsa.ipac.caltech.edu/data/SPITZER/SWIRE/docs/delivery_doc_r2_v2.pdf
+# Use SWIRE (cdfs/elais)_swire-sdss-cat-plus-full
 
-# 17/9/2014 : Mattia Vaccari - aper_2 fluxes are best used rather than aper_1 fluxes.
-#             that can make a difference for slightly extended galaxies.
-#             ra_12 is the average of servs irac1 and irac2 positions,
-#             when both are available, otherwise it's simply ra_1 or ra_2)
-#             and should be used at all times.
-	
-#    sql1a=("select t2.flux_ap2_36 "
-    sql1a=("select t2.flux_aper_2_1 "
-           "FROM fusion."+field+" as t2, "+schema+"."+field+"_coords as t1 "
-#           "WHERE flux_ap2_36 != -9.9 "
-           "WHERE flux_aper_2_1 > 0 "
-           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_1_1)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
-           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_1_1,2) <= pow("+str(sr)+"/3600,2) "
+    sql1a=("select t2.IRAC_3_6_micron_Flux_muJy "
+           "FROM fusion.swire_"+field+" as t2, "+schema+"."+field+"_coords as t1 "
+           "WHERE IRAC_3_6_micron_Flux_muJy > 0 "
+           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
+           "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,2) <= pow("+str(sr)+"/3600,2) "
            "limit 0,20000000;")
 
 # Based on answer to which method of Magnitude Distribution to use

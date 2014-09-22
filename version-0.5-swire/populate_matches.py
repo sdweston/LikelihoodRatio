@@ -36,22 +36,20 @@ def pm():
     
     print "find all matches within search radius\n"
 
-# Using FUSION servs-es1-data-fusion-sextractor.readme	18-Jul-2014 14:48, alot of the flus_ap2_36 (SWIRE_2013) entrys are Zero.
-# So lets try FLUX_APER_1_1 which is from http://irsa.ipac.caltech.edu/data/SPITZER/SWIRE/docs/delivery_doc_r2_v2.pdf
+# Use SWIRE (cdfs/elais)_swire-sdss-cat-plus-full
 
     sql1=("insert into "+schema+"."+field+"_matches(cid,swire_index_spitzer,dx,dy,r_arcsec,flux) "
               "select t1.id, "
-              "t2.ID_12, "
-              "(t1.ra-"+str(posn_offset_ra)+"-t2.ra_1_1)*cos(t1.decl-"+str(posn_offset_dec)+"), "
-              "t1.decl-"+str(posn_offset_dec)+"-t2.dec_12, "
-              "sqrt(pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_1_1)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_1_1,2))*3600, "
-#			  "t2.flux_ap2_36 "
-              "t2.flux_aper_2_1 "
-              "from "+schema+"."+field+"_coords as t1, fusion."+field+" as t2 "
-              "where pow((t1.ra-"+str(posn_offset_ra)+"-t2.ra_1_1)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+" 
-              "pow(t1.decl-"+str(posn_offset_dec)+"-t2.dec_1_1,2) <= pow("+str(sr)+"/3600,2) "
-              " and   t2.ra_1_1 > "+str(ra1)+" and t2.ra_1_1 < "+str(ra2)+" "
-              " and   t2.dec_1_1 > "+str(dec1)+" and t2.dec_1_1 < "+str(dec2)+" limit 0,3000000; ")
+              "t2.Index_Spitzer, "
+              "(t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(t1.decl-"+str(posn_offset_dec)+"), "
+              "t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer, "
+              "sqrt(pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+pow(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,2))*3600, "
+              "t2.IRAC_3_6_micron_Flux_muJy "
+              "from "+schema+"."+field+"_coords as t1, fusion.swire_"+field+" as t2 "
+              "where pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+" 
+              "pow(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,2) <= pow("+str(sr)+"/3600,2) "
+              " and   t2.RA_Spitzer > "+str(ra1)+" and t2.RA_Spitzer < "+str(ra2)+" "
+              " and   t2.Dec_Spitzer > "+str(dec1)+" and t2.Dec_Spitzer < "+str(dec2)+" limit 0,3000000; ")
 
 
     print sql1,"\n"

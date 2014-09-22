@@ -62,9 +62,9 @@ else:
    beam_maj=12.2
    beam_min=7.6
    beam_posn_ang=-11.0
-#  See Middelberg et al 2007
-   posn_offset_ra=0.06
-   posn_offset_dec=0.08
+#  See Middelberg et al 2007, these are in arcsec need to be decimal degrees !!!!
+   posn_offset_ra=0.06/3600
+   posn_offset_dec=0.08/3600
    
 print "Field : ",field," ; swire_schema : ",swire_schema
 
