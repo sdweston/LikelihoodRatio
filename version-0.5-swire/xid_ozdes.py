@@ -86,10 +86,10 @@ for row in rows:
 #        print "find all OzDES matches within search radius\n"
 	
         sql4="select id,ra,decl, \
-                     pow((ra-"+fsi[1]+")*cos(decl),2)+pow(decl-"+fsi[2]+",2) as rs \
+                     pow((ra-"+fsi[1]+")*cos(radians(decl)),2)+pow(decl-"+fsi[2]+",2) as rs \
               from atlas_dr3.ozdes_"+answer+" \
               where \
-              pow((ra-"+fsi[1]+")*cos(decl),2)+pow(decl-"+fsi[2]+",2) <= pow(5/3600,2) \
+              pow((ra-"+fsi[1]+")*cos(radians(decl)),2)+pow(decl-"+fsi[2]+",2) <= pow(5/3600,2) \
               order by rs asc \
               limit 1;"
 

@@ -84,12 +84,12 @@ def real_m():
 # (select t1.id,
 #       t2.index_spitzer,
 #       t2.IRAC_3_6_micron_FLUX_MUJY, 
-#       sqrt(pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+pow(t1.decl-t2.DEC_SPITZER,2))*3600 as "angsep arcsec"
+#       sqrt(pow((t1.ra-t2.RA_SPITZER)*cos(radians(t1.decl)),2)+pow(t1.decl-t2.DEC_SPITZER,2))*3600 as "angsep arcsec"
 # FROM swire_cdfs.swire as t2, atlas_dr3.cdfs_coords as t1
 # where IRAC_3_6_micron_FLUX_MUJY != -9.9
-# and   pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+
+# and   pow((t1.ra-t2.RA_SPITZER)*cos(radians(t1.decl)),2)+
 #      pow(t1.decl-t2.DEC_SPITZER,2) >= pow("+str(sr)+"/3600,2)
-# and   pow((t1.ra-t2.RA_SPITZER)*cos(t1.decl),2)+
+# and   pow((t1.ra-t2.RA_SPITZER)*cos(radians(t1.decl)),2)+
 #       pow(t1.decl-t2.DEC_SPITZER,2) <= pow("+str(sr_out)+"/3600,2)
 # limit 0,20000000) as a1;
 		

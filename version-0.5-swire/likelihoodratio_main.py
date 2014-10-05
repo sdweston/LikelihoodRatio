@@ -21,6 +21,12 @@ def auks():
     pie=math.pi
     e=math.e
     eradian=180.0/math.pi
+    global dradian
+    dradian=math.pi/180
+
+# NOTE: all trig funcations use radian's !
+# so multiply degrees by "dradian"
+# for sql use the radians functions, ie cos(radians(deg))
 
 def print_header():
 	print "Likelihood Ratio"

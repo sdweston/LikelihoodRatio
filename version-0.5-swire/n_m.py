@@ -51,9 +51,9 @@ def n_m():
     sql1a=("select t2.IRAC_3_6_micron_Flux_muJy "
            "FROM fusion.swire_"+field+" as t2, "+schema+"."+field+"_coords as t1 "
            "WHERE IRAC_3_6_micron_Flux_muJy > 0 "
-           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
+           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(radians(t1.decl-"+str(posn_offset_dec)+")),2)+ "
            "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,2) >= pow("+str(sr)+"/3600,2) "
-           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(t1.decl-"+str(posn_offset_dec)+"),2)+ "
+           "and   pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(radians(t1.decl-"+str(posn_offset_dec)+")),2)+ "
            "      pow(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,2) <= pow("+str(sr_out)+"/3600,2) "
            "limit 0,20000000;")
 

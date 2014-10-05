@@ -16,8 +16,11 @@ from astropysics.constants import c,G
 
 schema="atlas_dr3"
 field="cdfs"
-swire_schema='swire_cdfs'
+swire_schema='cdfs'
 sr=20.0
+
+global dradian
+dradian=math.pi/180
 
 #===================================================================================================
 #
@@ -82,10 +85,10 @@ for row in rows:
 
     sql=("select "
          "t2.Index_Spitzer, "
-         "sqrt(pow(("+str(ra)+"-t2.RA_SPITZER)*cos("+str(dec)+"),2)+"
+         "sqrt(pow(("+str(ra)+"-t2.RA_SPITZER)*cos(radians("+str(dec)+")),2)+"
          "     pow("+str(dec)+"-t2.DEC_SPITZER,2))*3600 as radius "
-	 "from "+swire_schema+".swire as t2 "
-         "where pow(("+str(ra)+"-t2.RA_SPITZER)*cos("+str(dec)+"),2)+" 
+	 	 "from fusion.swire_"+swire_schema+" as t2 "
+         "where pow(("+str(ra)+"-t2.RA_SPITZER)*cos(radians("+str(dec)+")),2)+" 
          "      pow("+str(dec)+"-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2) "
          " and   t2.ra_spitzer > "+str(ra_min)+" and t2.ra_spitzer < "+str(ra_max)+" "
          " and   t2.dec_spitzer > "+str(dec_min)+" and t2.dec_spitzer < "+str(dec_max)+

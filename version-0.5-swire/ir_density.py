@@ -48,7 +48,7 @@ for row in rows:
     
     sql2=("select count(*) "
          "from "+swire_schema+".es1_swire as t2 "
-         "where pow(("+str(ra)+"-t2.RA_SPITZER)*cos("+str(decl)+"),2)+" 
+         "where pow(("+str(ra)+"-t2.RA_SPITZER)*cos(radians("+str(decl)+")),2)+" 
          "pow("+str(decl)+"-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2); ")
 
     db.query(sql2)

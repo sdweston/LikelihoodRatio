@@ -46,7 +46,7 @@ for row in rows:
     ra=float(row[1])
     dec=float(row[2])
     db=MySQLdb.connect(host="localhost",user="atlas",passwd="atlas")
-    db.query("select count(index_spitzer) from swire_es1.es1 as t2 where pow((%f-t2.RA_SPITZER)*cos(%f),2)+ pow(%f-t2.DEC_SPITZER,2) <= pow(30/3600,2);" % (ra,dec,dec))
+    db.query("select count(index_spitzer) from swire_es1.es1 as t2 where pow((%f-t2.RA_SPITZER)*cos(radians(%f)),2)+ pow(%f-t2.DEC_SPITZER,2) <= pow(30/3600,2);" % (ra,dec,dec))
     result=db.use_result()
     count=result.fetch_row(maxrows=1)
     print "Result: ",count[1]
@@ -55,7 +55,7 @@ for row in rows:
     db.close()
 	  
 
-# where pow((t1.RA_Deg-t2.RA_SPITZER)*cos(t1.Dec_Deg),2)+
+# where pow((t1.RA_Deg-t2.RA_SPITZER)*cos(radians(t1.Dec_Deg)),2)+
 #      pow(t1.Dec_Deg-t2.DEC_SPITZER,2) <= pow(2/3600,2)
  
 # Close connection to the database

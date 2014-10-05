@@ -55,9 +55,9 @@ def rp():
 
     sql4=("insert into "+schema+"."+field+"_radio_pairs(cid1,cid2,ang_sep_arcsec)"
          " select t1.id, t2.id,"
-         " format(sqrt(pow((t1.RA-t2.RA)*cos(t1.Decl),2)+pow(t1.Decl-t2.Decl,2))*3600,6)"
+         " format(sqrt(pow((t1.RA-t2.RA)*cos(radians(t1.Decl)),2)+pow(t1.Decl-t2.Decl,2))*3600,6)"
          " from "+schema+"."+field+"_coords as t1, "+schema+"."+field+"_coords as t2"
-         " where pow((t1.RA-t2.RA)*cos(t1.Decl),2)+pow(t1.Decl-t2.Decl,2) <= pow(100/3600,2)"
+         " where pow((t1.RA-t2.RA)*cos(radians(t1.Decl)),2)+pow(t1.Decl-t2.Decl,2) <= pow(100/3600,2)"
          " and t1.id!=t2.id"
          " limit 0,20000;")
     print sql4,"\n"		 
