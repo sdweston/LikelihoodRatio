@@ -37,14 +37,19 @@ def pm():
     print "find all matches within search radius\n"
 
 # Use SWIRE (cdfs/elais)_swire-sdss-cat-plus-full
+# Add "theta" angle of vector between Radio and IR sources.
+#     This function returns the arctangent of the two arguments: X and Y. 
+#     It is similar to the arctangent of Y/X, except that the signs of both
+#     are used to find the quadrant of the result.
 
-    sql1=("insert into "+schema+"."+field+"_matches(cid,swire_index_spitzer,dx,dy,r_arcsec,flux) "
+    sql1=("insert into "+schema+"."+field+"_matches(cid,swire_index_spitzer,dx,dy,r_arcsec,flux,theta) "
               "select t1.id, "
               "t2.Index_Spitzer, "
               "(t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(radians(t1.decl-"+str(posn_offset_dec)+")), "
               "t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer, "
               "sqrt(pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(radians(t1.decl-"+str(posn_offset_dec)+")),2)+pow(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,2))*3600, "
-              "t2.IRAC_3_6_micron_Flux_muJy "
+              "t2.IRAC_3_6_micron_Flux_muJy,			  "
+			  "atan2(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,(t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(radians(t1.decl-"+str(posn_offset_dec)+"))) "
               "from "+schema+"."+field+"_coords as t1, fusion.swire_"+field+" as t2 "
               "where pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(radians(t1.decl-"+str(posn_offset_dec)+")),2)+" 
               "pow(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,2) <= pow("+str(sr)+"/3600,2) "

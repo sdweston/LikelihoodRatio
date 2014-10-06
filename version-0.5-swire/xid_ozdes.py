@@ -28,7 +28,7 @@ db.query(sql00)
 #          where reliability > 0.3 and reliability < 0.7) ;"
 
 sql0="drop table atlas_dr3."+answer+"_ird;"
-#db.query(sql0)
+db.query(sql0)
 
 sql1="create table if not exists atlas_dr3."+answer+"_ird as ( \
           select t1.cid,t1.swire_index_spitzer,t2.ra_spitzer,t2.dec_spitzer,t1.reliability,t1.lr \
@@ -124,7 +124,7 @@ for row in rows:
 # Close connection to the database
 db.close()
 
-Produce the catalogue with this sql:
+#Produce the catalogue with this sql:
 #select t1.cid,t2.ra,t2.decl,t1.swire_index_spitzer,t3.ra_spitzer,t3.dec_spitzer,t4.ozdes_id,t4.ra, t4.decl,t1.reliability
 #from atlas_dr3.elais_matches as t1, atlas_dr3.elais_coords as t2, fusion.swire_elais as t3, atlas_dr3.elais_ird_ozdes as t4
 #where t1.cid=t2.id

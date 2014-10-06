@@ -26,6 +26,7 @@ def auks():
 
 # NOTE: all trig funcations use radian's !
 # so multiply degrees by "dradian"
+# In the database tables we have decimal degrees
 # for sql use the radians functions, ie cos(radians(deg))
 
 def print_header():

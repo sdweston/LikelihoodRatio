@@ -66,7 +66,9 @@ def f_r():
 	
 # We are running against atlas_dr3 now, so need to join tables.
 #    sql1=("select t1.cid, t1.swire_index_spitzer, t3.sint, t3.snr, t1.r_arcsec "
-    sql1=("select t1.cid, t1.swire_index_spitzer, t3.sp, t3.snr, t1.r_arcsec "
+
+# note: theta is stored in radians
+    sql1=("select t1.cid, t1.swire_index_spitzer, t3.sp, t3.snr, t1.r_arcsec, t1.theta "
           " from "+schema+"."+field+"_matches as t1, "+schema+"."+field+"_deconv as t2, "+schema+"."+field+"_radio_properties as t3 "
           " where t1.cid=t2.id "
           " and t1.cid=t3.id "
@@ -110,6 +112,7 @@ def f_r():
         if row[4]==None:
             continue
         r=float(row[4])
+        theta=float(row[5])
     
 #    print cid, index_spitzer,dbmaj,dbmin,sint,rms,r
         sys.stdout.write('.')
@@ -132,11 +135,11 @@ def f_r():
 # Calculate Sigma
 #        Will need to allow for beam angle !
 #        sigma_x=math.sqrt((0.6*(beam_min/snr))**2)
-        sigma_x=((0.6*(beam_min/snr))**2 )
+        sigma_x=((0.6*(beam_min/snr)*math.sin(theta))**2 )
 #    print "Sigma X       : ",sigma_x
 
 #        sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 )
-        sigma_y=((0.6*(beam_maj/snr))**2 )
+        sigma_y=((0.6*(beam_maj/snr)*math.cos(theta))**2 )
 #    print "Sigma Y       : ",sigma_y
 
 #   sigma is the mean of sigma_x and sigma_y, or quadrature (in paper quadrature)
