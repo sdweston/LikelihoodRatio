@@ -81,7 +81,9 @@ for row in rows:
     for row in rows:
         ra_radio=row[0]
         dec_radio=row[1]
-        print f1 "Coords : ",cid1,ra_radio,dec_radio
+#        print f1, (" %s,%s,%s " % (cid1,ra_radio,dec_radio))
+        f1.write('ATLAS Source '+cid1+','+ra_radio+','+dec_radio+' \n')
+#        print f1, "testing"
         f_ra_radio=float(ra_radio)
         f_dec_radio=float(dec_radio)
 
@@ -122,8 +124,8 @@ for row in rows:
 
 
 #   So now get coords for spitzer match
-        sql5=("SELECT ra_spitzer, dec_spitzer,irac_3_6_m_flux_mujy \
-              from swire_"+answer+".swire \
+        sql5=("SELECT ra_spitzer, dec_spitzer,irac_3_6_micron_flux_mujy \
+              from fusion.swire_"+answer+" \
               where index_spitzer="+swire_id+";")
         db.query(sql5)
         r=db.use_result()
@@ -132,9 +134,10 @@ for row in rows:
         for sub_row in sub_rows:
             ra_spitzer=sub_row[0]
             dec_spitzer=sub_row[1]
-			f_3_6=sub_row[2]
+            f_3_6=sub_row[2]
         
-        print f1 "IR Candidate: ",swire_id,ra_spitzer,dec_spitzer,rel,f_3_6
+        print "IR Candidate: ",swire_id,ra_spitzer,dec_spitzer,rel,f_3_6
+        f1.write('     IR Candidates '+swire_id+','+ra_spitzer+','+dec_spitzer+','+rel+','+f_3_6+' \n')
 
         # add lines to the region file to identify the non-radio candidates
 
@@ -171,8 +174,8 @@ for row in rows:
 		 ' -saveimage '+postage_stamp_filename+' 100 -exit '
 #    print cmd2
 
-    os.system(cmd1)
-    os.system(cmd2)
+#    os.system(cmd1)
+#    os.system(cmd2)
 	
 f1.close()
 
