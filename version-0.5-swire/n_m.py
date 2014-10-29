@@ -46,7 +46,7 @@ def n_m():
 #             ra_12 is the average of servs irac1 and irac2 positions,
 #             when both are available, otherwise it's simply ra_1 or ra_2)
 #             and should be used at all times.
-
+# 21/10/2014 : Back using FUSION SERVS, so use IRAC_3_6_micron_Flux_muJy
 
     sql1a=("select t2.IRAC_3_6_micron_Flux_muJy "
            "FROM fusion.swire_"+field+" as t2, "+schema+"."+field+"_coords as t1 "
