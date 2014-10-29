@@ -64,9 +64,9 @@ def plot_lr_rel():
     plt.xlabel('Likelihood Ratio')
     plt.grid(True)
     plt.ylim((-0.1,1.1))
-    plot_fname='atlas_' +field+ '_rel_vs_lr.pdf'
+    plot_fname='atlas_' +field+ '_rel_vs_lr.eps'
     fname=output_dir + plot_fname
-    plt.savefig(fname,orientation='landscape')
+    plt.savefig(fname,orientation='landscape',format="eps")
     plt.show()
 
 # Bin Reliability and plot	
@@ -95,9 +95,9 @@ def plot_lr_rel():
     plt.hist(REL,**common_params)
     plt.ylim(0.9999)
 #    pylab.hist(hist, bins=bins, normed=1,histtype='step')
-    plot_fname='atlas_' +field+ '_N_vs_rel.pdf'
+    plot_fname='atlas_' +field+ '_N_vs_rel.eps'
     fname=output_dir + plot_fname
-    plt.savefig(fname,orientation='landscape')
+    plt.savefig(fname,orientation='landscape',format="eps")
     plt.show()
 	
 # Bin LR and plot

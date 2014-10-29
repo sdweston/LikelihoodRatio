@@ -155,9 +155,9 @@ plot_title=' Catalog Position Offsets - ECDFS'
 plt.title(plot_title)
 plt.ylabel('Delta Dec arc seconds')
 plt.xlabel('Delta RA arc seconds')
-plot_fname='nn_atlas_dr3_ecdfs_cat_posn_offset.pdf'
+plot_fname='nn_atlas_dr3_ecdfs_cat_posn_offset.eps'
 fname=output_dir + plot_fname
-plt.savefig(fname)
+plt.savefig(fname,format="eps")
 plt.show()
 
 print "End Plotting\n"
