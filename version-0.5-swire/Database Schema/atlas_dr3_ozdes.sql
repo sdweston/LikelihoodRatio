@@ -18,23 +18,24 @@ USE `atlas_dr3`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `cdfs_radio_properties`
+-- Table structure for table `ozdes`
 --
 
-DROP TABLE IF EXISTS `cdfs_radio_properties`;
+DROP TABLE IF EXISTS `ozdes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cdfs_radio_properties` (
-  `id` varchar(8) NOT NULL COMMENT 'Component identification number',
-  `snr` float DEFAULT NULL COMMENT 'signal-to-noise ratio of raw dectection',
-  `rms` float DEFAULT NULL COMMENT 'local rms noise level (mJy/beam)',
-  `bws` float DEFAULT NULL COMMENT 'local bandwidth smearing value',
-  `sp` float DEFAULT NULL COMMENT 'Fitted source peak (mJy/beam)',
-  `sp_err` float DEFAULT NULL COMMENT 'Error in fitted source peak (mJy/beam)',
-  `sint` float DEFAULT NULL COMMENT 'Integrated flux density (mJy)',
-  `sint_err` float DEFAULT NULL COMMENT 'Error in integrated flux density (mJy)',
-  `obs_freq` float DEFAULT NULL COMMENT 'Frequency at which the peak and integrated flux was measured (MHz)',
-  PRIMARY KEY (`id`)
+CREATE TABLE `ozdes` (
+  `ID` varchar(30) NOT NULL,
+  `RA` double DEFAULT NULL,
+  `DECL` double DEFAULT NULL,
+  `z` float DEFAULT NULL,
+  `z_Err` float DEFAULT NULL,
+  `flag` varchar(4) DEFAULT NULL,
+  `source` varchar(20) DEFAULT NULL,
+  `comments` varchar(30) DEFAULT NULL,
+  KEY `RA` (`RA`),
+  KEY `DECL` (`DECL`),
+  KEY `ID` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -47,4 +48,4 @@ CREATE TABLE `cdfs_radio_properties` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-12-01 18:55:36
+-- Dump completed on 2014-12-01 18:55:59

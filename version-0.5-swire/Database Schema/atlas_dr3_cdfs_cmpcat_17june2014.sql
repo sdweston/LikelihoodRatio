@@ -18,16 +18,16 @@ USE `atlas_dr3`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `cdfs_cmpcat`
+-- Table structure for table `cdfs_cmpcat_17june2014`
 --
 
-DROP TABLE IF EXISTS `cdfs_cmpcat`;
+DROP TABLE IF EXISTS `cdfs_cmpcat_17june2014`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cdfs_cmpcat` (
-  `ID` varchar(8) DEFAULT NULL COMMENT 'Component identification number',
-  `Survey` varchar(6) DEFAULT NULL,
-  `Name` varchar(20) DEFAULT NULL COMMENT 'Full catalogue name',
+CREATE TABLE `cdfs_cmpcat_17june2014` (
+  `ID` varchar(8) NOT NULL DEFAULT '' COMMENT 'Component identification number',
+  `Name1` varchar(6) DEFAULT NULL,
+  `Name2` varchar(20) DEFAULT NULL,
   `RA` double DEFAULT NULL COMMENT 'Right Ascension (degrees, J2000)',
   `DECL` double DEFAULT NULL COMMENT 'Declination (degrees, J2000)',
   `RA_ERR` double DEFAULT NULL COMMENT 'Error in right ascension (arcsec)',
@@ -36,18 +36,17 @@ CREATE TABLE `cdfs_cmpcat` (
   `RMS` float DEFAULT NULL COMMENT 'local rms noise level (mJy/beam)',
   `BWS` float DEFAULT NULL COMMENT 'local bandwidth smearing value',
   `Sp` float DEFAULT NULL COMMENT 'Fitted source peak (mJy/beam)',
-  `Sp_Err` float DEFAULT NULL COMMENT 'Error in fitted source peak (mJy/beam)',
-  `SInt` float DEFAULT NULL COMMENT 'Integrated flux density (mJy)',
-  `SInt_Err` float DEFAULT NULL COMMENT 'Error in integrated flux density (mJy)',
+  `Sp_ERR` float DEFAULT NULL COMMENT 'Error in fitted source peak (mJy/beam)',
+  `Sint` double DEFAULT NULL COMMENT 'Integrated flux density (mJy)',
+  `Sint_ERR` float DEFAULT NULL COMMENT 'Error in integrated flux density (mJy)',
   `DECONV` float DEFAULT NULL COMMENT 'Deconvolved angular size (arcsec)',
   `DECONV_ERR` float DEFAULT NULL COMMENT 'Error in deconvolved angular size (arcsec)',
-  `V` float DEFAULT NULL COMMENT 'Visibility area',
   `OBS_FREQ` float DEFAULT NULL COMMENT 'Frequency at which the peak and integrated flux was measured (MHz)',
   `SINDEX` float DEFAULT NULL COMMENT 'Spectral index of source between 1400 and 1710 MHz',
-  `SINDEX_ERR` float DEFAULT NULL COMMENT 'Error on spectral index',
-  KEY `idx_id` (`ID`),
+  `INDEX_ERR` float DEFAULT NULL COMMENT 'Error on spectral index',
+  PRIMARY KEY (`ID`),
   KEY `idx_ra` (`RA`),
-  KEY `idx_dec` (`DECL`)
+  KEY `idx_decl` (`DECL`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -60,4 +59,4 @@ CREATE TABLE `cdfs_cmpcat` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-12-01 18:55:51
+-- Dump completed on 2014-12-01 18:56:10

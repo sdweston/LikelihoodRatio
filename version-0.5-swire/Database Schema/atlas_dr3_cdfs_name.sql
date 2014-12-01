@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `cdfs_name`;
 CREATE TABLE `cdfs_name` (
   `id` varchar(8) NOT NULL COMMENT 'Component identification number',
   `survey` varchar(6) DEFAULT NULL COMMENT 'Survey - ATLAS',
-  `name` varchar(20) DEFAULT NULL COMMENT 'Full catalogue name',
+  `name` varchar(30) DEFAULT NULL COMMENT 'Full catalogue name',
   PRIMARY KEY (`id`),
   KEY `idx_id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -42,4 +42,4 @@ CREATE TABLE `cdfs_name` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-31  9:15:03
+-- Dump completed on 2014-12-01 18:56:02

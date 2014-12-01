@@ -37,7 +37,7 @@ CREATE TABLE `cdfs_radio_pairs` (
   PRIMARY KEY (`id`),
   KEY `idx_cid1` (`cid1`),
   KEY `idx_cid2` (`cid2`)
-) ENGINE=InnoDB AUTO_INCREMENT=2402 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8192 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -49,4 +49,4 @@ CREATE TABLE `cdfs_radio_pairs` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-31  9:15:13
+-- Dump completed on 2014-12-01 18:56:14

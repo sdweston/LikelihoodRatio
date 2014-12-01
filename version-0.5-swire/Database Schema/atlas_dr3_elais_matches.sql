@@ -37,6 +37,9 @@ CREATE TABLE `elais_matches` (
   `lr` decimal(28,9) DEFAULT NULL,
   `reliability` decimal(28,9) DEFAULT NULL,
   `p_not` decimal(15,13) DEFAULT NULL,
+  `magz` float DEFAULT NULL COMMENT 'magz from fusion for swire_index_spitzer',
+  `ozdes_z` float DEFAULT NULL COMMENT 'z from ozdes for nearest neighbour to fusion candidate',
+  `theta` float DEFAULT NULL,
   KEY `idx_cid` (`cid`),
   KEY `idx_swireid` (`swire_index_spitzer`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -51,4 +54,4 @@ CREATE TABLE `elais_matches` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-31  9:15:10
+-- Dump completed on 2014-12-01 18:56:13
