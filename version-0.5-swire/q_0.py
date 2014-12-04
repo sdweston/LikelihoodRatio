@@ -73,15 +73,17 @@ def q_0():
     yy=func(xx,*popt)
 
 #plot_title=field+" Q0 = %s " % (popt[0])
-    plot_title=field+" y = %s * x ** (- r^2/2 Simga^2) " % (popt[0])
+#    plot_title=field+" y = %s * x ** (- r^2/2 Simga^2) " % (popt[0])
+    plot_title=field
     plt.title(plot_title)
     plt.xlabel('Radius (arcsec)')
     plt.ylabel('Real/Random Normalised')
     plt.plot(x,y,'ro',label="Original Data")
     plt.plot(xx,yy,label="Fitted Curve")
     plt.axis([0,11,0,1])
-    plt.legend(loc='upper right')
-    plt.grid()
+#    plt.legend(loc='upper right')
+#    No grid for publication
+#    plt.grid()
 #output_dir='I:/PhD 2012/Marsfield April 2014/'
     output_dir='D:/temp/'
     filename=field+'_q0.eps'
