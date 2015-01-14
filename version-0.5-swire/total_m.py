@@ -98,6 +98,11 @@ def total_m():
     
     width = 0.7*(bins[1]-bins[0])
     center = (bins[:-1]+bins[1:])/2
+#
+# Set axis limits so all are to the same scale
+#
+    plt.ylim(0,500)
+    plt.xlim(0,4)
     plt.bar(center, hist, align = 'center',width = width,linewidth=0)
     plot_title=field+' total(m)'
     plt.title(plot_title)
