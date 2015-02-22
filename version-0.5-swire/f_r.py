@@ -135,11 +135,13 @@ def f_r():
 # Calculate Sigma
 #        Will need to allow for beam angle !
 #        sigma_x=math.sqrt((0.6*(beam_min/snr))**2)
-        sigma_x=((0.6*(beam_min/snr)*math.sin(theta))**2 )
+#        Check Ivison et al 2007, equation B7. should be 0.3 not 0.6
+        sigma_x=((0.3*(beam_min/snr)*math.sin(theta))**2 )
 #    print "Sigma X       : ",sigma_x
 
 #        sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 )
-        sigma_y=((0.6*(beam_maj/snr)*math.cos(theta))**2 )
+#        Check Ivison et al 2007, equation B7. should be 0.3 not 0.6
+        sigma_y=((0.3*(beam_maj/snr)*math.cos(theta))**2 )
 #    print "Sigma Y       : ",sigma_y
 
 #   sigma is the mean of sigma_x and sigma_y, or quadrature (in paper quadrature)
