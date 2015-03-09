@@ -50,12 +50,18 @@ field=answer
 for inc in range(1,100):
     print inc,"\n"
     reliability=str(float(inc)/100)
+    print reliability,"\n"
+    llim_rel=str(float(inc)/100 - 0.005)
+    ulim_rel=str(float(inc)/100 + 0.005)
+
+    print llim_rel,ulim_rel,"\n"
     
 # select from matches the sum of 1-Ri
 #   Connect to the local database with the atlas uid
 
     db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)       
-    sql1=("SELECT sum(1-reliability),avg(reliability) FROM atlas_dr3."+field+"_matches where reliability >="+reliability+";")
+#    sql1=("SELECT sum(1-reliability),avg(reliability) FROM atlas_dr3."+field+"_matches where reliability >="+reliability+";")
+    sql1=("SELECT count(reliability),avg(reliability) FROM atlas_dr3."+field+"_matches where reliability > "+llim_rel+" and reliability < "+ulim_rel+";")
     print sql1,"\n"
     db.query(sql1)
           
@@ -76,7 +82,7 @@ for inc in range(1,100):
     for row in rows:
         
         n_false.append(float(row[0]))
-        avg_rel.append(float(row[1]))
+#        avg_rel.append(float(row[1]))
         rel.append(float(reliability))
         print reliability," ",row[0]," ",row[1],"\n"
 	
