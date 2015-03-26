@@ -48,7 +48,12 @@ n_false_2=[]
 rel_2=[]
 field=answer
 
-for inc in range(1,10):
+def my_range(start,end,step):
+    while start<=end:
+        yield start
+        start += step
+        
+for inc in my_range(0.05,10,0.05):
     print inc,"\n"
     reliability=str(float(inc)/10)
     print reliability,"\n"
@@ -82,24 +87,24 @@ for inc in range(1,10):
 # rows is a tuple, convert it to a list
 
     for row in rows:
-        if inc==1:
-           n_false_1.append(float(row[0]))
-           rel_1.append(0.0)
+#        if inc==1:
+#           n_false_1.append(float(row[0]))
+#           rel_1.append(0.0)
             
         n_false_1.append(float(row[0]))
         rel_1.append(float(row[1]))
         print inc," ",row[0]," ",row[1],"\n"
 
-        if inc==9:
-           n_false_1.append(float(row[0]))
-           rel_1.append(1.0)
+#        if inc==9:
+#           n_false_1.append(float(row[0]))
+#           rel_1.append(1.0)
 
 #    End of do block
 
 # Close connection to the database
     db.close()
 
-for inc in range(1,10):
+for inc in my_range(0,10,0.05):
     print inc,"\n"
     reliability=str(float(inc)/10)
     print reliability,"\n"
@@ -133,17 +138,17 @@ for inc in range(1,10):
 # rows is a tuple, convert it to a list
 
     for row in rows:
-        if inc==1:
-           n_false_2.append(float(row[0]))
-           rel_2.append(0.0)
+#        if inc==1:
+#           n_false_2.append(float(row[0]))
+#           rel_2.append(0.0)
             
         n_false_2.append(float(row[0]))
         rel_2.append(float(row[1]))
         print inc," ",row[0]," ",row[1],"\n"
 
-        if inc==9:
-           n_false_2.append(float(row[0]))
-           rel_2.append(1.0)
+#        if inc==9:
+#           n_false_2.append(float(row[0]))
+#           rel_2.append(1.0)
 
 #    End of do block
 
@@ -155,14 +160,15 @@ print rel_1,"\n"
 
 # Now plot the data
 
-plt.plot(rel_1,n_false_1,'r^',markersize=5)
-plt.plot(rel_2,n_false_2,'gv',markersize=5)
+plt.plot(rel_1,n_false_1,'r.',markersize=5)
+plt.plot(rel_2,n_false_2,'g.',markersize=5)
 plot_title=field+'  N(false) vs reliability' 
 #plt.title(plot_title)
 plt.ylabel('N(false)')
 plt.xlabel('reliability')
-plt.xlim(0.05,0.95)
-#plt.ylim(0.0,200)
+plt.xlim(0.05,1.0)
+#plt.yscale('log')
+plt.ylim(0.0,300)
 #plt.legend(["Total(m)","Real(m)","n(m) - Background"])
 plot_fname='atlas_n_false_vs_reliability.eps' 
 fname=output_dir + plot_fname
@@ -175,13 +181,13 @@ width=0.5*(bins[1]-bins[0])
 center=(bins[:-1]+bins[1:])/2
 
 #plt.bar(center, hist, align = 'center',width = width,linewidth=0)
-plt.title(plot_title)
-plt.ylabel('N(false)')
-plt.xlabel('reliability')
-plt.plot(rel_1,n_false_1,drawstyle='steps')
-plt.xlim(0.1,0.9)
-plot_fname='atlas_'+field+'_n_false_vs_reliability_historgram.eps' 
-fname=output_dir + plot_fname
-plt.savefig(fname,format="eps")
-plt.show()
+#plt.title(plot_title)
+#plt.ylabel('N(false)')
+#plt.xlabel('reliability')
+#plt.plot(rel_1,n_false_1,drawstyle='steps')
+#plt.xlim(0.1,0.9)
+#plot_fname='atlas_'+field+'_n_false_vs_reliability_historgram.eps' 
+#fname=output_dir + plot_fname
+#plt.savefig(fname,format="eps")
+#plt.show()
 	
