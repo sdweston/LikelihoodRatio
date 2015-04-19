@@ -160,8 +160,8 @@ print rel_1,"\n"
 
 # Now plot the data
 
-plt.plot(rel_1,n_false_1,'r.',markersize=5)
-plt.plot(rel_2,n_false_2,'g.',markersize=5)
+plt.plot(rel_1,n_false_1,'rv',markersize=5)
+plt.plot(rel_2,n_false_2,'go',markersize=5)
 plot_title=field+'  N(false) vs reliability' 
 #plt.title(plot_title)
 plt.ylabel('N(false)')

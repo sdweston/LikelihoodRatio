@@ -143,7 +143,7 @@ for row in rows:
     cmd2='ds9 -zscale -invert '+ nonradio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 100 100 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
-         ' -contour close -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
+         ' -contour close -grid load ds9.grd  -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
 #    print cmd2
 
     os.system(cmd1)
