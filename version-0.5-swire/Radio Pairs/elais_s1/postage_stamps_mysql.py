@@ -40,7 +40,7 @@ sql1=("select t1.cid,t1.swire_index_spitzer,t2.ra,t2.decl,t1.reliability "
       "    where t1.reliability > 0.8 "
       "    and t1.cid=t2.id "
       "    and t1.cid not like 'E%' "
-      "    limit 20000;")
+      "    limit 2000;")
 print sql1,"\n"
 db.query(sql1)
 
@@ -61,6 +61,9 @@ db.close()
 
 #print rows
 
+print "======"
+print " "
+
 for row in rows:
     cid1=row[0]
     swire_id=row[1]
@@ -79,7 +82,7 @@ for row in rows:
 
 #   So now get coords for spitzer match
     sql=("SELECT ra_spitzer, dec_spitzer \
-              from swire_es1.swire \
+              from fusion.swire_elais \
               where index_spitzer="+swire_id+";")
     print sql,"\n"
     db.query(sql)
@@ -102,6 +105,7 @@ for row in rows:
     # put a cross for the radio source
     f.write('global color=red\n')
     f.write('fk5;circle( '+ra_radio1+' , '+dec_radio1+' ,1") # point=cross text={'+cid1+'}\n')
+    f.write('fk5;circle( '+ra_radio1+' , '+dec_radio1+' ,10")\n')
  
 #   Define start coords for full txt string for object
     t_ra1=f_ra_radio1+0.02
@@ -119,11 +123,11 @@ for row in rows:
 
     f.write('global color=yellow\n')
     f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,1") # point=cross\n')
-    f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,0.05") # text={'+str(idx_sub_row)+'}\n')
+    #f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,0.05") # text={'+str(idx_sub_row)+'}\n')
     # put in the values of spitzer_index, relibility & likelihood
-    f.write('fk5;circle('+str(t_ra1)+' , '+str(t_dec1)+',0.1") # text={'+str(idx_sub_row)+' : '+swire_id+' '+rel+'}\n')
+    #f.write('fk5;circle('+str(t_ra1)+' , '+str(t_dec1)+',0.1") # text={'+str(idx_sub_row)+' : '+swire_id+' '+rel+'}\n')
 
-    # Close ihe region file
+    # Close the region file
     f.close()
 
 #------------------------------------------------------------------------------
@@ -149,7 +153,9 @@ for row in rows:
     os.system(cmd1)
     os.system(cmd2)
 
-
+    print "======"
+    print " "
+    
 # End of do block
 
 print "End"

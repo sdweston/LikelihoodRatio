@@ -19,7 +19,20 @@ import math
 import sys
 import os
 
+# ask which field to process
+answer=raw_input('Which field cdfs/elais ?')
+print "\nentered : ",answer,"\n"
 
+if answer == 'cdfs':
+   schema='atlas_dr3' 
+   field='cdfs'
+   swire_schema='swire_cdfs'
+else:
+   schema='atlas_dr3' 
+   field='elais'
+   swire_schema='swire_es1'
+
+   
 radio_image_fits='d:\\elais\\atlas_elaiss1_map.fits'
 
 nonradio_image_fits='d:\\elais\\elais_s1_factor2.fits'
@@ -33,14 +46,12 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 # Lets run a querry
 # This gets a list of the possible radio pairs  
 
-"+schema+"."+field+"
-
 sql1=("select t1.cid,t1.swire_index_spitzer,t2.ra,t2.decl,t1.reliability "
       "    from "+schema+"."+field+"_matches as t1, "+schema+"."+field+"_coords as t2 "
       "    where t1.reliability > 0.8 "
       "    and t1.cid=t2.id "
       "    and t1.cid not like 'E%' "
-      "    limit 20000;")
+      "    limit 2;")
 print sql1,"\n"
 db.query(sql1)
 
@@ -130,7 +141,7 @@ for row in rows:
     # Now create DS9 commands and execute
 
     contour_file_name=cid1+'_'+ra_radio1+'_'+dec_radio1+'.con'
-    postage_stamp_filename1='d:\\elaiss1\\dr3\\atlas_'+cid1+'.jpeg'
+    postage_stamp_filename1='d:\\elais\\dr3\\atlas_'+cid1+'.jpeg'
     
     cmd1='ds9 -zscale -invert '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 100 100 wcs fk5 arcsec -contour open -contour loadlevels contour_ds9.lev -contour yes ' + \

@@ -40,7 +40,7 @@ sql1=("select t1.cid,t1.swire_index_spitzer,t2.ra,t2.decl,t1.reliability "
       "    where t1.reliability > 0.8 "
       "    and t1.cid=t2.id "
       "    and t1.cid not like 'E%' "
-      "    limit 20000;")
+      "    limit 20;")
 print sql1,"\n"
 db.query(sql1)
 
@@ -143,7 +143,7 @@ for row in rows:
     cmd2='ds9 -zscale -invert '+ nonradio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 100 100 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
-         ' -contour close -zoom to fit -grid load D:\elais\dr3_radio_pairs\ds9.grd -saveimage '+postage_stamp_filename+' 100 -exit '
+         ' -contour close -grid load D:\elais\dr3_radio_pairs\ds9.grd -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
 #    print cmd2
 
     os.system(cmd1)

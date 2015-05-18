@@ -40,7 +40,7 @@ sql1=("select t1.cid,t1.swire_index_spitzer,t2.ra,t2.decl,t1.reliability "
       "    where t1.reliability > 0.8 "
       "    and t1.cid=t2.id "
       "    and t1.cid not like 'C%' "
-      "    limit 20000;")
+      "    limit 2000;")
 print sql1,"\n"
 db.query(sql1)
 
@@ -61,6 +61,9 @@ db.close()
 
 #print rows
 
+print "======"
+print " "
+
 for row in rows:
     cid1=row[0]
     swire_id=row[1]
@@ -79,7 +82,7 @@ for row in rows:
 
 #   So now get coords for spitzer match
     sql=("SELECT ra_spitzer, dec_spitzer \
-              from swire_cdfs.swire \
+              from fusion.swire_cdfs \
               where index_spitzer="+swire_id+";")
     print sql,"\n"
     db.query(sql)
@@ -123,7 +126,7 @@ for row in rows:
     # put in the values of spitzer_index, relibility & likelihood
     f.write('fk5;circle('+str(t_ra1)+' , '+str(t_dec1)+',0.1") # text={'+str(idx_sub_row)+' : '+swire_id+' '+rel+'}\n')
 
-    # Close ihe region file
+    # Close the region file
     f.close()
 
 #------------------------------------------------------------------------------
