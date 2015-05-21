@@ -38,7 +38,7 @@ db.query("select t1.cid,t1.swire_index_spitzer,t2.ra,t2.decl,format(t1.reliabili
           where t1.reliability > 0.8 \
           and t1.cid like 'C%' \
           and t2.id=t1.cid \
-          limit 10;")
+          limit 100;")
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server
@@ -161,8 +161,8 @@ for row in rows:
          ' -geometry 844x922 '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 70 70 wcs fk5 arcsec -contour open -contour loadlevels contour_20mjy.lev -contour yes ' + \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
-         '-contour save '+contour_file_name+' -contour close -zoom to fit ' +\
-         '-saveimage '+postage_stamp_filename1+' 100 -exit'
+         ' -contour save '+contour_file_name+' -contour close -zoom to fit -exit ' 
+#         ' -saveimage '+postage_stamp_filename1+' 100 -exit'
 #    print cmd1
  
     postage_stamp_filename='d:\\cdfs\\dr3\\images\\'+cid1+'_'+swire_id+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'

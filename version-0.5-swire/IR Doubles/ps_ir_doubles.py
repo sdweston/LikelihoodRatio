@@ -93,9 +93,8 @@ for row in rows:
     f.write('global color=blue font="helvetica 10 normal "\n')
     # put a cross for the radio source
     f.write('global color=red\n')
-#    f.write('fk5;circle( '+ra_radio+' , '+dec_radio+' ,1") # point=cross width=2\n')
-    f.write('fk5;point( '+ra_radio+' , '+dec_radio+') # point=cross width=1\n')
-    f.write('fk5;circle( '+ra_radio+' , '+dec_radio+' ,10") # point=cross width=2\n')
+    f.write('fk5;circle( '+ra_radio+' , '+dec_radio+' ,1") # point=cross \n')
+    f.write('fk5;circle( '+ra_radio+' , '+dec_radio+' ,10") # point=cross \n')
  
 #   Define start coords for full txt string for object
     t_ra1=f_ra_radio+0.02
@@ -123,9 +122,9 @@ for row in rows:
 
 
 #   So now get coords for spitzer match
-        sql5=("SELECT ra_12, dec_12, flux_ap2_36, redshift \
-              from fusion."+answer+"  \
-              where id_12="+swire_id+";")
+        sql5=("SELECT ra_spitzer, dec_spitzer, irac_3_6_micron_flux_mujy \
+              from swire_"+answer+".swire \
+              where index_spitzer="+swire_id+";")
         db.query(sql5)
         r=db.use_result()
         sub_rows=r.fetch_row(maxrows=10)
@@ -134,34 +133,18 @@ for row in rows:
             ra_spitzer=sub_row[0]
             dec_spitzer=sub_row[1]
             f_3_6=sub_row[2]
-            redshift=sub_row[3]
         
-        print >> f1, cid1,ra_radio,dec_radio,idx_sub_row,swire_id,ra_spitzer,dec_spitzer,rel,f_3_6,redshift
+        print >> f1, cid1,ra_radio,dec_radio,idx_sub_row,swire_id,ra_spitzer,dec_spitzer,rel,f_3_6
 
         # add lines to the region file to identify the non-radio candidates
 
         f.write('global color=yellow\n')
-        f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,1") # point=cross width=2\n')
-#        f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,0.05") # text={'+str(idx_sub_row)+'}\n')
+        f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,1") # point=cross\n')
+        f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,0.05") # text={'+str(idx_sub_row)+'}\n')
         # put in the values of spitzer_index, relibility & likelihood
         #f.write('fk5;circle('+str(t_ra1)+' , '+str(t_dec1)+',0.1") # text={'+str(idx_sub_row)+' : '+swire_id+' '+rel+'}\n')
         idx_sub_row=idx_sub_row+1
-
-    # Get the OzDES Nearest Neighbour candidate, mark these with a blue star
-    sql6="select ra,decl from atlas_dr3."+answer+"_ird_ozdes \
-          where cid='"+cid1+"' ;"
-    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
-    print sql6
-    db.query(sql6)
-    r=db.use_result()
-    sub_rows=r.fetch_row(maxrows=10)
-    db.close()
-    for sub_row in sub_rows:
-        ra_ozdes=sub_row[0]
-        dec_ozdes=sub_row[1]
-        f.write('global color=cyan\n')
-#        f.write('fk5;circle( '+ra_ozdes+' , '+dec_ozdes+' ,1") # point=diamond\n')
-        f.write('fk5;point( '+ra_ozdes+' , '+dec_ozdes+') # point=diamond color=cyan width=2\n')
+                
 
     # Close ihe region file
     f.close()
@@ -185,7 +168,7 @@ for row in rows:
          ' 100 100 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
          ' -contour close -grid load ds9.grd  -zoom to fit ' +\
-         ' -saveimage '+postage_stamp_filename+' 100 -exit '
+		 ' -saveimage '+postage_stamp_filename+' 100 -exit '
 #    print cmd2
 
     os.system(cmd1)

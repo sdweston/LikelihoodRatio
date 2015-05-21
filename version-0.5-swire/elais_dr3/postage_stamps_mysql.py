@@ -38,7 +38,7 @@ db.query("select t1.cid,t1.swire_index_spitzer,t2.ra,t2.decl,format(t1.reliabili
           where t1.reliability > 0.8 \
           and t1.cid like 'E%' \
           and t1.cid=t2.id \
-          limit 10;")
+          limit 100;")
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server
@@ -123,6 +123,30 @@ for row in rows:
 
 # Find the other candidates with a rel < 0.8 and put them on as well !
 
+    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+    sql=("select t1.cid,t2.ra_spitzer, t2.dec_spitzer, t1.reliability \
+                from atlas_dr3.elais_matches as t1, fusion.swire_elais as t2 \
+                where t1.swire_index_spitzer=t2.index_spitzer \
+                and t1.reliability < 0.8 \
+                and t1.cid='"+cid1+"';")
+    print sql,"\n"
+    db.query(sql)
+
+    r1=db.use_result()
+    sub_rows1=r1.fetch_row(maxrows=10)
+
+    db.close
+
+    for sub_row1 in sub_rows1:
+        cid2=sub_row1[0]
+        ra_spitzer1=sub_row1[1]
+        dec_spitzer1=sub_row1[2]
+        reliability2=sub_row1[3]
+        print "Spitzer Candidate: ",cid2,ra_spitzer1,dec_spitzer1,reliability2
+
+        f.write('global color=blue\n')
+        f.write('fk5;circle( '+ra_spitzer1+' , '+dec_spitzer1+' ,0.5") # point=cross\n')
+        
     # Close ihe region file
     f.close()
 
@@ -132,11 +156,12 @@ for row in rows:
     contour_file_name=cid1+'_'+ra_radio1+'_'+dec_radio1+'.con'
     postage_stamp_filename1='d:\\elais\\dr3\\images\\atlas_'+cid1+'.jpeg'
     
-    cmd1='ds9 -zscale -invert '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
-         ' 60 60 wcs fk5 arcsec -contour open -contour loadlevels contour_ds9.lev -contour yes ' + \
+    cmd1='ds9 -zscale -invert '+ \
+         ' -geometry 844x922 '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
+         ' 70 70 wcs fk5 arcsec -contour open -contour loadlevels contour_ds9.lev -contour yes ' + \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
-         '-contour save '+contour_file_name+' -contour close -zoom to fit ' +\
-         '-saveimage '+postage_stamp_filename1+' 100 -exit '
+         ' -contour save '+contour_file_name+' -contour close -zoom to fit -exit ' 
+#         ' -saveimage '+postage_stamp_filename1+' 100 -exit '
 #    print cmd1
  
     postage_stamp_filename='d:\\elais\\dr3\\images\\'+cid1+'_'+swire_id+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'

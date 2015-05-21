@@ -19,7 +19,9 @@ import math
 import sys
 import os
 
-field='cdfs'
+# ask which field to process
+field=raw_input('Which field cdfs/elais ?')
+print "\nentered : ",field,"\n"
 
 radio_image_fits='d:\\'+field+'\\atlas_'+field+'_map.fits'
 
@@ -101,20 +103,22 @@ for row in rows:
     # Now create DS9 commands and execute
 
     contour_file_name=cid1+'_'+ra_radio1+'_'+dec_radio1+'.con'
-    postage_stamp_filename1='D:\\'+field+'\\radio_pairs\\atlas_'+cid1+'_'+cid2+'.jpeg'
+    postage_stamp_filename1='D:\\'+field+'\\dr3_radio_pairs\\atlas_'+cid1+'_'+cid2+'.jpeg'
     
-    cmd1='ds9 -zscale -invert '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
+    cmd1='ds9 -zscale -invert '+ \
+	     ' -geometry 844x922 '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 150 150 wcs fk5 arcsec -contour open -contour loadlevels contour_ds9.lev -contour yes ' + \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
-         '-contour save '+contour_file_name+' -contour close -zoom to fit -grid yes ' +\
-         '-saveimage '+postage_stamp_filename1+' 100 '
+         '-contour save '+contour_file_name+' -contour close -zoom to fit -grid yes -exit' 
+#         '-saveimage '+postage_stamp_filename1+' 100 '
 #    print cmd1
  
-    postage_stamp_filename='D:\\'+field+'\\radio_pairs\\swire_'+cid1+'_'+cid2+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
-    cmd2='ds9 -zscale -invert '+ nonradio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
+    postage_stamp_filename='D:\\'+field+'\\dr3_radio_pairs\\images\\swire_'+cid1+'_'+cid2+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
+    cmd2='ds9 -zscale -invert '+ \
+         ' -geometry 844x922 '+nonradio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 150 150 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
-         ' -contour close -zoom to fit -grid yes -saveimage '+postage_stamp_filename+' 100 '
+         ' -grid load ds9.grd -contour close -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
 #    print cmd2
 
     os.system(cmd1)
