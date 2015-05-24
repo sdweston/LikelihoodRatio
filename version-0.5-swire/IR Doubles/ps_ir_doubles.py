@@ -123,7 +123,7 @@ for row in rows:
 
 #   So now get coords for spitzer match
         sql5=("SELECT ra_spitzer, dec_spitzer, irac_3_6_micron_flux_mujy \
-              from swire_"+answer+".swire \
+              from fusion.swire_"+answer+" \
               where index_spitzer="+swire_id+";")
         db.query(sql5)
         r=db.use_result()
@@ -152,23 +152,24 @@ for row in rows:
         #------------------------------------------------------------------------------
     # Now create DS9 commands and execute
 
-    contour_file_name='d:\\'+answer+'\\dr3_ir_doubles\\atlas_'+cid1+'_'+ra_radio+'_'+dec_radio+'.con'
-    postage_stamp_filename1='d:\\'+answer+'\\dr3_ir_doubles\\atlas_'+cid1+'.jpeg'
+    contour_file_name='d:\\'+answer+'\\dr3_ir_doubles\\images\\atlas_'+cid1+'_'+ra_radio+'_'+dec_radio+'.con'
+    postage_stamp_filename1='d:\\'+answer+'\\dr3_ir_doubles\\images\\atlas_'+cid1+'.jpeg'
     
-    cmd1='ds9 -zscale -invert '+radio_image_fits+' -crop '+ra_radio+' '+dec_radio+ \
+    cmd1='ds9 -zscale -invert '+ \
+         ' -geometry 844x922 '+radio_image_fits+' -crop '+ra_radio+' '+dec_radio+ \
          ' 75 75 wcs fk5 arcsec -contour open -contour loadlevels contour_20mjy.lev -contour yes ' + \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
-         '-contour save '+contour_file_name+' -contour close -zoom to fit ' +\
-         '-saveimage '+postage_stamp_filename1+' 100 -exit'
+         '-contour save '+contour_file_name+' -contour close -zoom to fit -exit '
+#         '-saveimage '+postage_stamp_filename1+' 100 -exit'
 #    print cmd1
  
-    postage_stamp_filename='d:\\'+answer+'\\dr3_ir_doubles\\'+cid1+'_'+ra_radio+'_'+dec_radio+'.jpeg'
+    postage_stamp_filename='d:\\'+answer+'\\dr3_ir_doubles\\images\\'+cid1+'_'+ra_radio+'_'+dec_radio+'.jpeg'
     cmd2='ds9 -zscale -invert  ' +\
          ' -geometry 844x922 '+ nonradio_image_fits+' -crop '+ra_radio+' '+dec_radio+ \
-         ' 100 100 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
+         ' 75 75 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
          ' -contour close -grid load ds9.grd  -zoom to fit ' +\
-		 ' -saveimage '+postage_stamp_filename+' 100 -exit '
+	 ' -saveimage '+postage_stamp_filename+' 100 -exit '
 #    print cmd2
 
     os.system(cmd1)
