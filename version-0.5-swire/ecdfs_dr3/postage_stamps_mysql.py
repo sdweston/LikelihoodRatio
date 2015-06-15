@@ -144,7 +144,7 @@ for row in rows:
         reliability2=sub_row1[3]
         print "Spitzer Candidate: ",cid2,ra_spitzer1,dec_spitzer1,reliability2
 
-        f.write('global color=blue\n')
+        f.write('global color=magenta\n')
         f.write('fk5;circle( '+ra_spitzer1+' , '+dec_spitzer1+' ,0.5") # point=cross\n')
         
     

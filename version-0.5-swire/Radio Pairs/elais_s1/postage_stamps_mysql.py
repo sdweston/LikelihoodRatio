@@ -134,16 +134,16 @@ for row in rows:
     # Now create DS9 commands and execute
 
     contour_file_name=cid1+'_'+ra_radio1+'_'+dec_radio1+'.con'
-    postage_stamp_filename1='D:\elais\dr3_radio_pairs\\atlas_'+cid1+'.jpeg'
+    postage_stamp_filename1='D:\elais\dr3_radio_pairs\\radio_doubles\\atlas_'+cid1+'.jpeg'
     
     cmd1='ds9 -zscale -invert '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 100 100 wcs fk5 arcsec -contour open -contour loadlevels contour_ds9.lev -contour yes ' + \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
          '-contour save '+contour_file_name+' -contour close -zoom to fit  -grid yes ' +\
-         '-saveimage '+postage_stamp_filename1+' 100 -exit'
+         ' -exit'
 #    print cmd1
  
-    postage_stamp_filename='D:\elais\dr3_radio_pairs\\'+cid1+'_'+swire_id+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
+    postage_stamp_filename='D:\elais\dr3_radio_pairs\\radio_doubles\\'+cid1+'_'+swire_id+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
     cmd2='ds9 -zscale -invert '+ nonradio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 100 100 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
