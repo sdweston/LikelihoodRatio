@@ -68,6 +68,9 @@ def q_0():
     popt,pcov=curve_fit(func,x,y)
 
     print "a = %s " % (popt[0])
+	
+    perr = numpy.sqrt(numpy.diag(pcov))
+    print "perr +- %s " % perr
 
     xx=numpy.linspace(1.0,10.0,num=100)
     yy=func(xx,*popt)
@@ -75,7 +78,7 @@ def q_0():
 #plot_title=field+" Q0 = %s " % (popt[0])
 #    plot_title=field+" y = %s * x ** (- r^2/2 Simga^2) " % (popt[0])
     plot_title=field
-    plt.title(plot_title)
+#    plt.title(plot_title)
     plt.xlabel('Radius (arcsec)')
     plt.ylabel('Real/Random Normalised')
     plt.plot(x,y,'ro',label="Original Data")

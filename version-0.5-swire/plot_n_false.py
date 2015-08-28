@@ -37,8 +37,8 @@ global output_dir
 output_dir='d:/temp/'
 
 # ask which field to process
-answer=raw_input('Which field cdfs/elais ?')
-print "\nentered : ",answer,"\n"
+#answer=raw_input('Which field cdfs/elais ?')
+#print "\nentered : ",answer,"\n"
 
 print "\nStarting Plot N(false) vs rel_1iability"
 
@@ -46,7 +46,7 @@ n_false_1=[]
 rel_1=[]
 n_false_2=[]
 rel_2=[]
-field=answer
+#field=answer
 
 def my_range(start,end,step):
     while start<=end:
@@ -54,9 +54,9 @@ def my_range(start,end,step):
         start += step
         
 for inc in my_range(0.05,10,0.05):
-    print inc,"\n"
+#    print inc,"\n"
     reliability=str(float(inc)/10)
-    print reliability,"\n"
+#    print reliability,"\n"
     llim_rel_1=str(float(inc)/10 - 0.5)
     ulim_rel_1=str(float(inc)/10 + 0.5)
 
@@ -66,10 +66,10 @@ for inc in my_range(0.05,10,0.05):
 #   Connect to the local database with the atlas uid
 
     db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)       
-    sql1=("SELECT sum(1-reliability),"+reliability+" FROM atlas_dr3.cdfs_matches where reliability >="+reliability+";")
+    sql1=("SELECT (sum(1-reliability)/3034)*100,"+reliability+" FROM atlas_dr3.cdfs_matches where reliability >="+reliability+";")
 #    sql1=("SELECT count(rel_1iability),avg(rel_1iability) FROM atlas_dr3."+field+ \
 #          "_matches where rel_1iability > "+llim_rel_1+" and rel_1iability < "+ulim_rel_1+";")
-    print sql1,"\n"
+#    print sql1,"\n"
     db.query(sql1)
           
 # store_result() returns the entire result set to the client immediately.
@@ -93,7 +93,7 @@ for inc in my_range(0.05,10,0.05):
             
         n_false_1.append(float(row[0]))
         rel_1.append(float(row[1]))
-        print inc," ",row[0]," ",row[1],"\n"
+        print inc," ",(float(row[0])/3034)*100," ",row[1]
 
 #        if inc==9:
 #           n_false_1.append(float(row[0]))
@@ -104,10 +104,14 @@ for inc in my_range(0.05,10,0.05):
 # Close connection to the database
     db.close()
 
+print n_false_1,"\n"
+print rel_1,"\n"
+
+
 for inc in my_range(0,10,0.05):
-    print inc,"\n"
+#    print inc,"\n"
     reliability=str(float(inc)/10)
-    print reliability,"\n"
+#    print reliability,"\n"
     llim_rel_1=str(float(inc)/10 - 0.5)
     ulim_rel_1=str(float(inc)/10 + 0.5)
 
@@ -117,10 +121,10 @@ for inc in my_range(0,10,0.05):
 #   Connect to the local database with the atlas uid
 
     db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)       
-    sql1=("SELECT sum(1-reliability),"+reliability+" FROM atlas_dr3.elais_matches where reliability >="+reliability+";")
+    sql1=("SELECT (sum(1-reliability)/2084)*100,"+reliability+" FROM atlas_dr3.elais_matches where reliability >="+reliability+";")
 #    sql1=("SELECT count(rel_1iability),avg(rel_1iability) FROM atlas_dr3."+field+ \
 #          "_matches where rel_1iability > "+llim_rel_1+" and rel_1iability < "+ulim_rel_1+";")
-    print sql1,"\n"
+#    print sql1,"\n"
     db.query(sql1)
           
 # store_result() returns the entire result set to the client immediately.
@@ -144,7 +148,7 @@ for inc in my_range(0,10,0.05):
             
         n_false_2.append(float(row[0]))
         rel_2.append(float(row[1]))
-        print inc," ",row[0]," ",row[1],"\n"
+        print inc," ",(float(row[0])/2084)*100," ",row[1]
 
 #        if inc==9:
 #           n_false_2.append(float(row[0]))
@@ -155,20 +159,22 @@ for inc in my_range(0,10,0.05):
 # Close connection to the database
     db.close()
 
-print n_false_1,"\n"
-print rel_1,"\n"
+#print n_false_2,"\n"
+#print rel_2,"\n"
 
 # Now plot the data
 
+# Or dump the data out to use a different plotting tool !
+
 plt.plot(rel_1,n_false_1,'rv',markersize=5)
 plt.plot(rel_2,n_false_2,'go',markersize=5)
-plot_title=field+'  N(false) vs reliability' 
+plot_title='  N(false) vs reliability' 
 #plt.title(plot_title)
-plt.ylabel('N(false)')
-plt.xlabel('reliability')
+plt.ylabel('N(false) %')
+plt.xlabel('Reliability')
 plt.xlim(0.05,1.0)
 #plt.yscale('log')
-plt.ylim(0.0,300)
+plt.ylim(0.0,20)
 #plt.legend(["Total(m)","Real(m)","n(m) - Background"])
 plot_fname='atlas_n_false_vs_reliability.eps' 
 fname=output_dir + plot_fname

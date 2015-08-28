@@ -59,7 +59,7 @@ def plot_lr_rel():
     plt.plot(LR, REL,'k.')
 	
     plot_title='ATLAS ' +field+ ' Reliability vs Likelihood Ratio'
-    plt.title(field)
+#    plt.title(field)
     plt.ylabel('Reliability')
     plt.xlabel('Likelihood Ratio')
 # no grid for publication
@@ -81,7 +81,7 @@ def plot_lr_rel():
 #    center = (bins[:-1]+bins[1:])/2
     center = 0.5*(bins[1:]+bins[:-1])
     plot_title='ATLAS ' +field+ ' Histogram of the Reliability values'
-    plt.title(field)
+#    plt.title(field)
     plt.yscale('log')
 # no grid for publication
 #   plt.grid(True)
@@ -119,7 +119,7 @@ def plot_lr_rel():
     print bins,'\n'
     print hist,'\n'
     plot_title='ATLAS ' +field+ ' Histogram of the Likelihood Ratio values'
-    plt.title(field)
+#    plt.title(field)
     plt.yscale('log')
     plt.xscale('log')
     plt.ylabel('N(counterparts)')

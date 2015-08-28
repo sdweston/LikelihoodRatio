@@ -93,7 +93,7 @@ for row in rows:
 #   within the search radius of the radio source
 
     r=db.use_result()
-    sub_rows=r.fetch_row(maxrows=2)
+    sub_rows=r.fetch_row(maxrows=0)
     
 # Close connection to the database
     db.close()
@@ -106,7 +106,9 @@ for row in rows:
     f.write('global color=blue font="helvetica 10 normal "\n')
     # put a cross for the radio source
     f.write('global color=red\n')
-    f.write('fk5;circle( '+ra_radio1+' , '+dec_radio1+' ,1") # point=cross text={'+cid1+'}\n')
+    #f.write('fk5;circle( '+ra_radio1+' , '+dec_radio1+' ,1") # point=cross text={'+cid1+'}\n')
+    f.write('fk5;circle( '+ra_radio1+' , '+dec_radio1+' ,1") # width=2 \n')
+    f.write('fk5;circle( '+ra_radio1+' , '+dec_radio1+' ,10") # width=2 \n')
  
 #   Define start coords for full txt string for object
     t_ra1=f_ra_radio1+0.02
@@ -124,9 +126,10 @@ for row in rows:
 
     f.write('global color=yellow\n')
     f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,1") # point=cross\n')
-    f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,0.05") # text={'+str(idx_sub_row)+'}\n')
+    f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,1") # width=2 \n')
+    #f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,0.05") # text={'+str(idx_sub_row)+'}\n')
     # put in the values of spitzer_index, relibility & likelihood
-    f.write('fk5;circle('+str(t_ra1)+' , '+str(t_dec1)+',0.1") # text={'+str(idx_sub_row)+' : '+swire_id+' '+rel+'}\n')
+    #f.write('fk5;circle('+str(t_ra1)+' , '+str(t_dec1)+',0.1") # text={'+str(idx_sub_row)+' : '+swire_id+' '+rel+'}\n')
 
     # Close the region file
     f.close()
@@ -136,23 +139,34 @@ for row in rows:
 
     contour_file_name=cid1+'_'+ra_radio1+'_'+dec_radio1+'.con'
     postage_stamp_filename1='D:\cdfs\dr3_radio_pairs\\radio_doubles\\atlas_'+cid1+'.jpeg'
+    pp_fits='d:\\cdfs\\dr3_radio_pairs\\radio_doubles\\atlas_'+cid1+'.fits'
     
     cmd1='ds9 -zscale -invert '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
          ' 100 100 wcs fk5 arcsec -contour open -contour loadlevels contour_ds9.lev -contour yes ' + \
          ' -regions '+region_file_name+ ' -colorbar no ' +\
-         '-contour save '+contour_file_name+' -contour close -zoom to fit ' +\
-         '-saveimage '+postage_stamp_filename1+' 100 -exit'
+         ' -contour save '+contour_file_name+' -contour close -zoom to fit ' +\
+         ' -exit'
 #    print cmd1
  
     postage_stamp_filename='D:\cdfs\dr3_radio_pairs\\radio_doubles\\'+cid1+'_'+swire_id+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
-    cmd2='ds9 -zscale -invert '+ nonradio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
-         ' 100 100 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
-         ' -regions '+region_file_name+ ' -colorbar no ' +\
-         ' -contour close -grid load ds9.grd  -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
+    cmd2='ds9 -zscale -invert '+ \
+         ' -geometry 844x922 -fits '+nonradio_image_fits+' -contour open -contour load '+contour_file_name+ \
+         ' -contour close ' + \
+         ' -crop '+ra_radio1+' '+dec_radio1+ ' 200 200 wcs fk5 arcsec ' + \
+         ' -regions '+region_file_name+ ' -colorbar no -align yes -orient xy ' + \
+         ' -zoom to fit -saveimage fits '+pp_fits+' -exit '
+
+    cmd3='ds9 -zscale -invert '+ \
+         ' -geometry 844x922 -fits '+pp_fits+' -contour open -contour load '+contour_file_name+ \
+         ' -contour close ' + \
+         ' -crop '+ra_radio1+' '+dec_radio1+ ' 100 100 wcs fk5 arcsec ' + \
+         ' -regions '+region_file_name+ ' -colorbar no -align yes -orient xy ' + \
+         ' -grid load ds9-nogrid.grd -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
 #    print cmd2
 
     os.system(cmd1)
     os.system(cmd2)
+    os.system(cmd3)
 
 
 # End of do block

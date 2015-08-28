@@ -94,7 +94,9 @@ for row in rows:
     # put a cross for the radio source
     f.write('global color=red\n')
     f.write('fk5;circle( '+ra_radio+' , '+dec_radio+' ,1") # point=cross \n')
+    f.write('fk5;circle( '+ra_radio+' , '+dec_radio+' ,1") # width=2 \n')
     f.write('fk5;circle( '+ra_radio+' , '+dec_radio+' ,10") # point=cross \n')
+    f.write('fk5;circle( '+ra_radio+' , '+dec_radio+' ,10") # width=2 \n')
  
 #   Define start coords for full txt string for object
     t_ra1=f_ra_radio+0.02
@@ -140,6 +142,7 @@ for row in rows:
 
         f.write('global color=yellow\n')
         f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,1") # point=cross\n')
+        f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,1") # width=2 \n')
         f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,0.05") # text={'+str(idx_sub_row)+'}\n')
         # put in the values of spitzer_index, relibility & likelihood
         #f.write('fk5;circle('+str(t_ra1)+' , '+str(t_dec1)+',0.1") # text={'+str(idx_sub_row)+' : '+swire_id+' '+rel+'}\n')
@@ -154,6 +157,7 @@ for row in rows:
 
     contour_file_name='d:\\'+answer+'\\dr3_ir_doubles\\images\\atlas_'+cid1+'_'+ra_radio+'_'+dec_radio+'.con'
     postage_stamp_filename1='d:\\'+answer+'\\dr3_ir_doubles\\images\\atlas_'+cid1+'.jpeg'
+    pp_fits='d:\\'+answer+'\\dr3_ir_doubles\\images\\atlas_'+cid1+'.fits'
     
     cmd1='ds9 -zscale -invert '+ \
          ' -geometry 844x922 '+radio_image_fits+' -crop '+ra_radio+' '+dec_radio+ \
@@ -163,17 +167,27 @@ for row in rows:
 #         '-saveimage '+postage_stamp_filename1+' 100 -exit'
 #    print cmd1
  
+    cmd2='ds9 -zscale -invert '+ \
+         ' -geometry 844x922 -fits '+nonradio_image_fits+' -contour open -contour load '+contour_file_name+ \
+         ' -contour close ' + \
+         ' -crop '+ra_radio+' '+dec_radio+ ' 200 200 wcs fk5 arcsec ' + \
+         ' -regions '+region_file_name+ ' -colorbar no -align yes -orient xy ' + \
+         ' -zoom to fit -saveimage fits '+pp_fits+' -exit '
+
     postage_stamp_filename='d:\\'+answer+'\\dr3_ir_doubles\\images\\'+cid1+'_'+ra_radio+'_'+dec_radio+'.jpeg'
-    cmd2='ds9 -zscale -invert  ' +\
-         ' -geometry 844x922 '+ nonradio_image_fits+' -crop '+ra_radio+' '+dec_radio+ \
-         ' 75 75 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
-         ' -regions '+region_file_name+ ' -colorbar no ' +\
-         ' -contour close -grid load ds9.grd  -zoom to fit ' +\
-	 ' -saveimage '+postage_stamp_filename+' 100 -exit '
+    cmd3='ds9 -zscale -invert '+ \
+         ' -geometry 844x922 -fits '+pp_fits+' -contour open -contour load '+contour_file_name+ \
+         ' -contour close ' + \
+         ' -crop '+ra_radio+' '+dec_radio+ ' 75 75 wcs fk5 arcsec ' + \
+         ' -regions '+region_file_name+ ' -colorbar no -align yes -orient xy ' + \
+         ' -grid load ds9-nogrid.grd -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
+
+    
 #    print cmd2
 
     os.system(cmd1)
     os.system(cmd2)
+    os.system(cmd3)
 	
 f1.close()
 

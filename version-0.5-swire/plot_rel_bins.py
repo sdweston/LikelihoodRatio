@@ -89,7 +89,7 @@ width = 1.0*(bins[1]-bins[0])
 center = 0.5*(bins[1:]+bins[:-1])
 
 plot_title='ATLAS ' +field+ ' Histogram of the Reliability values'
-pylab.title(plot_title)
+#pylab.title(plot_title)
 pylab.yscale('log')
 pylab.grid(True)
 pylab.ylabel('N(counterparts)')

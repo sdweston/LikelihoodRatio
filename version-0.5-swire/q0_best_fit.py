@@ -71,6 +71,10 @@ popt,pcov=curve_fit(func,x,y)
 
 print "a = %s " % (popt[0])
 
+perr = np.sqrt(np.diag(pcov))
+print "perr +- %s " % perr
+
+
 xx=np.linspace(1.0,10.0,num=100)
 yy=func(xx,*popt)
 

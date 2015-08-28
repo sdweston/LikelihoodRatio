@@ -1,7 +1,7 @@
 import math
 import array
 import _mysql
-import numpy
+import numpy 
 import scipy
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit

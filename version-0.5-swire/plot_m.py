@@ -97,7 +97,10 @@ def plot_m():
     print x
     print y1	
 #    plt.plot(x,y1,linestyle='_',color='k')
-    plt.plot(x, y1,'k:',x,y2,'g-',x,y3,'r--')
+    line_y1, = plt.plot(x, y1,'k:', label="total(m)")
+    line_y2, = plt.plot(x,y2,'g-', label="real(m)")
+    line_y3, = plt.plot(x,y3,'r--', label="background")
+    plt.legend(["total(m)","real(m)","background"])
     plt.yscale('log')
     plt.ylabel('total(m)')
     plt.xlabel('log10(f)')

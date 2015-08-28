@@ -131,15 +131,22 @@ def rp():
           " where flag='rd';")
     print sql11,"\n"
     db.query(sql11)
+
+# NOTE (Nick Seymour 27/7/2015) :
+#     Flux = sum(flux of components)
+#     RMS = mean
+#     SNR = max (snr1, snr2)
+#     SP_ERR = SP_ERR of max peak
+#     SINT_ERR = sqrt ( sint_err1 ^2 + sint_err2 ^2)
 	
     sql12=("insert into "+schema+"."+field+"_radio_properties"
           " (id,snr,rms,sp,sint,sp_err,sint_err)"
           " select id,"
-          "       sqrt(power((select snr from "+schema+"."+field+"_radio_properties where id=cid1),2)+power((select snr from "+schema+"."+field+"_radio_properties where id=cid2),2)),"
-	      "       sqrt(power((select rms from "+schema+"."+field+"_radio_properties where id=cid1),2)+power((select rms from "+schema+"."+field+"_radio_properties where id=cid2),2)),"
-	      "      (flux1+flux2)/2,"
+          "       greatest((select snr from "+schema+"."+field+"_radio_properties where id=cid1),(select snr from "+schema+"."+field+"_radio_properties where id=cid2)),"
+	      "       ((select rms from "+schema+"."+field+"_radio_properties where id=cid1)+(select rms from "+schema+"."+field+"_radio_properties where id=cid2))/2,"
+	      "      (flux1+flux2),"
           "      ((select sint from "+schema+"."+field+"_radio_properties where id=cid1)+(select sint from "+schema+"."+field+"_radio_properties where id=cid2))/2,"
-	      "      sqrt(power((select sp_err from "+schema+"."+field+"_radio_properties where id=cid1),2)+power((select sp_err from "+schema+"."+field+"_radio_properties where id=cid2),2)),"
+	      "      select max(sp_err) from "+schema+"."+field+"_radio_properties where id=cid1 or id=cid2,"
 	      "      sqrt(power((select sint_err from "+schema+"."+field+"_radio_properties where id=cid1),2)+power((select sint_err from "+schema+"."+field+"_radio_properties where id=cid2),2))"
           " from "+schema+"."+field+"_radio_pairs"
           " where flag='rd';")

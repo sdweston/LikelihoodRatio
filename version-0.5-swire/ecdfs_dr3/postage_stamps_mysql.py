@@ -50,7 +50,8 @@ r=db.use_result()
 
 # fetch results, returning char we need float !
 
-rows=r.fetch_row(maxrows=0)
+# for testing limit to two
+rows=r.fetch_row(maxrows=100)
 
 # Close connection to the database
 db.close()
@@ -97,9 +98,9 @@ for row in rows:
     f.write('global color=blue font="helvetica 10 normal "\n')
     # put a cross for the radio source
     f.write('global color=red\n')
-    f.write('fk5;circle( '+ra_radio1+' , '+dec_radio1+' ,1")\n')
+    f.write('fk5;circle( '+ra_radio1+' , '+dec_radio1+' ,1") # width = 2 \n')
 	# Put in search radius
-    f.write('fk5;circle( '+ra_radio1+' , '+dec_radio1+' ,10")\n')
+    f.write('fk5;circle( '+ra_radio1+' , '+dec_radio1+' ,10") # width = 2 \n')
  
 #   Define start coords for full txt string for object
     t_ra1=f_ra_radio1+0.02
@@ -116,8 +117,8 @@ for row in rows:
     # add lines to the region file to identify the non-radio candidates
 
     f.write('global color=yellow\n')
-    f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,1") # point=cross\n')
-    f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,0.05") \n')
+    f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,1")    # width=2 \n')
+    f.write('fk5;circle( '+ra_spitzer+' , '+dec_spitzer+' ,0.05") # point=cross \n')
     # put in the values of spitzer_index, relibility & likelihood
     #f.write('fk5;circle('+str(t_ra1)+' , '+str(t_dec1)+',0.1") # text={'+str(idx_sub_row)+' : '+swire_id+' '+rel+'}\n')
 
@@ -145,7 +146,7 @@ for row in rows:
         print "Spitzer Candidate: ",cid2,ra_spitzer1,dec_spitzer1,reliability2
 
         f.write('global color=magenta\n')
-        f.write('fk5;circle( '+ra_spitzer1+' , '+dec_spitzer1+' ,0.5") # point=cross\n')
+        f.write('fk5;circle( '+ra_spitzer1+' , '+dec_spitzer1+' ,1") # width=2 \n')
         
     
     # Close ihe region file
@@ -156,25 +157,41 @@ for row in rows:
 
     contour_file_name='d:\\cdfs\\dr3\\atlas_'+cid1+'_'+ra_radio1+'_'+dec_radio1+'.con'
     postage_stamp_filename1='d:\\cdfs\\dr3\\images\\atlas_'+cid1+'.jpeg'
+    pp_fits='d:\\cdfs\\dr3\\images\\atlas_'+cid1+'.fits'
     
     cmd1='ds9 -zscale -invert '+ \
-         ' -geometry 844x922 '+radio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
-         ' 70 70 wcs fk5 arcsec -contour open -contour loadlevels contour_20mjy.lev -contour yes ' + \
-         ' -regions '+region_file_name+ ' -colorbar no ' +\
-         ' -contour save '+contour_file_name+' -contour close -zoom to fit -exit ' 
+         ' -geometry 844x922 -fits '+radio_image_fits+ \
+         ' -crop '+ra_radio1+' '+dec_radio1+ ' 50 50 wcs fk5 arcsec ' + \
+         ' -contour open -contour loadlevels contour_20mjy.lev -contour yes ' + \
+         ' -regions '+region_file_name+ ' -colorbar no -zoom to fit ' +\
+         ' -contour save '+contour_file_name+' -contour close -exit ' 
 #         ' -saveimage '+postage_stamp_filename1+' 100 -exit'
 #    print cmd1
  
-    postage_stamp_filename='d:\\cdfs\\dr3\\images\\'+cid1+'_'+swire_id+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
     cmd2='ds9 -zscale -invert '+ \
-         ' -geometry 844x922 '+nonradio_image_fits+' -crop '+ra_radio1+' '+dec_radio1+ \
-         ' 70 70 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
-         ' -regions '+region_file_name+ ' -colorbar no ' +\
-         ' -grid load ds9.grd -contour close -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
+         ' -geometry 844x922 -fits '+nonradio_image_fits+' -contour open -contour load '+contour_file_name+ \
+         ' -contour close ' + \
+         ' -crop '+ra_radio1+' '+dec_radio1+ ' 100 100 wcs fk5 arcsec ' + \
+         ' -regions '+region_file_name+ ' -colorbar no -align yes -orient xy ' + \
+         ' -zoom to fit -saveimage fits '+pp_fits+' -exit '
+#         ' -grid load ds9.grd -zoom to fit -saveimage '+postage_stamp_filename+' 100  '
 #    print cmd2
+
+    postage_stamp_filename='d:\\cdfs\\dr3\\images\\'+cid1+'_'+swire_id+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
+    cmd3='ds9 -zscale -invert '+ \
+         ' -geometry 844x922 -fits '+pp_fits+' -contour open -contour load '+contour_file_name+ \
+         ' -contour close ' + \
+         ' -crop '+ra_radio1+' '+dec_radio1+ ' 70 70 wcs fk5 arcsec ' + \
+         ' -regions '+region_file_name+ ' -colorbar no -align yes -orient xy ' + \
+         ' -grid load ds9-nogrid.grd -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
+#    print cmd2
+
+# Need to do it again, apply contours etc and crop to say 70 70 !
 
     os.system(cmd1)
     os.system(cmd2)
+    os.system(cmd3)
+#    os.system(cmd3)
 
 
 # End of do block
