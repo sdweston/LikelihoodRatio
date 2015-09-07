@@ -26,3 +26,31 @@ output_dir='d:/temp/'
 # Sum of Real(m)_i
 global sum_real_m
 sum_real_m=0.0
+
+# Schema Information
+global schema
+schema='gama12' 
+global foreground_field
+foreground_field='nvss_gama12'
+global background_field
+background_field='supercosmos_gama12'
+
+# NVSS Beam, arcsec
+global beam_maj
+beam_maj=45.0
+global beam_min
+beam_min=45.0
+
+# Supercosmos
+global sc_ra_min
+sc_ra_min=174.138458333
+global sc_ra_max
+sc_ra_max=186.185083333
+global sc_dec_min
+sc_dec_min=-2.08702777778
+global sc_dec_max
+sc_dec_max=1.94011111111
+
+# n(m)
+global sr_out
+sr_out=200

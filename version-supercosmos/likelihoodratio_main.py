@@ -37,9 +37,7 @@ def print_end():
 
 #===================================================================================================
 
-schema='gama12' 
-foreground_field='nvss_gama12'
-background_field='supercosmos_gama12'
+
 beam_maj=12.2
 beam_min=7.6
 beam_posn_ang=-11.0
@@ -58,12 +56,24 @@ if answer !='':
 else:
     sr=20.0
 
+# Magnitude Distribution of Background Sources - Method
+
+print "Magnitude Distribution of Background Sources Method\n"
+print " 1 - search radii \n"
+print " 2 - whole background catalogue \n"
+mdbs=raw_input('Which method 1 or 2 (default 2) :')
+
+if mdbs !='1' and mdbs!='2':
+   mdbs='2'
+
+print "\nMethod : ",mdbs,"\n"
+
 	
 execfile('area_background_survey.py')
 #execfile('radio_pairs.py')
 execfile('populate_matches.py')
-#execfile('f_r.py')
-#execfile('n_m.py')
+execfile('f_r.py')
+execfile('n_m.py')
 #execfile('q_0.py')
 #execfile('total_m.py')
 #execfile('real_m.py')
@@ -100,7 +110,7 @@ if (answer =='Y' or answer=='y'):
     print "Run nearest neighbour match  : ",answer,"\n"
     pm()
 
-"""
+
 # Determine f(r) and update the database.
 
 print "You need sigma from f(r) for Q_0 calculations latter"
@@ -118,6 +128,7 @@ if (answer =='Y' or answer=='y'):
     print "Runing n(m) calculations                 : ",answer,"\n"
     n_m()
 
+"""
 # Determine the Q0 at this point as we have n_m
 #q_0()
 
