@@ -70,6 +70,8 @@ if mdbs !='1' and mdbs!='2':
 print "\nMethod : ",mdbs,"\n"
 
 execfile('random_foreground_catalogue.py')
+execfile('find_blanks_random.py')
+execfile('find_blanks_real.py')
 	
 execfile('area_background_survey.py')
 #execfile('radio_pairs.py')
@@ -92,13 +94,15 @@ print_header()
 
 # Prepare base data, random catalogue etc
 
+print "This next step only need to be done once at the begining !"
+
 answer=raw_input('Run create a new random foreground catalogue (y/n) : ')
 
 if (answer =='Y' or answer=='y'):
     print "Create a new random foreground catalogue : ",answer,"\n"
     random_foreground_catalogue()
-#    find_blanks_random()
-#    find_blanks_real()
+    find_blanks_random()
+    find_blanks_real()
 
 # Calculate the spherical area of the none-radio survey being used
 # for cross matching to get an accurate measure of the area for determining

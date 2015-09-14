@@ -1,76 +1,64 @@
-# randomcats.py
-# This program makes a random catalogue based on the FUSION catalogue
+# Find the real blanks
 # Based on method Bonzini et al 2012
 
-import sys
-import math
-import array
-import random
-import _mysql
-import numpy
-import matplotlib.pyplot as plt
-import astropysics as astro
-import pylab as p
+def find_blanks_real():
 
-from astropysics.constants import c,G
+  print "Find Blanks with the Random Catalogue"
+  
+  sr=100.0
 
-schema="atlas_dr3"
-field="cdfs"
-swire_schema='cdfs'
-sr=20.0
-
-global dradian
-dradian=math.pi/180
+  global dradian
+  dradian=math.pi/180
 
 #===================================================================================================
 #
 
-print sys.argv[0],"\n"
+  print sys.argv[0],"\n"
 
-db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+  db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
-db.query("select count(*),max(ra),min(ra),max(decl),min(decl) from atlas_dr3.cdfs_coords;")
+  db.query("select count(*),max(ra_2000),min(ra_2000),max(decl_2000),min(decl_2000) from "+foreground_field+"."+foreground_field+";")
 
-r=db.use_result()
+  r=db.use_result()
 
 # fetch results, returning char we need float !
 
-rows=r.fetch_row(maxrows=1)
+  rows=r.fetch_row(maxrows=1)
 
-for row in rows:
+  for row in rows:
  
     ra_max=float(row[1])
     ra_min=float(row[2])
     dec_min=float(row[3])
     dec_max=float(row[4])
 
-print "RA Max, RA Min    : %f %f" % (ra_max,ra_min)
-print "Dec Max, Dec Min  : %f %f" % (dec_max,dec_min)
+  print "RA Max, RA Min    : %f %f" % (ra_max,ra_min)
+  print "Dec Max, Dec Min  : %f %f" % (dec_max,dec_min)
 
 # Close connection to the database
-db.close()
+  db.close()
 
-db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+  db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # Lets run a querry, find the number of records
 
-db.query("select ra,decl from atlas_dr3.cdfs_coords;")
+  db.query("select ra_2000,decl_2000 from "+foreground_field+"."+foreground_field+";")
 
-r=db.use_result()
+  r=db.use_result()
 
 # fetch results, returning char we need float !
 
-rows=r.fetch_row(maxrows=0)
+  rows=r.fetch_row(maxrows=0)
 
-n_blanks=0
+  n_blanks=0
 
 # Close connection to the database
-db.close()
-db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+  db.close()
+  db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
-f_radius=[]
+  f_radius=[]
 
-for row in rows:
+  for row in rows:
     ra=float(row[0])
     dec=float(row[1])
 
@@ -84,16 +72,15 @@ for row in rows:
 #    print "Ra Dec  : %f %f" % (ra,dec)
 
     sql=("select "
-         "t2.Index_Spitzer, "
-         "sqrt(pow(("+str(ra)+"-t2.RA_SPITZER)*cos(radians("+str(dec)+")),2)+"
-         "     pow("+str(dec)+"-t2.DEC_SPITZER,2))*3600 as radius "
-	 	 "from fusion.swire_"+swire_schema+" as t2 "
-         "where pow(("+str(ra)+"-t2.RA_SPITZER)*cos(radians("+str(dec)+")),2)+" 
-         "      pow("+str(dec)+"-t2.DEC_SPITZER,2) <= pow("+str(sr)+"/3600,2) "
-         " and   t2.ra_spitzer > "+str(ra_min)+" and t2.ra_spitzer < "+str(ra_max)+" "
-         " and   t2.dec_spitzer > "+str(dec_min)+" and t2.dec_spitzer < "+str(dec_max)+
+         "t2.id, "
+         "sqrt(pow(("+str(ra)+"-t2.RA)*cos(radians("+str(dec)+")),2)+"
+         "     pow("+str(dec)+"-t2.DECL,2))*3600 as radius "
+	     "from "+background_field+"."+background_field+" as t2 "
+         "where pow(("+str(ra)+"-t2.RA)*cos(radians("+str(dec)+")),2)+" 
+         "      pow("+str(dec)+"-t2.DECL,2) <= pow("+str(sr)+"/3600,2) "
+         " and   t2.ra > "+str(ra_min)+" and t2.ra < "+str(ra_max)+" "
+         " and   t2.decl > "+str(dec_min)+" and t2.decl < "+str(dec_max)+
          " order by radius asc limit 0,3000000; ")
-
 #    print sql
     db.query(sql)
     r=db.use_result()
@@ -114,15 +101,15 @@ for row in rows:
     if nm==0:
         n_blanks=n_blanks+1
 
-print "number of blanks :",n_blanks
+  print "number of blanks :",n_blanks
 
-(hist,bins)=numpy.histogram(f_radius,bins=int(sr),range=[0.0,sr])
-width = 0.7*(bins[1]-bins[0])
-center = (bins[:-1]+bins[1:])/2
+  (hist,bins)=numpy.histogram(f_radius,bins=int(sr),range=[0.0,sr])
+  width = 0.7*(bins[1]-bins[0])
+  center = (bins[:-1]+bins[1:])/2
 
-f=open('Blanks_'+field+'_real.csv','w')
-for x in xrange(0,20):
-    sql3=("update atlas_dr3.cdfs_q0 set nb_real="+str(hist[x])+" where radius="+str(x+1)+";")
+  f=open('Blanks_'+schema+'_real.csv','w')
+  for x in xrange(0,int(sr)):
+    sql3=("update "+schema+"."+schema+"_q0 set nb_real="+str(hist[x])+" where radius="+str(x+1)+";")
     print sql3,"\n"
     db.query(sql3)
     db.commit()
@@ -131,9 +118,9 @@ for x in xrange(0,20):
 
 # Need a cumulative histogram
 
-for x in xrange(0,20):
+  for x in xrange(0,int(sr)):
     if x > 0: hist[x]=hist[x]+hist[x-1]
-    sql4=("update atlas_dr3.cdfs_q0 set nr_real="+str(hist[x])+" where radius="+str(x+1)+";")
+    sql4=("update "+schema+"."+schema+"_q0 set nr_real="+str(hist[x])+" where radius="+str(x+1)+";")
     print sql4,"\n"
     db.query(sql4)
     db.commit()
@@ -141,29 +128,30 @@ for x in xrange(0,20):
 
 # Close connection to the database
 
-db.close()
+  db.close()
 
-plt.bar(center, hist, align = 'center',width = width,linewidth=0)
+  plt.bar(center, hist, align = 'center',width = width,linewidth=0)
 #plt.hist(hist, bins=15, cumulative=True)
-plot_title=' Finding Blanks m(>r)'
-plt.title(plot_title)
-plt.ylabel('m(>r)')
-plt.xlabel('radius (arcsec)')
-plot_fname='atlas_'+field+'_blanks_n_r.ps'
-output_dir='D:/temp/'
-fname=output_dir + plot_fname
-plt.savefig(fname)
-plt.show()
+  plot_title=' Real Catalogue - Finding Blanks m(>r)'
+  plt.title(plot_title)
+  plt.ylabel('m(>r)')
+  plt.grid('on')
+  plt.xlabel('radius (arcsec)')
+  plot_fname=''+schema+'_real_blanks_n_r.ps'
+  output_dir='D:/temp/'
+  fname=output_dir + plot_fname
+  plt.savefig(fname)
+  plt.show()
 
 # Print out the histogram values
 # 
 
 #f=open('random_cats_cdfs.csv','w')
-f.write('====Cumulative Histogram====\n')
-for x in xrange(0,20):
+  f.write('====Cumulative Histogram====\n')
+  for x in xrange(0,20):
     out_str="hist[%d] : %d \n" % (x,hist[x])
     f.write(out_str)
-f.close()
+  f.close()
 
 
 
