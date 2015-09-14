@@ -8,6 +8,7 @@ from scipy.optimize import curve_fit
 import astropysics as astro
 import pylab
 import sys
+import random
 
 from astropysics.constants import c,G
 
@@ -68,6 +69,7 @@ if mdbs !='1' and mdbs!='2':
 
 print "\nMethod : ",mdbs,"\n"
 
+execfile('random_foreground_catalogue.py')
 	
 execfile('area_background_survey.py')
 #execfile('radio_pairs.py')
@@ -75,8 +77,8 @@ execfile('populate_matches.py')
 execfile('f_r.py')
 execfile('n_m.py')
 #execfile('q_0.py')
-#execfile('total_m.py')
-#execfile('real_m.py')
+execfile('total_m.py')
+execfile('real_m.py')
 #execfile('q_m.py')
 #execfile('plot_m.py')
 #execfile('likelihoodratio.py')
@@ -87,6 +89,14 @@ auks()
 print_header()	
 
 # First truncate all the working tables in the database
+
+# Prepare base data, random catalogue etc
+
+answer=raw_input('Run create a new random foreground catalogue (y/n) : ')
+
+if (answer =='Y' or answer=='y'):
+    print "Create a new random foreground catalogue : ",answer,"\n"
+    random_foreground_catalogue()
 
 # Calculate the spherical area of the none-radio survey being used
 # for cross matching to get an accurate measure of the area for determining
@@ -140,6 +150,7 @@ if (answer =='Y' or answer=='y'):
     q_0()
 
 # Determine total(m) and update data base
+"""
 
 answer=raw_input('Run total(m) calculations   (y/n) : ')
 
@@ -157,6 +168,7 @@ if (answer =='Y' or answer=='y'):
     real_m()
 #real_m()
 
+"""
 # Determine q(m) and update database
 
 answer=raw_input('Run q(m) calculations       (y/n) : ')
