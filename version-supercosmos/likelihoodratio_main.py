@@ -97,6 +97,8 @@ answer=raw_input('Run create a new random foreground catalogue (y/n) : ')
 if (answer =='Y' or answer=='y'):
     print "Create a new random foreground catalogue : ",answer,"\n"
     random_foreground_catalogue()
+#    find_blanks_random()
+#    find_blanks_real()
 
 # Calculate the spherical area of the none-radio survey being used
 # for cross matching to get an accurate measure of the area for determining

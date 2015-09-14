@@ -48,8 +48,8 @@ def f_r():
     for row in rows:
         sigma_y_radio=float(row[0])
         sigma_x_radio=float(row[1])
-        print sigma_y_radio
-        print sigma_x_radio
+#        if debug==1: print sigma_y_radio
+#        if debug==1: print sigma_x_radio
  	db.close()
 	
     sigma_radio=math.sqrt((sigma_x_radio)**2 + (sigma_y_radio)**2)
@@ -65,8 +65,8 @@ def f_r():
 
 # Put sigma_radio into the working table, so don't have to re-run this each time
 
-    sql_update_sigma=("update "+foreground_field+"."+foreground_field+"_working "
-                      "set sigma="+str(sigma_radio)+" where field like '"+foreground_field+"';")
+    sql_update_sigma=("update "+schema+"."+schema+"_working "
+                      "set sigma="+str(sigma_radio)+" where field like '"+schema+"';")
     if debug==1: print sql_update_sigma,"\n"
     db.query(sql_update_sigma)
 	
@@ -169,7 +169,7 @@ def f_r():
         part2a=r**2/2*sigma
         if debug==1: print part1, part2, part2a
         f_r=(1/(2*math.pi*sigma)) * math.exp(-r**2/2*sigma)
-        print f_r
+        if debug==1: print f_r
         if f_r > 0 : 
            log10_f_r=math.log10(f_r)
            F_R.append(log10_f_r)
