@@ -48,14 +48,17 @@ def f_r():
     for row in rows:
         sigma_y_radio=float(row[0])
         sigma_x_radio=float(row[1])
-#        if debug==1: print sigma_y_radio
-#        if debug==1: print sigma_x_radio
+        print "sigma_y_radio :",sigma_y_radio
+        print "sigma_x_radio :",sigma_x_radio
  	db.close()
 	
     sigma_radio=math.sqrt((sigma_x_radio)**2 + (sigma_y_radio)**2)
     print "Sigma Radio : ",sigma_radio
     if debug==1: print "\n"
     global sigma_radio
+	
+    beam_maj=sigma_x_radio
+    beam_min=sigma_y_radio
 
 			  
 # Lets run a querry
@@ -65,8 +68,8 @@ def f_r():
 
 # Put sigma_radio into the working table, so don't have to re-run this each time
 
-    sql_update_sigma=("update "+schema+"."+schema+"_working "
-                      "set sigma="+str(sigma_radio)+" where field like '"+schema+"';")
+    sql_update_sigma=("update "+foreground_field+"."+foreground_field+"_working "
+                      "set sigma="+str(sigma_radio)+" where field like '"+foreground_field+"';")
     if debug==1: print sql_update_sigma,"\n"
     db.query(sql_update_sigma)
 	
@@ -76,11 +79,13 @@ def f_r():
 
 # note: theta is stored in radians
     sql1=("select t1.nvss_id, t1.supercosmos_id, t2.s1_4, t2.e_s1_4, t1.r_arcsec, t1.theta "
-          " from gama12.gama12_matches as t1, nvss_gama12.nvss_gama12 as t2"
+          " from "+schema+"."+schema+"_matches as t1, "+foreground_field+"."+foreground_field+" as t2"
           " where t1.nvss_id=t2.id "
-           "order by t1.nvss_id;")
+           "order by t1.nvss_id limit 1000000;")
 		  
-    if debug==1: print sql1,"\n"  
+
+#		  if debug==1: print sql1,"\n" 
+    print sql1,"\n" 
     db.query(sql1)
 
 #    db.query("select t1.cid,t2.swire_index_spitzer,t1.majaxis,t1.minaxis,t1.sint,t1.rms,t2.r_arcsec \
@@ -99,7 +104,7 @@ def f_r():
 
 # fetch results, returning char we need float !
 
-    rows=r.fetch_row(maxrows=5000)
+    rows=r.fetch_row(maxrows=500000)
 
 # rows is a tuple, convert it to a list
 
@@ -111,8 +116,8 @@ def f_r():
     F_R=[]
 
     for row in rows:
-        cid=row[0]
-        index_spitzer=row[1]
+        foreground_id=row[0]
+        background_id=row[1]
         sint=float(row[2])
         snr=float(row[3])
         if row[4]==None:
@@ -120,17 +125,18 @@ def f_r():
         r=float(row[4])
         theta=float(row[5])
     
-        if debug==1: print cid, index_spitzer,sint,snr,r,theta
+        if debug==1: print foreground_id, background_id,sint,snr,r,theta
         sys.stdout.write('.')
 
 # ACE - ancillary catalogue error, arcsec's
 
-        ACE=0.1
+        ACE=1.0
 
 # IRE - intrensic radio error, arcsec's
 # Looking at http://www.cv.nrao.edu/nvss/paper.ps
+# Take the larger rms error in ra,dec of 7"
 
-        IRE=1.0
+        IRE=7.0
 
 # In DR3 we have SNR !
         SNR = snr
@@ -157,7 +163,8 @@ def f_r():
 #        sigma=math.sqrt(sigma_x + sigma_y + ACE**2 + IRE**2)
         sigma=(sigma_x + sigma_y + ACE**2 + IRE**2)
         if debug==1: print "Sigma         : ",sigma
-
+ 
+		
 # r is the radial distance between the radio source and the aux catalogue source
 # r was returned from the sql in the matches table
 
@@ -165,24 +172,26 @@ def f_r():
 #        By the formula it should be sigma**2, but see above why sqrt when we will sq again !
 #        f_r=(1/(2*math.pi*sigma**2)) * math.exp(-r**2/2*sigma**2)
         part1=(1/(2*math.pi*sigma))
-        part2=math.exp(-r**2/2*sigma)
-        part2a=r**2/2*sigma
+        part2=math.exp(-r**2/(2*sigma))
+        part2a=r**2/(2*sigma)
         if debug==1: print part1, part2, part2a
-        f_r=(1/(2*math.pi*sigma)) * math.exp(-r**2/2*sigma)
+
+        f_r=(1/(2*math.pi*sigma)) * math.exp(-r**2/(2*sigma))
         if debug==1: print f_r
-        if f_r > 0 : 
+
+        if f_r > 0.0 : 
            log10_f_r=math.log10(f_r)
            F_R.append(log10_f_r)
            RADIUS.append(r)
 
-        if debug==1: print "cid   index_spitzer sigma r f(r) : ",cid,index_spitzer,sigma,r,f_r
+        if debug==1: print "foreground_id   background_id sigma r f(r) : ",foreground_id,background_id,sigma,r,f_r
         if debug==1: print "\n"
 
 #        print "    Update the database with the f(r) values"
 		
-# Populate new table with cid,BS,SNR,f(r), or put back into matches table.
-#        db.query("update "+schema+"."+field+"_matches set f_r=%s,snr=%s where cid='%s' \
-#                  and swire_index_spitzer='%s';" % (f_r, SNR, cid, index_spitzer))
+# Populate new table with foreground_id,BS,SNR,f(r), or put back into matches table.
+        db.query("update "+schema+"."+schema+"_matches set f_r=%s,snr=%s where nvss_id='%s' \
+                  and supercosmos_id='%s';" % (f_r, SNR, foreground_id, background_id))
 
 # End of do block
 
