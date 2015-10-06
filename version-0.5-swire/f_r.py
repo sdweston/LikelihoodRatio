@@ -93,7 +93,7 @@ def f_r():
 
 # fetch results, returning char we need float !
 
-    rows=r.fetch_row(maxrows=5000)
+    rows=r.fetch_row(maxrows=500000)
 
 # rows is a tuple, convert it to a list
 
@@ -149,7 +149,7 @@ def f_r():
 #       Do we need to sqrt here, when in f_r we square again. Save a calculation by not doing a sqrt.
 #        sigma=math.sqrt(sigma_x + sigma_y + ACE**2 + IRE**2)
         sigma=(sigma_x + sigma_y + ACE**2 + IRE**2)
-#    print "Sigma         : ",sigma
+        print "Sigma         : ",sigma
 
 # r is the radial distance between the radio source and the aux catalogue source
 # r was returned from the sql in the matches table
