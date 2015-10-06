@@ -40,7 +40,7 @@ def f_r():
 	
 # Find sigma_x_radio and sigma_y_radio
 
-    sql2=("select avg(0.6*(MajAxis/"+SNR+")),avg(0.6*(MinAxis/"+SNR+")) "
+    sql2=("select avg(0.3*(MajAxis/"+SNR+")),avg(0.3*(MinAxis/"+SNR+")) "
            "FROM "+foreground_field+"."+foreground_field+"; ")
     db.query(sql2)
     r=db.use_result()
@@ -57,8 +57,8 @@ def f_r():
     if debug==1: print "\n"
     global sigma_radio
 	
-    beam_maj=sigma_x_radio
-    beam_min=sigma_y_radio
+#    beam_maj=sigma_x_radio
+#    beam_min=sigma_y_radio
 
 			  
 # Lets run a querry
@@ -78,7 +78,8 @@ def f_r():
 
 
 # note: theta is stored in radians
-    sql1=("select t1.nvss_id, t1.supercosmos_id, t2.s1_4, t2.e_s1_4, t1.r_arcsec, t1.theta "
+    sql1=("select t1.nvss_id, t1.supercosmos_id, t2.s1_4, t2.e_s1_4, t1.r_arcsec, t1.theta, "
+          " t2.MajAxis, t2.MinAxis	"
           " from "+schema+"."+schema+"_matches as t1, "+foreground_field+"."+foreground_field+" as t2"
           " where t1.nvss_id=t2.id "
            "order by t1.nvss_id limit 1000000;")
@@ -119,27 +120,31 @@ def f_r():
         foreground_id=row[0]
         background_id=row[1]
         sint=float(row[2])
-        snr=float(row[3])
+        serr=float(row[3])
         if row[4]==None:
             continue
         r=float(row[4])
         theta=float(row[5])
+        beam_maj=float(row[6])
+        beam_min=float(row[7])
     
         if debug==1: print foreground_id, background_id,sint,snr,r,theta
         sys.stdout.write('.')
 
 # ACE - ancillary catalogue error, arcsec's
 
-        ACE=1.0
+#        ACE=1.0
+        ACE=0.0
 
 # IRE - intrensic radio error, arcsec's
 # Looking at http://www.cv.nrao.edu/nvss/paper.ps
 # Take the larger rms error in ra,dec of 7"
 
+#        IRE=7.0
         IRE=7.0
 
 # In DR3 we have SNR !
-        SNR = snr
+        snr=sint/serr
 		
 #    print "SNR           : ",SNR
 
@@ -149,12 +154,12 @@ def f_r():
 #        Will need to allow for beam angle !
 #        sigma_x=math.sqrt((0.6*(beam_min/snr))**2)
 #        Check Ivison et al 2007, equation B7. should be 0.3 not 0.6
-        sigma_x=((0.3*(beam_min/snr)*math.sin(theta))**2 )
+        sigma_y=(0.3*((beam_maj*math.sin(theta))/snr))**2 
 #    print "Sigma X       : ",sigma_x
 
 #        sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 )
 #        Check Ivison et al 2007, equation B7. should be 0.3 not 0.6
-        sigma_y=((0.3*(beam_maj/snr)*math.cos(theta))**2 )
+        sigma_x=(0.3*((beam_maj*math.cos(theta))/snr))**2 
 #    print "Sigma Y       : ",sigma_y
 
 #   sigma is the mean of sigma_x and sigma_y, or quadrature (in paper quadrature)
@@ -181,7 +186,7 @@ def f_r():
 
         if f_r > 0.0 : 
            log10_f_r=math.log10(f_r)
-           F_R.append(log10_f_r)
+           F_R.append(f_r)
            RADIUS.append(r)
 
         if debug==1: print "foreground_id   background_id sigma r f(r) : ",foreground_id,background_id,sigma,r,f_r
@@ -190,8 +195,8 @@ def f_r():
 #        print "    Update the database with the f(r) values"
 		
 # Populate new table with foreground_id,BS,SNR,f(r), or put back into matches table.
-        db.query("update "+schema+"."+schema+"_matches set f_r=%s,snr=%s where nvss_id='%s' \
-                  and supercosmos_id='%s';" % (f_r, SNR, foreground_id, background_id))
+        db.query("update "+schema+"."+schema+"_matches set f_r=%s,snr=%s,sigma=%s where nvss_id='%s' \
+                  and supercosmos_id='%s';" % (f_r, snr,sigma,foreground_id,background_id))
 
 # End of do block
 
@@ -205,7 +210,9 @@ def f_r():
     plt.xlabel('r (arcsec)')
 #    plt.yscale('log')
 
-    plt.xlim(0.0,sr)
+    xlim_h=sr+1.0
+    xlim_l=0.0
+    plt.xlim(xlim_l,xlim_h)
 #    plt.ylim(0.0,0.5)
 
     plot_fname='nvss_gama12_fr_vs_r.eps'

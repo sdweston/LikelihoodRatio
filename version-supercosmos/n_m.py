@@ -164,7 +164,7 @@ def n_m():
     if mdbs=='1':
        search_area=nrs *(math.pi * math.pow(sr_out,2) - math.pi * math.pow(sr,2))
     else:
-	   search_area=swire_sqsec
+	   search_area=area_nvss_sqdeg
 		
     print "Search Area : ",search_area
 	
