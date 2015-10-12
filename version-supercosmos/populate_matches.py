@@ -45,7 +45,7 @@ def pm():
               "(t1.ra_2000-t2.ra_2000)*cos(radians(t1.decl_2000)), "
               "t1.decl_2000-t2.dec_2000, "
               "sqrt(pow((t1.ra_2000-t2.ra_2000)*cos(radians(t1.decl_2000)),2)+pow(t1.decl_2000-t2.dec_2000,2))*3600, "
-              "t1.S1_4, "
+              "t2.B_J, "
 			  "atan2(t1.decl_2000-t2.dec_2000,(t1.ra_2000-t2.ra_2000)*cos(radians(t1.decl_2000))) "
               "from nvss_gama12.nvss_gama12 as t1, supercosmos_gama12.supercosmos_gama12 as t2 "
               "where pow((t1.ra_2000-t2.ra_2000)*cos(radians(t1.decl_2000)),2)+" 

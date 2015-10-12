@@ -124,6 +124,7 @@ def n_m():
         f_rows.append(b)
 
 #    (hist,bins)=numpy.histogram(f_rows,bins=60,range=[-1.0,5.0])
+#   Min and Max for B_J is 6.373 - 22.993
     (hist,bins)=numpy.histogram(f_rows,bins=40,range=[6.0,23.0])
     width = 0.7*(bins[1]-bins[0])
     center = (bins[:-1]+bins[1:])/2

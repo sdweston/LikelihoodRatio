@@ -35,7 +35,7 @@ def lr():
 
 # fetch results, returning char we need float !
 
-    rows=r.fetch_row(maxrows=100000)
+    rows=r.fetch_row(maxrows=10000)
 
 # rows is a tuple, convert it to a list
 
@@ -57,8 +57,9 @@ def lr():
 # we are working  B_J Photographic Magnitude, no need to log it !
 	
         sql1=("select log10_f,n_m,q_m from "+schema+"."+schema+"_n_m_lookup "
-              "    where log10_f > "+str(flux)+" - 0.05 "
-              "    and   log10_f < "+str(flux)+" + 0.05;" )
+              "    where log10_f between "+str(flux)+" - 0.2125 and  "+str(flux)+" + 0.2125;")
+ 			  
+# where log10_f between 17.541-0.2125 and 17.541+0.2125;
 	
         print sql1,"\n" 
         db.query(sql1)

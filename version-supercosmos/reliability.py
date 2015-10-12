@@ -62,7 +62,7 @@ def rel():
 	              and nvss_id like '%s';" % (foreground_id))
 
         r2=db.store_result()
-        strings=r2.fetch_row(maxrows=500000)
+        strings=r2.fetch_row(maxrows=50000)
 
         for string in strings:
 #        print string

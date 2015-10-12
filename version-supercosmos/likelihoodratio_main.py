@@ -77,6 +77,7 @@ execfile('area_background_survey.py')
 #execfile('radio_pairs.py')
 execfile('populate_matches.py')
 execfile('f_r.py')
+execfile('plot_f_r.py')
 execfile('n_m.py')
 #execfile('q_0.py')
 execfile('total_m.py')
@@ -85,7 +86,7 @@ execfile('q_m.py')
 execfile('plot_m.py')
 execfile('likelihoodratio.py')
 execfile('reliability.py')
-#execfile('plot_lr_vs_rel.py')
+execfile('plot_lr_vs_rel.py')
 
 auks()
 print_header()	
@@ -126,7 +127,6 @@ if (answer =='Y' or answer=='y'):
     print "Run nearest neighbour match  : ",answer,"\n"
     pm()
 
-
 # Determine f(r) and update the database.
 
 print "You need sigma from f(r) for Q_0 calculations latter"
@@ -135,6 +135,10 @@ answer=raw_input('Run f(r) calculations       (y/n) : ')
 if (answer =='Y' or answer=='y'):
     print "Runing f(r) calculations                 : ",answer,"\n"
     f_r()
+
+# Plot out f(r) just to confirm data is there
+
+plot_f_r()
 
 # Determine n(m) and update data base
 
@@ -183,8 +187,7 @@ if (answer =='Y' or answer=='y'):
     print "Runing q(m) calculations                 : ",answer,"\n"
     q_m()
 #   Plot n(m), q(m) and total(m)
-    plot_m()
-
+plot_m()
 
 # Calculate LR
 
@@ -193,8 +196,6 @@ answer=raw_input('Run LR  calculations       (y/n) : ')
 if (answer =='Y' or answer=='y'):
     print "Runing LR calculations                  : ",answer,"\n"
     lr()
-
-
 
 # Calculate Reliability
 
@@ -205,8 +206,8 @@ if (answer =='Y' or answer=='y'):
     rel()
 
 # Plot LR vs Reliability
-"""
+
 plot_lr_rel()
 
 print_end()
-"""
+
