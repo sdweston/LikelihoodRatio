@@ -79,7 +79,7 @@ execfile('populate_matches.py')
 execfile('f_r.py')
 execfile('plot_f_r.py')
 execfile('n_m.py')
-#execfile('q_0.py')
+execfile('q_0.py')
 execfile('total_m.py')
 execfile('real_m.py')
 execfile('q_m.py')
@@ -148,7 +148,7 @@ if (answer =='Y' or answer=='y'):
     print "Runing n(m) calculations                 : ",answer,"\n"
     n_m()
 
-"""
+
 # Determine the Q0 at this point as we have n_m
 #q_0()
 
@@ -160,7 +160,7 @@ if (answer =='Y' or answer=='y'):
     q_0()
 
 # Determine total(m) and update data base
-"""
+
 
 answer=raw_input('Run total(m) calculations   (y/n) : ')
 

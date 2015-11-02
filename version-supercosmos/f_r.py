@@ -52,7 +52,9 @@ def f_r():
         print "sigma_x_radio :",sigma_x_radio
  	db.close()
 	
-    sigma_radio=math.sqrt((sigma_x_radio)**2 + (sigma_y_radio)**2)
+#    sigma_radio=math.sqrt((sigma_x_radio)**2 + (sigma_y_radio)**2)
+# lets hard code sigma_radio
+    sigma_radio=2.5
     print "Sigma Radio : ",sigma_radio
     if debug==1: print "\n"
     global sigma_radio

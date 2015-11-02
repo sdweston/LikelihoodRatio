@@ -6,8 +6,8 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 	
 # Put sigma_radio into the working table, so don't have to re-run this each time
 
-sql_get_q0=("select q0 from "+foreground_field+"."+foreground_field+"_working "
-                   " where field like '"+foreground_field+"';")
+sql_get_q0=("select q0 from gama12.gama12_working "
+                   " where field like 'gama12';")
 print sql_get_q0,"\n"
 db.query(sql_get_q0)
 	

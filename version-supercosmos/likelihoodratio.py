@@ -48,7 +48,7 @@ def lr():
         index_background=row[1]
         f_r=float(row[2])
         flux=float(row[3])
-        print "Flux %f" %flux
+#        print "Flux %f" %flux
         sys.stdout.write('.')
 
 #   check lookup table for values of q(m) and n(m)
@@ -61,7 +61,7 @@ def lr():
  			  
 # where log10_f between 17.541-0.2125 and 17.541+0.2125;
 	
-        print sql1,"\n" 
+#        print sql1,"\n" 
         db.query(sql1)
         r2=db.store_result()
         strings=r2.fetch_row(maxrows=1)
@@ -72,7 +72,7 @@ def lr():
             n_m=float(string[1])
             q_m=float(string[2])         
 
-            print "n(m) %20.9f q(m) %20.9f f(r) %20.9f \n" % (n_m, q_m, f_r)
+#            print "n(m) %20.9f q(m) %20.9f f(r) %20.9f \n" % (n_m, q_m, f_r)
               
 #        lr = (q_m * f_r) / (n_m / atlas_sqasec)
             if n_m != 0.0:
