@@ -34,9 +34,11 @@ def f_r():
 # It will negligibly affect our normalised errors which take into 
 # account the shape of the beam.
 
-# For GAMA12 : Radio SNR take as AVG(e_S1_4) ?
+# For GAMA12 : Radio SNR take as AVG(s1_4/e_S1_4) ?
+#	'13.644923201588028', so call it 13.645
 
-    SNR="0.94685"
+    SNR="13.645"
+
 	
 # Find sigma_x_radio and sigma_y_radio
 
