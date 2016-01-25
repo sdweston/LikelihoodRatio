@@ -64,7 +64,7 @@ r=db.use_result()
 
 # fetch results, returning char we need float !
 
-rows=r.fetch_row(maxrows=5000)
+rows=r.fetch_row(maxrows=50000)
 
 # rows is a tuple, convert it to a list
 
@@ -75,7 +75,15 @@ ir_8_0_flux_mujy=[]
 r_sp_1_4_flux_mjy=[]
 r_sint_1_4_flux_mjy=[]
 redshift=[]
-	
+
+# We need :
+# 	4.5 - 8.0
+S45_S80=[]
+S36_S58=[]
+S36_S45=[]
+S58_S80=[]
+S36_S80=[]
+S36_S45=[]	
 i1_i2=[]
 i3_i4=[]
 
@@ -94,6 +102,15 @@ for row in rows:
     i1_i2.append(float(row[5])/float(row[3]))
     i3_i4.append(float(row[4])/float(row[2]))
 
+    S45_S80.append(float(row[3])-float(row[5]))
+    S36_S58.append(float(row[2])-float(row[4]))
+
+    S36_S45.append(float(row[2])-float(row[3]))
+    S58_S80.append(float(row[4])-float(row[5]))
+
+    S36_S80.append(float(row[2])-float(row[5]))
+    S36_S45.append(float(row[2])-float(row[3]))
+
     r_sint_mujy.append(float(row[7])*1000)
 	
 	        	
@@ -103,6 +120,19 @@ for row in rows:
 db.close()
 
 # Now plot the data
+
+# Colour - Colour Plots IR
+
+plt.yscale('log')
+plt.xscale('log')
+plt.scatter(S36_S58,S45_S80)
+#plt.title(field)
+plt.grid(True)
+#plt.xlim(0.0)
+#plt.ylim(0.0)
+plt.ylabel('[S_4.5]-[S_8.0]')
+plt.xlabel('[S_3.6]-[S_5.8]')
+plt.show()
 
 plt.yscale('log')
 plt.xscale('log')
