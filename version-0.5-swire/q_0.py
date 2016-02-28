@@ -79,8 +79,8 @@ def q_0():
 #    plot_title=field+" y = %s * x ** (- r^2/2 Simga^2) " % (popt[0])
     plot_title=field
 #    plt.title(plot_title)
-    plt.xlabel('Radius (arcsec)')
-    plt.ylabel('Real/Random Normalised')
+    plt.xlabel('Radius (arcsec)',fontsize=18)
+    plt.ylabel('Real/Random Normalised',fontsize=18)
     plt.plot(x,y,'ro',label="Original Data")
     plt.plot(xx,yy,label="Fitted Curve")
     plt.axis([0,11,0,1])

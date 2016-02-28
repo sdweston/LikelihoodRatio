@@ -86,6 +86,7 @@ flux_ratio=[]
 r_sint_mujy=[]
 rcount=1
 
+print " S14 SINT14 Z S45_S80 S36_S58 S36_S45 S58_S80 S36_80 SINT14_MJY FluxRatio\n"
 for row in rows:
 
 
@@ -108,6 +109,15 @@ for row in rows:
 
     flux_ratio.append(float(row[6])/(float(row[2])/1000))
     rcount=rcount+1
+
+    print "CDFS %s %s %s %f %f %f %f %f %f %f "% (row[6],row[7],row[8],
+                                  -2.5 * math.log10(float(row[3])/float(row[5])),
+                                  -2.5 * math.log10(float(row[2])/float(row[4])),
+                                  -2.5 * math.log10(float(row[2])/float(row[3])),
+                                  -2.5 * math.log10(float(row[4])/float(row[5])),
+                                  -2.5 * math.log10(float(row[2])/float(row[5])),
+                                  float(row[7])*1000,
+                                  float(row[6])/(float(row[2])/1000))
 	
 	        	
 #    End of do block
@@ -173,6 +183,15 @@ for row in rows:
 #   We have milli Jy (radio) and micro Jy (IR)
     flux_ratio.append(float(row[6])/(float(row[2])/1000))
     rcount=rcount+1
+
+    print "ELAIS %s %s %s %f %f %f %f %f %f %f "% (row[6],row[7],row[8],
+                                  -2.5 * math.log10(float(row[3])/float(row[5])),
+                                  -2.5 * math.log10(float(row[2])/float(row[4])),
+                                  -2.5 * math.log10(float(row[2])/float(row[3])),
+                                  -2.5 * math.log10(float(row[4])/float(row[5])),
+                                  -2.5 * math.log10(float(row[2])/float(row[5])),
+                                  float(row[7])*1000,
+                                  float(row[6])/(float(row[2])/1000))
 	
 	        	
 #    End of do block
@@ -198,7 +217,7 @@ plt.ylabel('[S_4.5]-[S_8.0]')
 plt.xlabel('[S_3.6]-[S_5.8]')
 plot_fname='atlas_color-01.pdf'
 fname=plot_fname
-plt.savefig(fname,format='pdf')
+#plt.savefig(fname,format='pdf')
 plt.show()
 
 #plt.yscale('log')
@@ -213,7 +232,7 @@ plt.ylabel('[S_3.6]-[S_8.0]')
 plt.xlabel('[S_3.6]-[S_4.5]')
 plot_fname='atlas_color-02.pdf'
 fname=plot_fname
-plt.savefig(fname,format='pdf')
+#plt.savefig(fname,format='pdf')
 plt.show()
 
 #plt.yscale('log')
@@ -228,7 +247,7 @@ plt.xlabel('[S_5.8]-[S_8.0]')
 plt.ylabel('[S_3.6]-[S_4.5]')
 plot_fname='atlas_color-03.pdf'
 fname=plot_fname
-plt.savefig(fname,format='pdf')
+#plt.savefig(fname,format='pdf')
 plt.show()
 
 plt.yscale('log')

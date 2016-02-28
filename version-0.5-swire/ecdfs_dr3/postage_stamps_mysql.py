@@ -179,7 +179,7 @@ for row in rows:
 
     postage_stamp_filename='d:\\cdfs\\dr3\\images\\'+cid1+'_'+swire_id+'_'+ra_radio1+'_'+dec_radio1+'.jpeg'
     cmd3='ds9 -zscale -invert '+ \
-         ' -geometry 844x922 -fits '+pp_fits+' -contour open -contour load '+contour_file_name+ \
+         ' -geometry 1024x1024 -fits '+pp_fits+' -contour open -contour load '+contour_file_name+ \
          ' -contour close ' + \
          ' -crop '+ra_radio1+' '+dec_radio1+ ' 70 70 wcs fk5 arcsec ' + \
          ' -regions '+region_file_name+ ' -colorbar no -align yes -orient xy ' + \

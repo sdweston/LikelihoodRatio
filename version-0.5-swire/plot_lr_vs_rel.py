@@ -60,8 +60,8 @@ def plot_lr_rel():
 	
     plot_title='ATLAS ' +field+ ' Reliability vs Likelihood Ratio'
 #    plt.title(field)
-    plt.ylabel('Reliability')
-    plt.xlabel('Likelihood Ratio')
+    plt.ylabel('Reliability',fontsize=18)
+    plt.xlabel('Likelihood Ratio',fontsize=18)
 # no grid for publication
 #    plt.grid(True)
     plt.ylim((-0.1,1.1))

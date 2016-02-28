@@ -64,7 +64,7 @@ def plot_m():
     plt.ylabel('#(m)')
     plt.yscale('log')
     plt.ylabel('N')
-    plt.xlabel('log10(f)')
+    plt.xlabel('log10(f)',fontsize=18)
     plt.legend(["Total(m)","Real(m)","n(m) - Background"])
     plot_fname='atlas_'+field+'_magnitude_dependance_point.eps' 
     fname=output_dir + plot_fname
@@ -102,8 +102,8 @@ def plot_m():
     line_y3, = plt.plot(x,y3,'r--', label="background")
     plt.legend(["total(m)","real(m)","background"])
     plt.yscale('log')
-    plt.ylabel('total(m)')
-    plt.xlabel('log10(f)')
+    plt.ylabel('total(m)',fontsize=18)
+    plt.xlabel('log10(f)', fontsize=18)
     plot_fname='atlas_'+field+'_magnitude_dependance_bar.eps' 
     fname=output_dir + plot_fname
     plt.savefig(fname,format="eps")

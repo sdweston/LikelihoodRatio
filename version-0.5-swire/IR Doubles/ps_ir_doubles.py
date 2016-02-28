@@ -176,11 +176,11 @@ for row in rows:
 
     postage_stamp_filename='d:\\'+answer+'\\dr3_ir_doubles\\images\\'+cid1+'_'+ra_radio+'_'+dec_radio+'.jpeg'
     cmd3='ds9 -zscale -invert '+ \
-         ' -geometry 844x922 -fits '+pp_fits+' -contour open -contour load '+contour_file_name+ \
+         ' -geometry 1024x1024 -fits '+pp_fits+' -contour open -contour load '+contour_file_name+ \
          ' -contour close ' + \
          ' -crop '+ra_radio+' '+dec_radio+ ' 75 75 wcs fk5 arcsec ' + \
          ' -regions '+region_file_name+ ' -colorbar no -align yes -orient xy ' + \
-         ' -grid load ds9-nogrid.grd -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
+         ' -grid load ds9-nogrid.grd -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit  '
 
     
 #    print cmd2
