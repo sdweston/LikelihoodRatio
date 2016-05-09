@@ -92,7 +92,7 @@ for row in lst_rows:
 
     sql2=("select id,ra,decl,z, "
           "pow(("+str(ra_ir)+"-RA)*cos("+str(dec_ir)+"),2)+ pow("+str(dec_ir)+"-DECL,2) "
-          "from ozdes.ozdes_grc "
+          "from ozdes.ozdes_grc_2016_02_25 "
           "where pow(("+str(ra_ir)+"-RA)*cos("+str(dec_ir)+"),2)+ "
           "pow("+str(dec_ir)+"-DECL,2) <= pow(1.0/3600.0,2) "
           "and   RA > "+str(ra1)+" and RA < "+str(ra2)+" "

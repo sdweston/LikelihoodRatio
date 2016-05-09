@@ -149,7 +149,7 @@ def f_r():
 #       Do we need to sqrt here, when in f_r we square again. Save a calculation by not doing a sqrt.
 #        sigma=math.sqrt(sigma_x + sigma_y + ACE**2 + IRE**2)
         sigma=(sigma_x + sigma_y + ACE**2 + IRE**2)
-        print "Sigma         : ",sigma
+#        print "Sigma         : ",sigma
 
 # r is the radial distance between the radio source and the aux catalogue source
 # r was returned from the sql in the matches table
@@ -167,8 +167,8 @@ def f_r():
 #        print "    Update the database with the f(r) values"
 		
 # Populate new table with cid,BS,SNR,f(r), or put back into matches table.
-        db.query("update "+schema+"."+field+"_matches set f_r=%s,snr=%s where cid='%s' \
-                  and swire_index_spitzer='%s';" % (f_r, SNR, cid, index_spitzer))
+        db.query("update "+schema+"."+field+"_matches set f_r=%s,snr=%s,sigma_ra=%s,sigma_dec=%s where cid='%s' \
+                  and swire_index_spitzer='%s';" % (f_r, SNR,sigma_x,sigma_y, cid, index_spitzer))
 
 # End of do block
 

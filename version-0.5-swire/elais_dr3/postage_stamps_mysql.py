@@ -38,7 +38,7 @@ db.query("select t1.cid,t1.swire_index_spitzer,t2.ra,t2.decl,format(t1.reliabili
           where t1.reliability > 0.8 \
           and t1.cid like 'E%' \
           and t1.cid=t2.id \
-          limit 100;")
+          limit 50;")
 
 # store_result() returns the entire result set to the client immediately.
 # The other is to use use_result(), which keeps the result set in the server

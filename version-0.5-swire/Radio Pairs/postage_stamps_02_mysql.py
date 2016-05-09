@@ -50,7 +50,7 @@ sql1=("select t1.cid,t1.swire_index_spitzer,t2.ra,t2.decl,t1.reliability "
       "    where t1.reliability > 0.8 "
       "    and t1.cid=t2.id "
       "    and t1.cid not like '"+search_prefix+"%' "
-      "    limit 2000;")
+      "    limit 1000;")
 print sql1,"\n"
 db.query(sql1)
 
@@ -177,26 +177,40 @@ for row in rows:
     # Now create DS9 commands and execute
 
     contour_file_name=cid1+'_'+ra_radio+'_'+dec_radio+'.con'
+    print contour_file_name
     postage_stamp_filename1='D:\\'+field+'\\dr3_radio_pairs\\images\\atlas_'+cid1+'.jpeg'
+    pp_fits='d:\\'+field+'\\dr3_radio_pairs\\images\\atlas_'+cid1+'.fits'
     
     cmd1='ds9 -zscale -invert '+ \
-         ' -geometry 844x922 '+radio_image_fits+' -crop '+ra_radio+' '+dec_radio+ \
-         ' 100 100 wcs fk5 arcsec -contour open -contour loadlevels contour_ds9.lev -contour yes ' + \
-         ' -regions '+region_file_name+ ' -colorbar no ' +\
-         '-contour save '+contour_file_name+' -contour close -zoom to fit -exit ' 
-#         '-saveimage '+postage_stamp_filename1+' 100 -exit'
+         ' -geometry 1024x1024 -fits '+radio_image_fits+ \
+         ' -contour open -contour loadlevels contour_20mjy.lev -contour yes '+ \
+         ' -crop '+ra_radio+' '+dec_radio+' 200 200 wcs fk5 arcsec '+ \
+         ' -regions '+region_file_name+' -colorbar no -align yes -orient xy '+ \
+         ' -contour save '+contour_file_name+' -contour close -zoom to fit  -exit '
+#         ' -saveimage '+pp_fits+' 100 -exit'
 #    print cmd1
+
+    cmd2='ds9 -zscale -invert '+ \
+         ' -geometry 1024x1024 -fits '+nonradio_image_fits+' -contour open -contour load '+contour_file_name+ \
+         ' -contour close ' + \
+         ' -crop '+ra_radio+' '+dec_radio+ ' 200 200 wcs fk5 arcsec ' + \
+         ' -regions '+region_file_name+ ' -colorbar no -align yes -orient xy ' + \
+         ' -zoom to fit -saveimage fits '+pp_fits+' -exit '
  
     postage_stamp_filename='D:\\'+field+'\\dr3_radio_pairs\\images\\'+cid1+'_'+swire_id+'_'+ra_radio+'_'+dec_radio+'.jpeg'
-    cmd2='ds9 -zscale -invert '+\
-         ' -geometry 844x922 '+nonradio_image_fits+' -crop '+ra_radio+' '+dec_radio+ \
-         ' 100 100 wcs fk5 arcsec -contour open -contour load '+contour_file_name+ \
-         ' -regions '+region_file_name+ ' -colorbar no -grid load ds9.grd ' +\
-         ' -contour close -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
+#         ' -geometry 1024x1024 -fits '+nonradio_image_fits+ \
+    cmd3='ds9 -zscale -invert '+ \
+         ' -geometry 1024x1024 -fits '+pp_fits+ \
+         ' -contour open -contour load '+contour_file_name+' -contour close '+ \
+         ' -crop '+ra_radio+' '+dec_radio+' 100 100 wcs fk5 arcsec ' + \
+         ' -regions '+region_file_name+' -colorbar no -align yes -orient xy ' + \
+         ' -grid load ds9-nogrid.grd -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
+#         ' -grid load ds9-nogrid.grd -zoom to fit -saveimage '+postage_stamp_filename+' 100 -exit '
 #    print cmd2
 
     os.system(cmd1)
     os.system(cmd2)
+    os.system(cmd3)
 
 
 # End of do block

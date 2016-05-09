@@ -85,8 +85,8 @@ def plot_lr_rel():
     plt.yscale('log')
 # no grid for publication
 #   plt.grid(True)
-    plt.ylabel('N(counterparts)')
-    plt.xlabel('Reliability')
+    plt.ylabel('N(counterparts)',fontsize=18)
+    plt.xlabel('Reliability',fontsize=18)
 
 #   edgecolor, linestyle, linewidth
 #    plt.bar(center, hist, align = 'center',fill=False,edgecolor='0.0', width = width,linewidth=1)
@@ -122,8 +122,8 @@ def plot_lr_rel():
 #    plt.title(field)
     plt.yscale('log')
     plt.xscale('log')
-    plt.ylabel('N(counterparts)')
-    plt.xlabel('Likelihood Ratio')
+    plt.ylabel('N(counterparts)',fontsize=18)
+    plt.xlabel('Likelihood Ratio',fontsize=18)
 #   edgecolor, linestyle, linewidth
 #    plt.bar(center, hist, align = 'center',fill=False,edgecolor='0.0', width = width,linewidth=1)
     common_params = dict(bins=100,

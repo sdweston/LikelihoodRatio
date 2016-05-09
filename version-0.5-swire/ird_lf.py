@@ -22,10 +22,11 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # This will give me the cid's
 
-sql2=("select cid,ra,decl,sint,count(cid),sum(reliability) from atlas_dr3."+answer+"_ird \
-       group by cid having count(cid) >1 and sum(reliability) > 0.8;")
+sql2=("select cid,ra,decl,sint,count(cid) from atlas_dr3."+answer+"_ird \
+       where reliability > 0.3 and reliability < 0.8 \
+       group by cid having count(cid) >1 ;")
  
-print sql2,"\n"
+#print sql2,"\n"
 db.query(sql2)
 
 r2=db.use_result()
@@ -37,6 +38,7 @@ rows=r2.fetch_row(maxrows=0)
 for row in rows:
     cid1=row[0]
 #    print >> f,row
+    print row
 	   
 # We now have the cid's for the infared multiple candidates
 # so go back to matches with these cid's and get the fusion_spitzer_id's, and ra,dec
@@ -45,9 +47,14 @@ for row in rows:
 #            from atlas_dr3."+answer+"_ird \
 #            where cid='"+cid1+"';")
 
+# We want angular seperation in arc sec between radio and ir
+# "sqrt(pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(radians(t1.decl-"+str(posn_offset_dec)+")),2)+pow(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,2))*3600, "
+
+
     sql3=("SELECT t1.cid, t3.ra, t3.decl, t2.sp , t2.sint, \
                   t1.swire_index_spitzer, t4.ra_spitzer, t4.dec_spitzer, \
-                  t4.irac_3_6_micron_flux_mujy, t4.irac_3_6_micron_flux_error_mujy, t1.reliability,'1' \
+                  sqrt(pow((t3.ra-t4.ra_Spitzer)*cos(radians(t3.decl)),2)+pow(t3.decl-t4.dec_spitzer,2))*3600, \
+                  t4.irac_3_6_micron_flux_mujy, t4.irac_3_6_micron_flux_error_mujy,t4.redshift, t1.reliability,'1' \
            FROM atlas_dr3."+answer+"_matches t1, atlas_dr3."+answer+"_radio_properties as t2, atlas_dr3."+answer+"_coords as t3, \
                 fusion.swire_"+answer+" as t4 \
            where t1.cid='"+cid1+"' \
@@ -56,7 +63,7 @@ for row in rows:
            and t1.cid=t3.id \
            and t1.reliability > 0.1 and t1.reliability < 0.9;")
 
-    print sql3,"\n"
+#    print sql3,"\n"
     db.query(sql3)
 
     r3=db.use_result()
@@ -66,7 +73,8 @@ for row in rows:
     fsis=r3.fetch_row(maxrows=0)
 
     for fsi in fsis:
-        print >> f,fsi
+         print >> f,fsi
+         print fsi
 #        f.write(output)
         
 # Close connection to the database
