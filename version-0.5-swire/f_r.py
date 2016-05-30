@@ -136,19 +136,24 @@ def f_r():
 #        Will need to allow for beam angle !
 #        sigma_x=math.sqrt((0.6*(beam_min/snr))**2)
 #        Check Ivison et al 2007, equation B7. should be 0.3 not 0.6
-        sigma_x=((0.3*(beam_min/snr)*math.sin(theta))**2 )
+#        sigma_x=((0.3*(beam_min/snr)*math.sin(theta))**2 )
 #    print "Sigma X       : ",sigma_x
 
 #        sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 )
 #        Check Ivison et al 2007, equation B7. should be 0.3 not 0.6
-        sigma_y=((0.3*(beam_maj/snr)*math.cos(theta))**2 )
+#        sigma_y=((0.3*(beam_maj/snr)*math.cos(theta))**2 )
 #    print "Sigma Y       : ",sigma_y
+
+# Lets try a different function for sigma_posn
+
+        sigma_xy= ((0.3/snr)**2) * ( 1/( (math.sin(theta)/beam_maj)**2 + (math.cos(theta)/beam_min)**2))
 
 #   sigma is the mean of sigma_x and sigma_y, or quadrature (in paper quadrature)
 #        sigma=(sigma_x + sigma_y)/2
 #       Do we need to sqrt here, when in f_r we square again. Save a calculation by not doing a sqrt.
 #        sigma=math.sqrt(sigma_x + sigma_y + ACE**2 + IRE**2)
-        sigma=(sigma_x + sigma_y + ACE**2 + IRE**2)
+#        sigma=(sigma_x + sigma_y + ACE**2 + IRE**2)
+        sigma=(sigma_xy + ACE**2 + IRE**2)
 #        print "Sigma         : ",sigma
 
 # r is the radial distance between the radio source and the aux catalogue source
@@ -168,7 +173,7 @@ def f_r():
 		
 # Populate new table with cid,BS,SNR,f(r), or put back into matches table.
         db.query("update "+schema+"."+field+"_matches set f_r=%s,snr=%s,sigma_ra=%s,sigma_dec=%s where cid='%s' \
-                  and swire_index_spitzer='%s';" % (f_r, SNR,sigma_x,sigma_y, cid, index_spitzer))
+                  and swire_index_spitzer='%s';" % (f_r, SNR,sigma_xy,sigma_xy, cid, index_spitzer))
 
 # End of do block
 

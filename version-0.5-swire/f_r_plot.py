@@ -121,17 +121,18 @@ IRE=0.6
 
 # 0.655 see Smith et al 2011, Page 7
 #sigma_x=math.sqrt((0.6*(beam_min/snr))**2 + ACE**2 + IRE**2)
-sigma_x=((0.655*(beam_min/snr))**2 )
+#sigma_x=((0.655*(beam_min/snr))**2 )
 #    print "Sigma X       : ",sigma_x
 
 #sigma_y=math.sqrt((0.6*(beam_maj/snr))**2 + ACE**2 + IRE**2)
-sigma_y=((0.655*(beam_maj/snr))**2 )
+#sigma_y=((0.655*(beam_maj/snr))**2 )
 #    print "Sigma Y       : ",sigma_y
 
+sigma_xy= ((0.3/snr)**2) * ( 1/( (math.sin(theta)/beam_maj)**2 + (math.cos(theta)/beam_min)**2))
 #   sigma is the mean of sigma_x and sigma_y
 #   sum in quadrature ?
 #sigma=(sigma_x + sigma_y)/2
-sigma=(sigma_x + sigma_y + ACE**2 + IRE**2)
+sigma=(sigma_xy + ACE**2 + IRE**2)
 #    print "Sigma         : ",sigma
 
 x = numpy.linspace(0,10,1000) # 1000 linearly spaced numbers
