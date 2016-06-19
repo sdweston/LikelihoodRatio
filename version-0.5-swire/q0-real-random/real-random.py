@@ -91,32 +91,36 @@ yy=func(xx,*popt)
 
 #
 # We want the residual between the True and Fit
-#print "Radius True Fit Residual"
-#for ix in xrange(1,13):
-#        fit=1-popt+popt*numpy.exp(-b*(ix*0.5)**2)
-#        print x[ix-1],t[ix-1],fit,fit-t[ix-1]
+print "Radius True Fit Residual"
+for ix in xrange(1,13):
+        fit=1-popt+popt*numpy.exp(-b*(ix*0.5)**2)
+        print x[ix-1],t[ix-1],fit,fit-t[ix-1]
         
 
 #plot_title=field+" Q0 = %s " % (popt[0])
 #    plot_title=field+" y = %s * x ** (- r^2/2 Simga^2) " % (popt[0])
 plot_title=field+" Q_0="+str(popt[0])+" Variance : "+str(pcov[0])
+plt.figure(figsize=(12,9),dpi=100)
 plt.title(plot_title)
-plt.xlabel('Radius (arcsec)',fontsize=18)
-plt.ylabel('1-Q(r)',fontsize=18)
+plt.xlabel('Radius, (arcsec)',fontsize=30)
+plt.ylabel('1-Q(r)',fontsize=30)
+plt.tick_params(labelsize=20)
 plt.plot(x,y,'r+',label="Real")
 plt.plot(x,t,'ro',label="True")
 plt.plot(x,r,'rx',label="Random")
 plt.plot(x1,y1,label="Poisson")
 plt.plot(xx,yy,label="Fitted Curve")
 plt.axis([0,8.25,0,1])
+#plt.legend(loc='upper right',fontsize=20)
 plt.legend(loc='upper right')
 #    No grid for publication
 #plt.grid(b=True, which='major',color='b',linestyle='--')
 #plt.grid(b=True, which='minor',axis='y',color='r',linestyle=':')
 #plt.minorticks_on()
 #output_dir='I:/PhD 2012/Marsfield April 2014/'
-#    output_dir='D:/temp/'
-#    filename=field+'_q0.eps'
-#    fullname=output_dir+filename
-#    plt.savefig(fullname,format="eps")
+output_dir='M:/atlas-cross-identifications/section_3/Figures/'
+filename=field+'_q0.pdf'
+fullname=output_dir+filename
+#plt.savefig(fullname,format="pdf")
+
 plt.show()
