@@ -162,7 +162,7 @@ def f_r():
 # Calculate f(r)
 #        By the formula it should be sigma**2, but see above why sqrt when we will sq again !
 #        f_r=(1/(2*math.pi*sigma**2)) * math.exp(-r**2/2*sigma**2)
-        f_r=(1/(2*math.pi*sigma)) * math.exp(-r**2/2*sigma)
+        f_r=(1/(2*math.pi*sigma)) * math.exp(-r**2/(2*sigma))
         F_R.append(f_r)
         RADIUS.append(r)
 
