@@ -172,8 +172,8 @@ def f_r():
 #        print "    Update the database with the f(r) values"
 		
 # Populate new table with cid,BS,SNR,f(r), or put back into matches table.
-        db.query("update "+schema+"."+field+"_matches set f_r=%s,snr=%s,sigma_ra=%s,sigma_dec=%s where cid='%s' \
-                  and swire_index_spitzer='%s';" % (f_r, SNR,sigma_xy,sigma_xy, cid, index_spitzer))
+        db.query("update "+schema+"."+field+"_matches set f_r=%s,snr=%s,sigma_ra=%s,sigma_dec=%s,sigma=%s where cid='%s' \
+                  and swire_index_spitzer='%s';" % (f_r, SNR,sigma_xy,sigma_xy, sigma, cid, index_spitzer))
 
 # End of do block
 

@@ -75,12 +75,12 @@ y1=numpy.exp(-math.pi*x1*x1*lamda)
 #
 # We need to fit a function to t[i] and x[i]
 b=1/(2*sigma**2)
-#def func(x,a):
-#    return 1-a+a*numpy.exp(-b*x**2)
+def func(x,a):
+    return 1-a+a*numpy.exp(-b*x**2)
 
 # allow x and sigma to be free for fit
-def func(x,a,s):
-    return 1-a+a*numpy.exp(-x**2/2*s**2)
+#def func(x,a,s):
+#    return 1-a+a*numpy.exp(-x**2/(2*s**2))
 
 popt,pcov=curve_fit(func,x,t)
 print "q0 = %s " % (popt)
@@ -91,10 +91,10 @@ yy=func(xx,*popt)
 
 #
 # We want the residual between the True and Fit
-print "Radius True Fit Residual"
-for ix in xrange(1,13):
-        fit=1-popt+popt*numpy.exp(-b*(ix*0.5)**2)
-        print x[ix-1],t[ix-1],fit,fit-t[ix-1]
+#print "Radius True Fit Residual"
+#for ix in xrange(1,13):
+#        fit=1-popt+popt*numpy.exp(-b*(ix*0.5)**2)
+#        print x[ix-1],t[ix-1],fit,fit-t[ix-1]
         
 
 #plot_title=field+" Q0 = %s " % (popt[0])
