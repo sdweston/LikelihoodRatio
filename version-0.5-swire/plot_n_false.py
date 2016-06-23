@@ -170,15 +170,17 @@ plt.plot(rel_1,n_false_1,'rv',markersize=5)
 plt.plot(rel_2,n_false_2,'go',markersize=5)
 plot_title='  N(false) vs reliability' 
 #plt.title(plot_title)
-plt.ylabel('N(false) %')
-plt.xlabel('Reliability')
+# We change the fontsize of minor ticks label 
+plt.tick_params(axis='both', which='major', labelsize=20)
+plt.ylabel('N(false) %',fontsize=25)
+plt.xlabel('Reliability',fontsize=25)
 plt.xlim(0.05,1.0)
 #plt.yscale('log')
-plt.ylim(0.0,20)
-#plt.legend(["Total(m)","Real(m)","n(m) - Background"])
-plot_fname='atlas_n_false_vs_reliability.eps' 
+plt.ylim(0.0,10)
+plt.legend(["CDFS","ELAIS"])
+plot_fname='atlas_n_false_vs_reliability.pdf' 
 fname=output_dir + plot_fname
-plt.savefig(fname,format="eps")
+plt.savefig(fname,format="pdf")
 plt.show()
 
 # Plot as historgram
