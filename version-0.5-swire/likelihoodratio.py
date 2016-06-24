@@ -54,15 +54,19 @@ def lr():
 #   check lookup table for values of q(m) and n(m)
 	
         log10_f=math.log10(flux)
+
+        sql1=("select log10_f,n_m,q_m from %s.%s_n_m_lookup \
+                  where %s > log10_f - 0.1 \
+                  and %s < log10_f + 0.1;" % (schema,field,log10_f, log10_f))
 	
-        db.query("select log10_f,n_m,q_m from %s.%s_n_m_lookup \
-                  where %s > log10_f - 0.05 \
-                  and %s < log10_f + 0.05;" % (schema,field,log10_f, log10_f))
+#        print sql1
+    
+        db.query(sql1)
 	
         r2=db.store_result()
         strings=r2.fetch_row(maxrows=1)
 
-#    print log10_f,strings
+#        print log10_f,strings
 
         for string in strings:
             n_m=float(string[1])
