@@ -140,9 +140,15 @@ def n_m():
         f_rows.append(b)
 
 #    (hist,bins)=numpy.histogram(f_rows,bins=60,range=[-1.0,5.0])
-    (hist,bins)=numpy.histogram(f_rows,bins=40,range=[0.0,4.0])
+    (hist,bins)=numpy.histogram(f_rows,bins=nbins,range=[0.0,4.0])
     width = 0.7*(bins[1]-bins[0])
     center = (bins[:-1]+bins[1:])/2
+    
+    print "hist"
+    print hist
+    print "bins"
+    print bins
+    
 #plt.yscale('log')
 #plt.xscale('log')
     plt.ylim(0,25000)

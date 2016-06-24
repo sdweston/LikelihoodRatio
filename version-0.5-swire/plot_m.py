@@ -96,6 +96,9 @@ def plot_m():
 	
     print x
     print y1	
+    print y2
+    print y3
+
 #    plt.plot(x,y1,linestyle='_',color='k')
     line_y1, = plt.plot(x, y1,'k:', label="total(m)")
     line_y2, = plt.plot(x,y2,'g-', label="real(m)")
@@ -104,7 +107,7 @@ def plot_m():
     plt.yscale('log')
     plt.ylabel('total(m)',fontsize=20)
     plt.xlabel('log10(f)', fontsize=20)
-    plt.xlim(0.0,4.0)
+    plt.xlim(0.1,3.7)
     plot_fname='atlas_'+field+'_magnitude_dependance_bar.pdf' 
     fname=output_dir + plot_fname
     plt.savefig(fname,format="pdf")

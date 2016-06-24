@@ -194,14 +194,19 @@ def real_m():
 # Close connection to the database
     db.close()
 
-# From Steve & Loretta, REAL_M can't be 0. So find the zero values and set them to be 
-# 1/2 of the lowest non-zero value
+# From Steve & Loretta, REAL_M can't be 0. 
+# So find the zero values and set them to be 
+# 1/2 of the lowest non-zero value.
+#
+# Next idea make it n(m) * const as this affects selection of low m ir sources
+# const=min(real_m)/min(n_m)
 
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 	
-    sql_real_m_min=("select min(real_m)/2 from "+schema+"."+field+"_n_m_lookup "
-                    "where real_m > 0.0")
+    sql_real_m_min=("select min(real_m) from "+schema+"."+field+"_n_m_lookup "
+                    "where real_m > 0.0 and i < 10;")
 	
+    print sql_real_m_min
     db.query(sql_real_m_min)
 	
     r=db.use_result()
@@ -212,12 +217,105 @@ def real_m():
         real_m_min=row[0]
         print "real(m) min : ",real_m_min
 
+    sql_real_n_min=("select min(n_m) from "+schema+"."+field+"_n_m_lookup "
+                    "where real_m ="+real_m_min+";")
 	
-    sql_real_m_update=("update "+schema+"."+field+"_n_m_lookup "
-                       " set real_m="+real_m_min+ 
-                       " where real_m=0.0;")
-    db.query(sql_real_m_update)
+    print sql_real_n_min
+    db.query(sql_real_n_min)
 	
+    r=db.use_result()
+
+    rows=r.fetch_row(maxrows=0)
+    lst_rows=list(rows)
+    for row in lst_rows:
+        n_m_min=row[0]
+        print "n(m)    min : ",n_m_min
+    
+    const=float(real_m_min)/float(n_m_min)
+    print     "const       : ",const
+
+    sql_n_m=("select n_m from "+schema+"."+field+"_n_m_lookup "
+                    "where real_m = 0.0 and i < 10;")
+	
+    print sql_n_m
+    db.query(sql_n_m)
+	
+    r=db.use_result()
+
+    rows=r.fetch_row(maxrows=0)
+    lst_rows=list(rows)
+    for row in lst_rows:
+        n_m=row[0]
+        print "n(m)        : ",n_m
+
+        new_real_m=float(n_m)*const
+	
+        sql_real_m_update=("update "+schema+"."+field+"_n_m_lookup "
+                       " set real_m="+str(new_real_m)+ 
+                       " where real_m=0.0 and n_m="+n_m+" and i < 10;")
+
+        db.query(sql_real_m_update)
+
+# Repeat for upper end
+# Next idea make it n(m) * const as this affects selection of low m ir sources
+# const=min(real_m)/min(n_m)
+
+    db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
+	
+    sql_real_m_min=("select min(real_m) from "+schema+"."+field+"_n_m_lookup "
+                    "where real_m > 0.0 and i > 10;")
+	
+    print sql_real_m_min
+    db.query(sql_real_m_min)
+	
+    r=db.use_result()
+
+    rows=r.fetch_row(maxrows=0)
+    lst_rows=list(rows)
+    for row in lst_rows:
+        real_m_min=row[0]
+        print "real(m) min : ",real_m_min
+
+    sql_real_n_min=("select min(n_m) from "+schema+"."+field+"_n_m_lookup "
+                    "where real_m ="+real_m_min+";")
+	
+    print sql_real_n_min
+    db.query(sql_real_n_min)
+	
+    r=db.use_result()
+
+    rows=r.fetch_row(maxrows=0)
+    lst_rows=list(rows)
+    for row in lst_rows:
+        n_m_min=row[0]
+        print "n(m)    min : ",n_m_min
+    
+    const=float(real_m_min)/float(n_m_min)
+    print     "const       : ",const
+
+    sql_n_m=("select n_m from "+schema+"."+field+"_n_m_lookup "
+                    "where real_m = 0.0 and i > 10;")
+	
+    print sql_n_m
+    db.query(sql_n_m)
+	
+    r=db.use_result()
+
+    rows=r.fetch_row(maxrows=0)
+    lst_rows=list(rows)
+    for row in lst_rows:
+        n_m=row[0]
+        print "n(m)        : ",n_m
+
+        new_real_m=float(n_m)*const
+	
+        sql_real_m_update=("update "+schema+"."+field+"_n_m_lookup "
+                       " set real_m="+str(new_real_m)+ 
+                       " where real_m=0.0 and n_m="+n_m+" and i > 10;")
+
+        db.query(sql_real_m_update)
+
+        
     db.close()
 
     print "End or real(m)\n"
