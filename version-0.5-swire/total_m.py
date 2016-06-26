@@ -89,7 +89,7 @@ def total_m():
 #    print "%.4f" % b
          f_rows.append(b)
 
-    (hist,bins)=numpy.histogram(f_rows,bins=40,range=[0.0,4.0])
+    (hist,bins)=numpy.histogram(f_rows,bins=nbins,range=[0.0,4.0])
 #    print "hist"
 #    print hist
 #    print "bins"
@@ -101,7 +101,7 @@ def total_m():
 #
 # Set axis limits so all are to the same scale
 #
-    plt.ylim(0,500)
+#    plt.ylim(0,500)
     plt.xlim(0,4)
     plt.bar(center, hist, align = 'center',width = width,linewidth=0)
     plot_title=field+' total(m)'

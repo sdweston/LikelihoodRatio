@@ -26,3 +26,7 @@ output_dir='d:/temp/'
 # Sum of Real(m)_i
 global sum_real_m
 sum_real_m=0.0
+
+# Number of bins to use for the n_m_lookup values
+global nbins
+nbins=20

@@ -151,7 +151,7 @@ def n_m():
     
 #plt.yscale('log')
 #plt.xscale('log')
-    plt.ylim(0,25000)
+#    plt.ylim(0,30000)
     plt.bar(center, hist, align = 'center',width = width,linewidth=0)
     plot_title=field+' N(m)'
     plt.title(plot_title)
