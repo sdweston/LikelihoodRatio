@@ -59,12 +59,12 @@ def plot_m():
 
 
     plt.plot(log10_f, total_m,'k.',log10_f,real_m,'g+',log10_f,bckgrd,'ro')
-    plot_title=field+'  Log10(f) vs #(m)' 
+    plot_title=field+'  Log10(m) vs #(m)' 
     plt.title(plot_title)
-    plt.ylabel('#(m)')
+    plt.ylabel('Count m')
     plt.yscale('log')
     plt.ylabel('N')
-    plt.xlabel('log10(f)',fontsize=18)
+    plt.xlabel('log10(m)',fontsize=18)
     plt.legend(["Total(m)","Real(m)","n(m) - Background"])
     plot_fname='atlas_'+field+'_magnitude_dependance_point.pdf' 
     fname=output_dir + plot_fname
@@ -105,8 +105,8 @@ def plot_m():
     line_y3, = plt.plot(x,y3,'r--', label="background")
     plt.legend(["total(m)","real(m)","background"])
     plt.yscale('log')
-    plt.ylabel('total(m)',fontsize=20)
-    plt.xlabel('log10(f)', fontsize=20)
+    plt.ylabel('Count m',fontsize=20)
+    plt.xlabel('log10(m)', fontsize=20)
     plt.xlim(0.1,3.7)
     plot_fname='atlas_'+field+'_magnitude_dependance_bar.pdf' 
     fname=output_dir + plot_fname

@@ -28,5 +28,8 @@ global sum_real_m
 sum_real_m=0.0
 
 # Number of bins to use for the n_m_lookup values
+# Might have to adjust nbins to get the best for the real_m & total_m calculations for your catalogue,
+# also minimize empty bins. We did have nbins=40 but not good.
+
 global nbins
 nbins=20
