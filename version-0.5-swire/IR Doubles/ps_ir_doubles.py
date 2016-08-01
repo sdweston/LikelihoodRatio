@@ -22,10 +22,13 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 # Find the possible IR multiples, from those radio sources with more than one IR candidate
 # between the reliability figures.
 
-sql1="create temporary table if not exists atlas_dr3."+answer+"_ird as ( \
+sql1="create table if not exists atlas_dr3."+answer+"_ird as ( \
           select cid,swire_index_spitzer,reliability \
           from atlas_dr3."+answer+"_matches  \
-          where reliability > 0.3 and reliability < 0.7) ;"
+          where reliability > 0.1 \
+          and lr > 0.01 \
+          and reliability > lr/(0.109+lr/0.1) \
+          and reliability < lr/(0.109+lr/0.9)	  );"
 
 print sql1,"\n"
 db.query(sql1)          
@@ -33,7 +36,7 @@ db.query(sql1)
 # This will give me the cid's
 
 sql2=("select cid,count(cid) as cnt from atlas_dr3."+answer+"_ird \
-       group by cid having cnt >1;")
+       group by cid having cnt >1 ;")
  
 print sql2,"\n"
 db.query(sql2)
@@ -56,8 +59,9 @@ db.close()
 
 #print rows
 
-cat_file_name=answer+'_ir_multiple.cat'
+cat_file_name='d:\\'+answer+'\\dr3_ir_doubles\\images\\'+answer+'_ir_multiple.cat'
 f1=open(cat_file_name,'w')
+print >> f1,"cid1,ra_radio,dec_radio,idx_sub_row,swire_id,ra_spitzer,dec_spitzer,rel,radio_flux,f_3_6"
 
 for row in rows:
     cid1=row[0]
@@ -105,9 +109,11 @@ for row in rows:
     
 # Now for each of these radio sources get a list of the IR candidates
 
-    sql4="select swire_index_spitzer,reliability \
+    sql4="select swire_index_spitzer,reliability,flux \
           from atlas_dr3."+answer+"_matches \
-          where reliability > 0.3 and reliability < 0.7 \
+          where reliability > 0.1 and lr > 0.01 \
+          and reliability > lr/(0.109+lr/0.1) \
+          and reliability < lr/(0.109+lr/0.9) \
           and cid='"+cid1+"' ;"
 
     db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
@@ -119,6 +125,7 @@ for row in rows:
     for row in rows:
         swire_id=row[0]
         rel=row[1]
+        radio_flux=row[2]
 #        print "IR Candidate : ",swire_id,rel
         db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
@@ -136,7 +143,7 @@ for row in rows:
             dec_spitzer=sub_row[1]
             f_3_6=sub_row[2]
         
-        print >> f1, cid1,ra_radio,dec_radio,idx_sub_row,swire_id,ra_spitzer,dec_spitzer,rel,f_3_6
+        print >> f1, cid1,ra_radio,dec_radio,idx_sub_row,swire_id,ra_spitzer,dec_spitzer,rel,radio_flux,f_3_6
 
         # add lines to the region file to identify the non-radio candidates
 
