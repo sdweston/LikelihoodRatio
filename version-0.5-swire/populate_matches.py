@@ -49,7 +49,7 @@ def pm():
               "t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer, "
               "sqrt(pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(radians(t1.decl-"+str(posn_offset_dec)+")),2)+pow(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,2))*3600, "
               "t2.IRAC_3_6_micron_Flux_muJy,			  "
-			  "atan2(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,(t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(radians(t1.decl-"+str(posn_offset_dec)+"))) "
+	      "atan2((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(radians(t1.decl-"+str(posn_offset_dec)+")),t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer) "
               "from "+schema+"."+field+"_coords as t1, fusion.swire_"+field+" as t2 "
               "where pow((t1.ra-"+str(posn_offset_ra)+"-t2.RA_Spitzer)*cos(radians(t1.decl-"+str(posn_offset_dec)+")),2)+" 
               "pow(t1.decl-"+str(posn_offset_dec)+"-t2.Dec_Spitzer,2) <= pow("+str(sr)+"/3600,2) "
