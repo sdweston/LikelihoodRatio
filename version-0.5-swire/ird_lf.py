@@ -22,9 +22,10 @@ db=_mysql.connect(host="localhost",user="atlas",passwd="atlas")
 
 # This will give me the cid's
 
-sql2=("select cid,ra,decl,sint,count(cid) from atlas_dr3."+answer+"_ird \
-       where reliability > 0.3 and reliability < 0.8 \
-       group by cid having count(cid) >1 ;")
+sql2=("select t1.cid,t2.ra,t2.decl,t2.sint,count(t1.cid) \
+       from atlas_dr3."+answer+"_ird as t1 \
+        atlas_dr3."+answer+"cmpcat as t2 \
+       group by t1.cid having count(t1.cid) >1 ;")
  
 #print sql2,"\n"
 db.query(sql2)
@@ -60,8 +61,8 @@ for row in rows:
            where t1.cid='"+cid1+"' \
            and t1.swire_index_spitzer=t4.index_spitzer \
            and t1.cid=t2.id \
-           and t1.cid=t3.id \
-           and t1.reliability > 0.1 and t1.reliability < 0.9;")
+           and t1.cid=t3.id ;")
+#           and t1.reliability > 0.1 and t1.reliability < 0.9;")
 
 #    print sql3,"\n"
     db.query(sql3)

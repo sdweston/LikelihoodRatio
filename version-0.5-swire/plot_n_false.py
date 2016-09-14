@@ -172,12 +172,12 @@ plot_title='  N(false) vs reliability'
 #plt.title(plot_title)
 # We change the fontsize of minor ticks label 
 plt.tick_params(axis='both', which='major', labelsize=20)
-plt.ylabel('N(false) %',fontsize=25)
-plt.xlabel('Reliability',fontsize=25)
+plt.ylabel(r"$N_{false} \%$",fontsize=25)
+plt.xlabel(r"$R_c$",fontsize=25)
 plt.xlim(0.05,1.0)
 #plt.yscale('log')
 plt.ylim(0.0,10)
-plt.legend(["CDFS","ELAIS"])
+plt.legend(["CDFS","ELAIS"],prop={'size':20})
 plot_fname='atlas_n_false_vs_reliability.pdf' 
 fname=output_dir + plot_fname
 plt.savefig(fname,format="pdf")
