@@ -1,0 +1,9 @@
+global color=blue font="helvetica 10 normal "
+global color=red
+fk5;circle( 8.8014164 , -42.9100571 ,1") 
+global color=yellow
+fk5;circle( 8.801273 , -42.910454 ,1") # point=cross
+fk5;circle( 8.801273 , -42.910454 ,0.05") 
+global color=red
+fk5;point( 8.79963112 , -42.9095383 ) # point=cross text={EI0080C1}
+fk5;point( 8.80320168 , -42.9105759 ) # point=cross text={EI0080C2}

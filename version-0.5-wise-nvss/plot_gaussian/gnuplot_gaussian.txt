@@ -1,0 +1,6 @@
+Norm(x,m,s) = 1./(sqrt(2*pi)*s) * exp( -(x-m)**2 / (2*s*s) )
+plot [-5:5] Norm(x,0,1)
+
+# To plot two functions overlayed:
+
+plot [-5:5] Norm(x,0,1), Norm(x,1,1.1)

@@ -1,0 +1,7 @@
+global color=blue font="helvetica 10 normal "
+global color=red
+fk5;circle( 8.62196493 , -43.43748855 ,1") # width=2 
+fk5;circle( 8.62196493 , -43.43748855 ,10") # width=2 
+global color=yellow
+fk5;circle( 8.622222 , -43.437324 ,1") # point=cross
+fk5;circle( 8.622222 , -43.437324 ,1") # width=2 

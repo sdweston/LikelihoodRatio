@@ -1,0 +1,10 @@
+set term eps
+set output 'atlas_dr1_radio_doubles.eps'
+set log x
+set log y
+set yrange [1:200]
+set ylabel "Flux_1 / Flux_2"
+set xlabel "Theta/SQRT(Flux_1 + Flux2)
+set key off
+plot 'atlas_dr1_cdfs_radio_pairs.txt' using 2:1 pt 7 linecolor 'black' , 'atlas_dr1_elais_radio_pairs.txt' using 2:1 pt 7 linecolor 'black'  
+set term windows
