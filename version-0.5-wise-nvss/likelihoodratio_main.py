@@ -85,8 +85,8 @@ print "\nMethod : ",mdbs,"\n"
 sr_out=100.0
 	
 execfile('area_background_survey.py')
-#execfile('radio_pairs.py')
-#execfile('populate_matches.py')
+
+execfile('populate_matches.py')
 #execfile('f_r.py')
 #execfile('f_r_plot.py')
 #execfile('n_m.py')
@@ -117,22 +117,13 @@ atlas_sqasec=area_nr[0]
 global swire_sqsec
 swire_sqsec=area_nr[1]
 
-# First pass for possible radio pairs, so that matches runs against new 
-# generated source for radio pair.
-
-answer=raw_input('Run radio pair search (y/n)       : ')
-
-if (answer =='Y' or answer=='y'):
-    print "Run radio pair search        : ",answer,"\n"
-#    rp()
-
 # Fine the nearest neighbour matches within search radius
 
 answer=raw_input('Run nearest neighbour match (y/n) : ')
 
 if (answer =='Y' or answer=='y'):
     print "Run nearest neighbour match  : ",answer,"\n"
-#    pm()
+    pm()
 
 # Determine f(r) and update the database.
 
