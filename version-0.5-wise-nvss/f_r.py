@@ -2,7 +2,7 @@
 #
 # f_r.py
 #
-# Python script to query SWIRE_ES1 mysql database to determine the
+# Python script to query mysql database to determine the
 # f(r) for the likelihood ratio.
 #
 #===========================================================================
@@ -33,16 +33,17 @@ def f_r():
 # account the shape of the beam.
 
 # Find sigma_x_radio and sigma_y_radio
+# For nvss/sumss we have been given a beam of 45" x 45"
 
-    sql2=("select avg(0.6*("+str(beam_maj)+"/snr)),avg(0.6*("+str(beam_min)+"/snr)) "
-           "FROM atlas_dr3."+field+"_radio_properties; ")
+    sql2=("select avg(0.6*(45/snr_nvssorsumss)),avg(0.6*(45/snr_nvssorsumss)) "
+           "FROM "+schema+".foreground_centroids; ")
     db.query(sql2)
     r=db.use_result()
     rows=r.fetch_row()
     for row in rows:
         sigma_y_radio=float(row[0])
         sigma_x_radio=float(row[1])
-        print sigma_y_radio
+        print sigma_x_radio
         print sigma_x_radio
  	db.close()
 	
@@ -62,17 +63,16 @@ def f_r():
     sql_update_sigma=("update atlas_dr3.atlas_dr3_working "
                       "set sigma="+str(sigma_radio)+" where field like '"+field+"';")
     print sql_update_sigma,"\n"
-    db.query(sql_update_sigma)
+#    db.query(sql_update_sigma)
 	
 # We are running against atlas_dr3 now, so need to join tables.
 #    sql1=("select t1.cid, t1.swire_index_spitzer, t3.sint, t3.snr, t1.r_arcsec "
 
 # note: theta is stored in radians
-    sql1=("select t1.cid, t1.swire_index_spitzer, t3.sp, t3.snr, t1.r_arcsec, t1.theta "
-          " from "+schema+"."+field+"_matches as t1, "+schema+"."+field+"_deconv as t2, "+schema+"."+field+"_radio_properties as t3 "
-          " where t1.cid=t2.id "
-          " and t1.cid=t3.id "
-          "order by t1.cid;")
+    sql1=("select t1.name, t1.wise_name, t3.s_nvssorsumss, t3.snr_nvssorsumss, t1.r_arcsec, t1.theta "
+          " from "+schema+".matches as t1, "+schema+".foreground_centroids as t3 "
+          " where t1.name=t3.name "
+          " order by t1.name;")
 		  
     print sql1,"\n"  
     db.query(sql1)
@@ -105,8 +105,8 @@ def f_r():
     F_R=[]
 
     for row in rows:
-        cid=row[0]
-        index_spitzer=row[1]
+        name=row[0]
+        wise_name=row[1]
         sint=float(row[2])
         snr=float(row[3])
         if row[4]==None:
@@ -119,11 +119,11 @@ def f_r():
 
 # ACE - ancillary catalogue error, arcsec's
 
-        ACE=0.1
+        ACE=0.0
 
 # IRE - intrensic radio error, arcsec's
 
-        IRE=0.6
+        IRE=0.0
 
 # In DR3 we have SNR !
         SNR = snr
@@ -149,7 +149,7 @@ def f_r():
 
 # Lets try a different function for sigma_posn
 
-        sigma_xy= ((0.6/snr)**2) * ( 1/( (math.sin(theta)/beam_maj)**2 + (math.cos(theta)/beam_min)**2))
+        sigma_xy= ((0.6*(45/snr))**2
 
 #   sigma is the mean of sigma_x and sigma_y, or quadrature (in paper quadrature)
 #        sigma=(sigma_x + sigma_y)/2
@@ -175,8 +175,8 @@ def f_r():
 #        print "    Update the database with the f(r) values"
 		
 # Populate new table with cid,BS,SNR,f(r), or put back into matches table.
-        db.query("update "+schema+"."+field+"_matches set f_r=%s,snr=%s,sigma_ra=%s,sigma_dec=%s,sigma=%s where cid='%s' \
-                  and swire_index_spitzer='%s';" % (f_r, SNR,sigma_xy,sigma_xy, sigma, cid, index_spitzer))
+        sql=("update "+schema+".matches set f_r=%s,snr=%s,sigma=%s where name='%s' "
+             "and wise_name='%s';" % (f_r, SNR, sigma, name, wise_name))
 
 # End of do block
 
