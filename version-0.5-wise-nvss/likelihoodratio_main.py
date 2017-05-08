@@ -87,7 +87,7 @@ sr_out=100.0
 execfile('area_background_survey.py')
 
 execfile('populate_matches.py')
-#execfile('f_r.py')
+execfile('f_r.py')
 #execfile('f_r_plot.py')
 #execfile('n_m.py')
 #execfile('q_0.py')
@@ -132,7 +132,7 @@ answer=raw_input('Run f(r) calculations       (y/n) : ')
 
 if (answer =='Y' or answer=='y'):
     print "Runing f(r) calculations                 : ",answer,"\n"
-#    f_r()
+    f_r()
 #    f_r_plot()
 
 # Determine n(m) and update data base
