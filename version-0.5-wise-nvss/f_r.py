@@ -189,8 +189,8 @@ def f_r():
     plt.ylabel('f(r)')
     plt.xlabel('r (arcsec)')
 
-    plt.xlim(0.0,10.0)
-    plt.ylim(0.0,0.5)
+    plt.xlim(0.0,25.0)
+    plt.ylim(0.0,1.0)
 
     plot_fname='atlas_' +field+ '_fr_vs_r.eps'
     fname=output_dir + plot_fname
