@@ -17,7 +17,8 @@ def pm():
     print "\nStarting finding nearest neighbours between catalogues\n"
 
 #   Search Radius for NN	
-    sr=10
+#    sr=10
+    print "\n     Search Radius = ",sr
 
 # Connect to the local database with the atlas uid
 
@@ -25,7 +26,7 @@ def pm():
 
 # Lets run a querry
 
-    print "Truncate the matches table\n"
+    print "\n     Truncate the matches table\n"
 	
     db.query("truncate table "+schema+".matches;")
     db.query("set session wait_timeout=30000;")
@@ -34,9 +35,9 @@ def pm():
 #   limit 0,3000000;
 #   First find all matches within search radius
     
-    print "find all matches within search radius\n"
+    print "     find all matches within search radius\n"
 
-    sql1=("select name,centroid_ra,centroid_dec from "+schema+".sumss_centroids;")
+    sql1=("select name,centroid_ra,centroid_dec from "+schema+".foreground_centroids;")
     print sql1,"\n"
     db.query(sql1)
           
@@ -45,15 +46,23 @@ def pm():
 
 # fetch results, returning char we need float !
 
-    rows=r.fetch_row(maxrows=10)
+    rows=r.fetch_row(maxrows=2000)
+	
+    db.close()
+	
+	# Connect to the local database againwith the atlas uid
+
+    db=_mysql.connect(host=db_host,user=db_user,passwd=db_passwd)   
 
 # rows is a tuple, convert it to a list
 
+    print "     This SQL will take a while .... \n"
+
     for row in rows:
-           sumss_name=row[0]
+           foreground_name=row[0]
            centroid_ra=row[1]
            centroid_dec=row[2]
-           print sumss_name, centroid_ra, centroid_dec
+#           print foreground_name, centroid_ra, centroid_dec
 
 # Change the logic here, for each entry in NVSS ands SUMSS find the NN within the search radius
 
@@ -77,16 +86,15 @@ def pm():
 #              " and   t2.RA_Spitzer > "+str(ra1)+" and t2.RA_Spitzer < "+str(ra2)+" "
 #              " and   t2.Dec_Spitzer > "+str(dec1)+" and t2.Dec_Spitzer < "+str(dec2)+" limit 0,3000000; ")
 
-           sql2=("select source_id,ra,decl, "
-		         "sqrt(pow((1.49021-ra)*cos(radians(-56.47542)),2)+pow(-56.47542-decl,2))*3600 "
-		        "from "+schema+".wise_5amin_4jy "
-                "where pow(("+centroid_ra+"-ra)*cos(radians("+centroid_dec+")),2)+" 
-                "pow("+centroid_dec+"-decl,2) <= pow("+str(sr)+"/3600,2); "		)
+           sql2=("insert into "+schema+".matches(name,wise_name,r_arcsec) "
+                 "select t1.name,t1.source_id,  "
+                 "sqrt(pow((("+str(centroid_ra)+"-t1.ra)*cos(radians("+str(centroid_dec)+"))),2)+pow(("+str(centroid_dec)+"-t1.decl),2))*3600 "
+                 "from wise.wise_5amin_4jy as t1 "
+                 "where sqrt(pow((("+str(centroid_ra)+"-t1.ra)*cos(radians("+str(centroid_dec)+"))),2)+pow(("+str(centroid_dec)+"-t1.decl),2)) <= (25.0/3600);  ")
 
-           print sql2,"\n"
+           sys.stdout.write('.')
 	
-    print "This SQL will take a while .... \n"
-#    db.query(sql1)
+           db.query(sql2)
     
 #    db.commit()
 
