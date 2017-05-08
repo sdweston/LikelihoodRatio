@@ -5,6 +5,8 @@ global db_user
 db_user='atlas'
 global db_passwd
 db_passwd='atlas'
+global schema
+schema='wise'
 
 # None radio source catalog area
 # arc_sec ^ 2
